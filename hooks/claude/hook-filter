@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+# claude-hook-filter - Filter Claude Code hook events by session name
+#
+# Use case:
+#   When running multiple Claude Code instances (e.g., an "orchestrator" that
+#   manages a "coder" instance), hooks fire for ALL instances. This creates a
+#   problem: the orchestrator's own Stop/Compact/SessionEnd events trigger
+#   notifications meant only for the coder.
+#
+#   Solution: Name sessions with /rename (e.g., /rename coder), then use this
+#   filter in hooks to only forward events from sessions with a matching name.
+#   The session name is stored in the transcript file as a "custom-title" entry.
+#
+# How it works:
+#   1. Reads hook payload from stdin (contains session_id and transcript_path)
+#   2. Looks up the custom-title in the transcript file
+#   3. If title matches: outputs full payload with session_name field injected
+#   4. If no match: outputs nothing, allowing downstream xargs -r to skip
+#
+# Usage:
+#   hook-filter <session-name> < payload.json
+#   hook-filter coder | jq -r '.session_id[:7]' | xargs -r -I{} tmuxb send orchestrator "[Claude {}] stopped"
+#
+# Arguments:
+#   session-name  Required. The custom title to match (e.g., "coder")
+#
+# Output:
+#   If session name matches: prints full payload with session_name injected
+#   If no match or error: prints nothing to stdout (errors to stderr)
+#
+# Exit codes:
+#   0 - Success (match or no match)
+#   1 - Missing required argument
+#   2 - Invalid or missing payload
+
+set -euo pipefail
+
+usage() {
+  echo "Usage: claude-hook-filter <session-name>" >&2
+  echo "Reads Claude Code hook payload from stdin, outputs session_id[:7] if session name matches." >&2
+  exit 1
+}
+
+err() {
+  echo "claude-hook-filter: $1" >&2
+}
+
+# Require target name argument
+if [[ $# -lt 1 || -z "${1:-}" ]]; then
+  usage
+fi
+
+target_name="$1"
+
+# Read payload from stdin
+payload=$(cat 2>/dev/null) || {
+  err "failed to read payload from stdin"
+  exit 2
+}
+
+# Validate payload is non-empty
+if [[ -z "$payload" ]]; then
+  err "empty payload"
+  exit 2
+fi
+
+# Extract transcript_path from payload
+transcript_path=$(echo "$payload" | jq -r '.transcript_path // empty' 2>/dev/null) || {
+  err "failed to parse payload JSON"
+  exit 0
+}
+
+# No transcript path - nothing to check
+if [[ -z "$transcript_path" ]]; then
+  exit 0
+fi
+
+# Transcript file doesn't exist - session may have been cleaned up
+if [[ ! -f "$transcript_path" ]]; then
+  exit 0
+fi
+
+# Find the custom-title entry in the transcript
+# Use grep for speed (transcript can be large), then parse with jq
+title_line=$(grep -m1 '"type":"custom-title"' "$transcript_path" 2>/dev/null) || true
+
+# No custom-title found - session was never renamed
+if [[ -z "$title_line" ]]; then
+  exit 0
+fi
+
+# Extract the customTitle value
+session_name=$(echo "$title_line" | jq -r '.customTitle // empty' 2>/dev/null) || true
+
+# Check if session name matches target
+if [[ "$session_name" == "$target_name" ]]; then
+  # Output the full payload with session_name injected
+  echo "$payload" | jq -c --arg name "$session_name" '. + {session_name: $name}' 2>/dev/null || echo "$payload"
+fi
