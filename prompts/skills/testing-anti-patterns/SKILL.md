@@ -357,9 +357,37 @@ TDD cycle:
 - **Verbose and noisy** - Five lines of assertions when one would do
 - **Easy to miss fields** - You might forget to assert on important keys
 
+**Still wrong - the common evasion:**
+
+```clojure
+;; STILL BAD: Extracting to a let doesn't fix it - assertions are still fragmented
+(deftest rate-limit-error-test
+  (let [ex   (sut/rate-limit "openai" "Rate limit exceeded" :http-status 429 :retry-after 30)
+        data (ex-data ex)]
+    (is (= :llx/rate-limit (:type data)))
+    (is (true? (:recoverable? data)))
+    (is (= 429 (:http-status data)))
+    (is (= 30 (:retry-after data)))
+    (is (= "openai" (:provider data)))
+    (is (= "Rate limit exceeded" (ex-message ex)))))
+```
+
+This is the SAME anti-pattern with a `let` binding. The problem is not repeated accessor calls. The problem is multiple individual field assertions instead of one structural comparison. Extracting to a local changes nothing.
+
 **The fix:**
 
 ```clojure
+;; GOOD: Single assertion comparing the whole structure
+(deftest rate-limit-error-test
+  (let [ex (sut/rate-limit "openai" "Rate limit exceeded" :http-status 429 :retry-after 30)]
+    (is (= {:type         :llx/rate-limit
+            :recoverable? true
+            :http-status  429
+            :retry-after  30
+            :provider     "openai"}
+           (ex-data ex)))
+    (is (= "Rate limit exceeded" (ex-message ex)))))
+
 ;; GOOD: Single assertion on the whole structure
 (deftest user-creation-test
   (let [result (sut/create-user {:name "Alice" :email "alice@example.com"})]
@@ -371,15 +399,14 @@ TDD cycle:
            result))))
 ```
 
-**For generated/dynamic values:**
+**When you only care about a subset of the map:**
 
 ```clojure
-;; GOOD: Use select-keys when you can't predict all fields
+;; GOOD: select-keys when the map contains dynamic/irrelevant fields you can't predict
 (deftest user-creation-test
   (let [result (sut/create-user {:name "Alice" :email "alice@example.com"})]
-    ;; Assert on known fields
-    (is (= {:name "Alice"
-            :email "alice@example.com"
+    (is (= {:name   "Alice"
+            :email  "alice@example.com"
             :status :active}
            (select-keys result [:name :email :status])))
     ;; Separately verify generated fields exist and have correct type
@@ -387,21 +414,29 @@ TDD cycle:
     (is (inst? (:created-at result)))))
 ```
 
+This is NOT fragmented assertions - it is one structural comparison on the fields you care about, plus type checks on genuinely unpredictable values. The key distinction: `select-keys` produces a single map comparison, not N individual field checks.
+
 ### Gate Function
 
 ```
-BEFORE writing multiple (is (= ...)) assertions on the same result:
-  Ask: "Could this be a single data comparison?"
+BEFORE writing assertions on a result:
+  Count: "How many (is ...) assertions reference the same data structure?"
 
-  IF yes:
-    Write one (is (= {...expected...} result))
-    Use select-keys if you need to ignore some fields
-    Only use separate assertions for type checks on generated values
+  IF more than one:
+    STOP - Combine into a single (is (= {...} data)) assertion
+    This applies even if you extracted the data into a let binding
+    Extracting to a let is NOT the fix. One (is (= {...} data)) IS the fix.
 
-  Benefits:
-    - Shows complete expected shape in one place
-    - Test failure diff shows exactly what's different
-    - Easier to update when data shape changes
+  IF the map contains dynamic/irrelevant fields you can't predict:
+    Use (is (= {:expected-keys ...} (select-keys data [...])))
+    This is still ONE structural comparison - not fragmented
+
+  The ONLY acceptable reasons for multiple assertions on the same value:
+    - Type checks on generated/unpredictable values (uuid?, inst?)
+    - Testing fundamentally different accessors (ex-data vs ex-message)
+
+  Self-test: If you wrote (let [data (something)] ...) followed by
+  multiple (is (= x (:key data))), you are STILL violating this rule.
 ```
 
 ## When Mocks Become Too Complex
