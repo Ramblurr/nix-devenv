@@ -1,6 +1,6 @@
 ---
 name: brepl
-description: Load this skill BEFORE using brepl in any way (mandatory). Teaches the heredoc pattern for reliable code evaluation.
+description: Use this skill to fix unbalanced bracket/delimiter errors or evaluate clojure code at the REPL.
 ---
 
 # brepl - Evaluating Clojure Code
@@ -8,6 +8,13 @@ description: Load this skill BEFORE using brepl in any way (mandatory). Teaches 
 ## CRITICAL: Load This Skill First
 
 **You MUST load this skill before using brepl.** Do NOT attempt to use brepl without loading this skill first, or you will use incorrect syntax.
+
+**IMPORTANT:** Do NOT try to manually repair parenthesis errors.
+If you encounter unbalanced delimiters, run `brepl balance <name> --write` on the file
+instead of attempting to fix them yourself. If the tool doesn't work,
+report to the user that they need to fix the delimiter error manually.
+
+The tool automatically formats files with cljfmt when it processes them.
 
 ## Overview
 
