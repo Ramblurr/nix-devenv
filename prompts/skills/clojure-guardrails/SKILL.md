@@ -14,7 +14,7 @@ grep -r "guardrails.enabled" deps.edn shadow-cljs.edn 2>/dev/null
 
 ## Setup
 
-**deps.edn:**
+deps.edn:
 ```clojure
 {:deps {com.fulcrologic/guardrails {:mvn/version "1.2.16"}
         metosin/malli             {:mvn/version "0.20.0"}}
@@ -23,7 +23,15 @@ grep -r "guardrails.enabled" deps.edn shadow-cljs.edn 2>/dev/null
 
 See https://clojars.org/com.fulcrologic/guardrails for the latest version.
 
-**Enable at runtime:** `-Dguardrails.enabled=true`
+guardrails.edn (sibling to deps.edn):
+```clojure
+{:throw? true}
+```
+
+This causes guardrails violations to throw exceptions instead of just logging.
+We want this in nearly all cases — silent validation failures defeat the purpose.
+
+Enable at runtime: `-Dguardrails.enabled=true`
 
 ## Import
 
@@ -113,6 +121,35 @@ This is an optional feature.
   [:int => (? :user/record)]
   (lookup id))
 ```
+
+## Anti-Patterns
+
+### Do NOT use :any, any?, :map, or map? in specs
+
+These specs validate nothing meaningful and defeat the purpose of guardrails.
+
+```clojure
+;; BAD - :any accepts everything, this is just ceremony
+(>defn process [data]
+  [:any => :any]
+  ...)
+
+;; BAD - :map only confirms it's a map, catches no real bugs
+(>defn process-user [user]
+  [:map => :string]
+  ...)
+
+;; GOOD - spec the keys you actually care about
+;; Maps are open by default, so you only need to declare the slice
+;; your function uses. Extra keys pass through fine.
+(>defn process-user [user]
+  [[:map [:name :string] [:age :int]] => :string]
+  (str (:name user) " is " (:age user)))
+```
+
+If you don't know the shape yet, figure it out before writing the spec.
+A guardrails spec that validates nothing is worse than no spec — it creates
+a false sense of safety.
 
 ## Detailed Reference
 
