@@ -8,3 +8,4 @@ result
 .env
 extra/
 .direnv
+prompts/skills/.system/
