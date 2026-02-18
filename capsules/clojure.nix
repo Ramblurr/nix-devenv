@@ -8,7 +8,7 @@ in
 {
   commands = map (withCategory "clojure") [
     {
-      package = pkgs.babashka;
+      package = pkgs.babashka-unwrapped;
       name = "bb";
       help = "task runner for clojure see `bb help`";
     }
@@ -22,6 +22,6 @@ in
     pkgs.clojure-lsp
     pkgs.clj-kondo
     pkgs.cljfmt
-    pkgs.babashka
+    pkgs.babashka-unwrapped
   ];
 }
