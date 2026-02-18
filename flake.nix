@@ -67,7 +67,7 @@
         homeConfigurations = import ./home-modules/default.nix;
         packages = {
           brepl = pkgs: pkgs.callPackage (import ./pkgs/brepl.nix) { };
-          catnipContainer = pkgs: (import ./pkgs/catnip-container.nix) { inherit self inputs pkgs; };
+          #catnipContainer = pkgs: (import ./pkgs/catnip-container.nix) { inherit self inputs pkgs; };
           clojure-mcp-light = pkgs: pkgs.callPackage (import ./pkgs/clojure-mcp-light.nix) { };
           ramblurr-global-deps-edn = pkgs: pkgs.callPackage (import ./pkgs/deps-edn.nix) { };
           spdx = pkgs: spdx-util.packages.${pkgs.stdenv.hostPlatform.system}.default;
