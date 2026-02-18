@@ -3,7 +3,9 @@
   inputs = {
     nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1"; # tracks nixpkgs unstable branch
     devshell.url = "github:numtide/devshell";
+    devshell.inputs.nixpkgs.follows = "nixpkgs";
     devenv.url = "https://flakehub.com/f/ramblurr/nix-devenv/*";
+    devenv.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs =
     inputs@{
@@ -26,6 +28,10 @@
           ];
           # https://numtide.github.io/devshell
           commands = [
+            #  { package = pkgs.cfssl; }
+          ];
+          packages = [
+            # pkgs.foobar
           ];
         };
     };

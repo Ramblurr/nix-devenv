@@ -13,7 +13,9 @@
     #nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1"; # tracks nixpkgs unstable branch
     nixpkgs.url = "git+https://github.com/ramblurr/nixpkgs?shallow=1&ref=consolidated";
     spdx-util.url = "https://flakehub.com/f/ramblurr/spdx-util/0.1.4";
+    spdx-util.inputs.nixpkgs.follows = "nixpkgs";
     flakelight.url = "github:nix-community/flakelight";
+    flakelight.inputs.nixpkgs.follows = "nixpkgs";
     treefmt-nix.url = "github:numtide/treefmt-nix";
     treefmt-nix.inputs.nixpkgs.follows = "flakelight/nixpkgs";
     llm-agents.url = "github:numtide/llm-agents.nix";
