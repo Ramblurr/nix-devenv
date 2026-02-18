@@ -242,7 +242,7 @@
     },
     "flakelight_2": {
       "inputs": {
-        "nixpkgs": "nixpkgs_6"
+        "nixpkgs": "nixpkgs_7"
       },
       "locked": {
         "lastModified": 1753102454,
@@ -331,9 +331,7 @@
     "llm-agents": {
       "inputs": {
         "blueprint": "blueprint",
-        "nixpkgs": [
-          "nixpkgs"
-        ],
+        "nixpkgs": "nixpkgs_4",
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
@@ -395,7 +393,7 @@
       "inputs": {
         "flake-parts": "flake-parts_2",
         "git-hooks-nix": "git-hooks-nix_2",
-        "nixpkgs": "nixpkgs_4",
+        "nixpkgs": "nixpkgs_5",
         "nixpkgs-23-11": "nixpkgs-23-11_2",
         "nixpkgs-regression": "nixpkgs-regression_2"
       },
@@ -520,6 +518,22 @@
     },
     "nixpkgs_4": {
       "locked": {
+        "lastModified": 1771177547,
+        "narHash": "sha256-trTtk3WTOHz7hSw89xIIvahkgoFJYQ0G43IlqprFoMA=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "ac055f38c798b0d87695240c7b761b82fc7e5bc2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_5": {
+      "locked": {
         "lastModified": 1761597516,
         "narHash": "sha256-wxX7u6D2rpkJLWkZ2E932SIvDJW8+ON/0Yy8+a5vsDU=",
         "rev": "daf6dc47aa4b44791372d6139ab7b25269184d55",
@@ -532,7 +546,7 @@
         "url": "https://flakehub.com/f/NixOS/nixpkgs/0.2505"
       }
     },
-    "nixpkgs_5": {
+    "nixpkgs_6": {
       "locked": {
         "lastModified": 1771397339,
         "narHash": "sha256-FPCf6Gll8YcIYhVe6DBTd1jyU4xFQts9ea9ISC1yBcQ=",
@@ -549,7 +563,7 @@
         "url": "https://github.com/ramblurr/nixpkgs"
       }
     },
-    "nixpkgs_6": {
+    "nixpkgs_7": {
       "locked": {
         "lastModified": 1752950548,
         "narHash": "sha256-NS6BLD0lxOrnCiEOcvQCDVPXafX1/ek1dfJHX1nUIzc=",
@@ -575,7 +589,7 @@
         "llm-agents": "llm-agents",
         "nix": "nix_2",
         "nix2container": "nix2container",
-        "nixpkgs": "nixpkgs_5",
+        "nixpkgs": "nixpkgs_6",
         "spdx-util": "spdx-util",
         "treefmt-nix": "treefmt-nix_2"
       }
