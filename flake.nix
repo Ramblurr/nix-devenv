@@ -18,6 +18,8 @@
     flakelight.inputs.nixpkgs.follows = "nixpkgs";
     treefmt-nix.url = "github:numtide/treefmt-nix";
     treefmt-nix.inputs.nixpkgs.follows = "flakelight/nixpkgs";
+    devshell.url = "github:numtide/devshell";
+    devshell.inputs.nixpkgs.follows = "nixpkgs";
     llm-agents.url = "github:numtide/llm-agents.nix";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -38,7 +40,42 @@
       ...
     }@inputs:
     flakelight ./. (
-      { config, ... }:
+      { config, lib, ... }:
+      let
+        mkTemplateFlake =
+          templateDir:
+          let
+            template = import (templateDir + "/flake.nix");
+            templateInputs = {
+              self = {
+                outPath = templateDir;
+              };
+              devenv = self;
+              nixpkgs = inputs.nixpkgs;
+              devshell = inputs.devshell;
+            };
+          in
+          template.outputs (templateInputs // { inputs = templateInputs; });
+
+        mkTemplateChecks =
+          pkgs:
+          let
+            system = pkgs.stdenv.hostPlatform.system;
+            mkTemplateChecks' =
+              name: dir:
+              let
+                template = mkTemplateFlake dir;
+              in
+              {
+                "template-${name}-devshell" = template.devShells.${system}.default;
+              }
+              // lib.mapAttrs' (checkName: drv: lib.nameValuePair "template-${name}-${checkName}" drv) (
+                template.checks.${system} or { }
+              );
+          in
+          (mkTemplateChecks' "generic" ./templates/generic)
+          // (mkTemplateChecks' "clojure" ./templates/clojure);
+      in
       {
         inherit inputs;
         imports = [
@@ -75,6 +112,7 @@
           codex = pkgs: inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex;
           gemini-cli = pkgs: inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.gemini-cli;
         };
+        checks = mkTemplateChecks;
         templates = import ./templates;
         outputs = {
           capsules = import ./capsules;
