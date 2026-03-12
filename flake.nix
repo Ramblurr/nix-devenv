@@ -20,6 +20,8 @@
     treefmt-nix.inputs.nixpkgs.follows = "flakelight/nixpkgs";
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
+    clj-nix.url = "github:jlesquembre/clj-nix";
+    clj-nix.inputs.nixpkgs.follows = "nixpkgs";
     llm-agents.url = "github:numtide/llm-agents.nix";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -46,13 +48,11 @@
           templateDir:
           let
             template = import (templateDir + "/flake.nix");
-            templateInputs = {
+            templateInputs = inputs // {
               self = {
                 outPath = templateDir;
               };
               devenv = self;
-              nixpkgs = inputs.nixpkgs;
-              devshell = inputs.devshell;
             };
           in
           template.outputs (templateInputs // { inputs = templateInputs; });
