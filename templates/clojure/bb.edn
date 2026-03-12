@@ -1,9 +1,12 @@
-{:deps  {}
+{:deps  {outskirtslabs/bb-tasks
+         {:git/url "https://github.com/outskirtslabs/bb-tasks"
+          :git/sha "b224881d5f6d4ae72c514faede9a5eb0b5f627a8"}}
  :paths []
  :tasks {:requires
          ([clojure.string :as str]
                             [clojure.pprint :refer [print-table]]
-                            [babashka.tasks :refer [shell]])
+                            [babashka.tasks :refer [shell]]
+                            [ol.bb-tasks.publish-clojars :as publish-clojars])
 
          :init
          (do (def paths ["src" "test"]))
@@ -61,4 +64,4 @@
 
          publish {:doc     "Publish the clojure sdk libs to clojars"
                   :depends [jar]
-                  :task    (clojure "-T:build deploy")}}}
+                  :task    (publish-clojars/publish!)}}}

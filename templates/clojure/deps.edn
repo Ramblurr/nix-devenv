@@ -13,6 +13,7 @@
                                  slipset/deps-deploy           {:mvn/version "0.2.2"}}
                     :ns-default build}
            :neil   {:project {:name        com.outskirtslabs/TODO
+                              :url         "https://example.com/TODO"
                               :license     {:id "TODO"}
                               :description ""
                               :version     "0.0.TODO"}}}}
