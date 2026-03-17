@@ -1,6 +1,10 @@
 ---
 name: Brainstorming
-description: IMMEDIATELY USE THIS SKILL when creating or develop anything and before writing code or implementation plans - refines rough ideas into fully-formed designs through structured Socratic questioning, alternative exploration, and incremental validation
+description: |
+  Refine ideas into detailed designs through Socratic dialogue.
+  Use when: user has rough idea, needs to clarify requirements, explore approaches.
+  Triggers: "brainstorm", "discuss idea", "I'm thinking about", "what if",
+  "help me think through", "explore options", "/brainstorm".
 ---
 
 # Brainstorming Ideas Into Designs
