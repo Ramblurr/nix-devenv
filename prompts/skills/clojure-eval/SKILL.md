@@ -1,12 +1,9 @@
 ---
 name: clojure-eval
-description: Use this skill BEFORE using writing any Clojure code. It teaches how to use the Clojure REPL (via brepl) so you can test code, check if edited files compile, verify function behavior, or interact with a running REPL session.
+description: Use this skill BEFORE using writing any Clojure code or using brepl. It teaches how to use the Clojure REPL (via brepl) so you can test code, check if edited files compile, verify function behavior, or interact with a running REPL session.
 ---
 
 # Clojure REPL Evaluation
-
-**You MUST load this skill before using brepl.** Do NOT attempt to use brepl without loading this skill first, or you will use incorrect syntax.
-
 
 ## When to Use This Skill
 
@@ -17,6 +14,32 @@ Use this skill when you need to:
 - Debug code by evaluating expressions
 - Require or load namespaces for testing
 - Validate that code changes work before committing
+
+## Starting a REPL
+
+Before evaluating code, you need a running nREPL server. Follow these steps in order:
+
+1. Check if a REPL is already running by trying a quick eval:
+   ```bash
+   brepl '(+ 1 2)'
+   ```
+   If this returns `3`, a REPL is already running. Skip to the evaluation sections below.
+
+2. If no REPL is running, check if the project has a `bb.edn` file (indicates one of our Clojure projects):
+   ```bash
+   ls bb.edn
+   ```
+   If `bb.edn` exists, start the REPL with:
+   ```bash
+   bb dev
+   ```
+   Run this as a background process since it blocks. Wait for `.nrepl-port` to appear, then verify with `brepl '(+ 1 2)'`.
+
+3. If there is no `bb.edn`, fall back to starting the REPL directly:
+   ```bash
+   clojure -M:dev:repl/dev
+   ```
+   Run this as a background process since it blocks. Wait for `.nrepl-port` to appear, then verify with `brepl '(+ 1 2)'`.
 
 ## How It Works
 
@@ -201,7 +224,7 @@ BREPL_PORT=7888 brepl -e '(+ 1 2)'
 
 ## Typical Workflow
 
-1. Ensure nREPL is running (creates .nrepl-port file)
+1. Ensure nREPL is running (see "Starting a REPL" above)
 2. Require namespace:
    ```bash
    brepl "$(cat <<'EOF'
