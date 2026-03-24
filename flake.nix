@@ -100,6 +100,7 @@
         };
         withOverlays = [
           self.overlays.default
+          inputs.clj-nix.overlays.default
         ];
         homeConfigurations = import ./home-modules/default.nix;
         packages = {
@@ -111,6 +112,11 @@
           claude-code = pkgs: inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.claude-code;
           codex = pkgs: inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex;
           gemini-cli = pkgs: inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.gemini-cli;
+        };
+        devShell = pkgs: {
+          packages = [
+            pkgs.deps-lock
+          ];
         };
         checks = mkTemplateChecks;
         templates = import ./templates;
