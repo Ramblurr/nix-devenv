@@ -7,6 +7,8 @@ description: Manage offline reference material in the `extra/` directory. Use wh
 
 The `extra/` directory (gitignored) contains offline reference material: cloned repos, docs, screenshots, PDFs, API specs. **Always prefer `extra/` over web fetches.**
 
+Most of the time the entries in there are symlinks to other documents, be careful your search/glob/list tool (whatever its name is) may not list or follow symlinks, so best explore it with a good 'ol `ls extra` in bash.
+
 ## Finding extra/ (Critical for Worktrees)
 
 The `extra/` directory lives at the **project root**, NOT in worktrees.
