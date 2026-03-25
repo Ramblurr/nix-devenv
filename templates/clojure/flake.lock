@@ -70,6 +70,7 @@
         "devshell": "devshell",
         "nix-fetcher-data": "nix-fetcher-data",
         "nixpkgs": [
+          "devenv",
           "nixpkgs"
         ]
       },
@@ -84,6 +85,27 @@
       "original": {
         "owner": "jlesquembre",
         "repo": "clj-nix",
+        "type": "github"
+      }
+    },
+    "clojure-nix-locker": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1767628431,
+        "narHash": "sha256-9JHKdlgDspXbBTE9b+bYYBMfXzBwHMUymY9DUHIvZrQ=",
+        "owner": "bevuta",
+        "repo": "clojure-nix-locker",
+        "rev": "d706ad2804bf8237a61171757b44783042bc9fee",
+        "type": "github"
+      },
+      "original": {
+        "owner": "bevuta",
+        "repo": "clojure-nix-locker",
         "type": "github"
       }
     },
@@ -160,6 +182,7 @@
     },
     "devenv": {
       "inputs": {
+        "clj-nix": "clj-nix",
         "determinate": "determinate",
         "devshell": "devshell_2",
         "fh": "fh",
@@ -176,12 +199,12 @@
         "treefmt-nix": "treefmt-nix_2"
       },
       "locked": {
-        "lastModified": 1773073475,
-        "narHash": "sha256-XsNwKfeoyhxczg/G9aB4fjY4Uveh10UE0QkAWmGKHKY=",
-        "rev": "f4c29b13066da37efc5ac709a676bf799df685bc",
-        "revCount": 143,
+        "lastModified": 1774372263,
+        "narHash": "sha256-kri9L62hzGCkRCCIB1ufTgtB+hxEQ8xNbTMEJ1A25QM=",
+        "rev": "a7f60216cbe67dd0544aaf5a1b1220fc5ee2d8a9",
+        "revCount": 153,
         "type": "tarball",
-        "url": "https://api.flakehub.com/f/pinned/ramblurr/nix-devenv/0.1.143%2Brev-f4c29b13066da37efc5ac709a676bf799df685bc/019cd36c-3594-7b9f-b07d-6c9a40c89280/source.tar.gz"
+        "url": "https://api.flakehub.com/f/pinned/ramblurr/nix-devenv/0.1.153%2Brev-a7f60216cbe67dd0544aaf5a1b1220fc5ee2d8a9/019d20d7-005f-73b6-8974-b94d9dd1536f/source.tar.gz"
       },
       "original": {
         "type": "tarball",
@@ -191,6 +214,7 @@
     "devshell": {
       "inputs": {
         "nixpkgs": [
+          "devenv",
           "clj-nix",
           "nixpkgs"
         ]
@@ -420,6 +444,24 @@
         "url": "https://flakehub.com/f/DeterminateSystems/flake-schemas/0.2.0"
       }
     },
+    "flake-utils": {
+      "inputs": {
+        "systems": "systems"
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "flakelight": {
       "inputs": {
         "nixpkgs": [
@@ -555,7 +597,7 @@
         "bun2nix": "bun2nix",
         "flake-parts": "flake-parts_3",
         "nixpkgs": "nixpkgs_4",
-        "systems": "systems",
+        "systems": "systems_2",
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
@@ -597,6 +639,7 @@
       "inputs": {
         "flake-parts": "flake-parts",
         "nixpkgs": [
+          "devenv",
           "clj-nix",
           "nixpkgs"
         ]
@@ -837,7 +880,7 @@
     },
     "root": {
       "inputs": {
-        "clj-nix": "clj-nix",
+        "clojure-nix-locker": "clojure-nix-locker",
         "devenv": "devenv",
         "devshell": "devshell_3",
         "nixpkgs": "nixpkgs_7"
@@ -882,6 +925,21 @@
       }
     },
     "systems": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
+    "systems_2": {
       "locked": {
         "lastModified": 1681028828,
         "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",

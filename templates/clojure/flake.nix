@@ -6,29 +6,35 @@
     devshell.inputs.nixpkgs.follows = "nixpkgs";
     devenv.url = "https://flakehub.com/f/ramblurr/nix-devenv/*";
     devenv.inputs.nixpkgs.follows = "nixpkgs";
-    clj-nix.url = "github:jlesquembre/clj-nix";
-    clj-nix.inputs.nixpkgs.follows = "nixpkgs";
+    clojure-nix-locker.url = "github:bevuta/clojure-nix-locker";
+    clojure-nix-locker.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs =
     inputs@{
+      clojure-nix-locker,
       self,
-      clj-nix,
       devenv,
       devshell,
       ...
     }:
+    let
+      jdk = "jdk25";
+    in
     devenv.lib.mkFlake ./. {
       inherit inputs;
       withOverlays = [
         devshell.overlays.default
         devenv.overlays.default
-        clj-nix.overlays.default
       ];
       packages = {
         default =
           pkgs:
           let
-            root = toString ./.;
+            jdkPackage = pkgs.${jdk};
+            lockerPkgs = pkgs // {
+              clojure = pkgs.clojure.override { jdk = jdkPackage; };
+            };
+            clojure = pkgs.clojure.override { jdk = jdkPackage; };
             gitRev =
               if self ? rev then
                 self.rev
@@ -36,32 +42,66 @@
                 self.dirtyRev
               else
                 "dirty";
-            projectSrc = pkgs.lib.cleanSourceWith {
+            clojureLocker = (import "${clojure-nix-locker}/default.nix" { pkgs = lockerPkgs; }).lockfile {
               src = ./.;
-              filter =
-                path: _type:
-                let
-                  rel = pkgs.lib.removePrefix (root + "/") (toString path);
-                  base = builtins.baseNameOf path;
-                in
-                !(base == ".git" || rel == "result" || pkgs.lib.hasPrefix "target/" rel);
+              lockfile = "./deps-lock.json";
             };
           in
-          pkgs.mkCljLib {
-            inherit projectSrc;
-            name = "com.outskirtslabs/TODO";
+          pkgs.stdenv.mkDerivation {
+            pname = "TODO";
             version = "0.0.TODO";
+            src = ./.;
             nativeBuildInputs = [
+              clojure
               pkgs.coreutils
+              pkgs.findutils
+              pkgs.git
+              jdkPackage
             ];
             GIT_REV = gitRev;
-            JAVA_HOME = pkgs.jdk25.home;
-            buildCommand = ''
-              export JAVA_HOME="${pkgs.jdk25.home}"
-              export JAVA_CMD="${pkgs.jdk25}/bin/java"
-              clojure -T:build jar
+            JAVA_HOME = jdkPackage.home;
+            buildPhase = ''
+              runHook preBuild
+
+              source ${clojureLocker.shellEnv}
+              export JAVA_HOME="${jdkPackage.home}"
+              export JAVA_CMD="${jdkPackage}/bin/java"
+
+              clojure -Srepro -M:kaocha
+              clojure -Srepro -T:build jar
+
+              runHook postBuild
+            '';
+            installPhase = ''
+              runHook preInstall
+
+              mkdir -p $out
+              cp "$(find target -type f -name '*.jar' -print | head -n 1)" $out/
+
+              runHook postInstall
             '';
           };
+        locker =
+          pkgs:
+          let
+            jdkPackage = pkgs.${jdk};
+            lockerPkgs = pkgs // {
+              clojure = pkgs.clojure.override { jdk = jdkPackage; };
+            };
+            clojure = pkgs.clojure.override { jdk = jdkPackage; };
+            clojureLocker = (import "${clojure-nix-locker}/default.nix" { pkgs = lockerPkgs; }).lockfile {
+              src = ./.;
+              lockfile = "./deps-lock.json";
+            };
+          in
+          clojureLocker.commandLocker ''
+            export HOME="$tmp/home"
+            unset CLJ_CACHE CLJ_CONFIG XDG_CACHE_HOME XDG_CONFIG_HOME XDG_DATA_HOME
+
+            ${clojure}/bin/clojure -Srepro -X:deps prep
+            ${clojure}/bin/clojure -Srepro -P -M:kaocha
+            ${clojure}/bin/clojure -Srepro -P -T:build jar
+          '';
       };
       devShell =
         pkgs:
@@ -75,7 +115,7 @@
             # { package = pkgs.bazqux; }
           ];
           packages = [
-            pkgs.deps-lock
+            (if self ? packages then self.packages.${pkgs.system}.locker else pkgs.deps-lock)
             # pkgs.foobar
           ];
 

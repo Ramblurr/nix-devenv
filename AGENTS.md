@@ -11,4 +11,4 @@ cd templates/clojure
 deps-lock
 ```
 
-`deps-lock` is provided by `clj-nix` and is available in the devshell.
+`deps-lock` is provided by `clojure-nix-locker` via the `deps-lock` package in this flake overlay and is available in the devshell.

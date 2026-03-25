@@ -20,8 +20,8 @@
     treefmt-nix.inputs.nixpkgs.follows = "flakelight/nixpkgs";
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
-    clj-nix.url = "github:jlesquembre/clj-nix";
-    clj-nix.inputs.nixpkgs.follows = "nixpkgs";
+    clojure-nix-locker.url = "github:bevuta/clojure-nix-locker";
+    clojure-nix-locker.inputs.nixpkgs.follows = "nixpkgs";
     llm-agents.url = "github:numtide/llm-agents.nix";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -100,13 +100,13 @@
         };
         withOverlays = [
           self.overlays.default
-          inputs.clj-nix.overlays.default
         ];
         homeConfigurations = import ./home-modules/default.nix;
         packages = {
           brepl = pkgs: pkgs.callPackage (import ./pkgs/brepl.nix) { };
           #catnipContainer = pkgs: (import ./pkgs/catnip-container.nix) { inherit self inputs pkgs; };
           clojure-mcp-light = pkgs: pkgs.callPackage (import ./pkgs/clojure-mcp-light.nix) { };
+          deps-lock = pkgs: inputs.clojure-nix-locker.packages.${pkgs.stdenv.hostPlatform.system}.default;
           ramblurr-global-deps-edn = pkgs: pkgs.callPackage (import ./pkgs/deps-edn.nix) { };
           spdx = pkgs: spdx-util.packages.${pkgs.stdenv.hostPlatform.system}.default;
           claude-code = pkgs: inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.claude-code;
@@ -122,6 +122,7 @@
         templates = import ./templates;
         outputs = {
           capsules = import ./capsules;
+          clojure = import ./lib/clojure.nix { inherit inputs; };
           # disable schemas for now, this breaks flakehub
           #schemas = inputs.flake-schemas.schemas // {
           #  capsules = {

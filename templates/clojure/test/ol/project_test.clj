@@ -1,7 +1,8 @@
 (ns ol.project-test
   (:require
-   [o.project :as sut]
+   [ol.project]
    [clojure.test :refer [deftest is testing]]))
 
-(deftest FIXME
-  (is (= 1 0)))
+(deftest smoke
+  (testing "the project namespace loads"
+    (is (some? (find-ns 'ol.project)))))
