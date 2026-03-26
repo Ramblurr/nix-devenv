@@ -90,11 +90,11 @@ Platform-only files use `.clj` or `.cljs` extensions instead of `.cljc`.
 
 ## Adding a Component Dependency
 
-1. Add the dependency to the component's `deps.edn`:
+1. Do not add workspace brick dependencies to the component's `deps.edn`. A component `deps.edn` should list only external libraries.
 
 ```clojure
 ;; components/auth/deps.edn
-{:deps {com.example/db {:local/root "../../components/db"}}}
+{:deps {metosin/malli {:mvn/version "0.17.0"}}}
 ```
 
 2. Require the interface (not the implementation) in your code:
@@ -103,7 +103,7 @@ Platform-only files use `.clj` or `.cljs` extensions instead of `.cljc`.
 (require '[com.example.db.interface :as db])
 ```
 
-3. Add the dependency to any project that uses `auth`:
+3. Add the brick dependencies to any project that uses `auth`:
 
 ```clojure
 ;; projects/api/deps.edn
@@ -111,7 +111,9 @@ Platform-only files use `.clj` or `.cljs` extensions instead of `.cljc`.
         com.example/db   {:local/root "../../components/db"}}}
 ```
 
-4. Run `clojure -M:poly check` to validate the dependency graph.
+4. If you need the brick available in the workspace REPL, add it to the workspace `:dev` alias rather than to the component `deps.edn`.
+
+5. Run `poly check` or the repo's wrapper task to validate the dependency graph.
 
 ## Test Structure
 

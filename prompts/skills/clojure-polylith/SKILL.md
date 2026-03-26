@@ -95,10 +95,19 @@ The interface namespace re-exports only what consumers should see:
 ## Dependency Rules
 
 - Components depend only on other component interfaces, never implementations
+- Component `deps.edn` files list only external libraries, not other workspace bricks
+- Project `deps.edn` files list which components and bases are included together
+- The workspace `:dev` alias acts like a project and may list brick `local/root` deps for REPL work
 - Bases depend on component interfaces
 - Projects declare which bricks to include — they don't contain logic
 - Circular dependencies between components are not allowed
 - `clojure -M:poly check` enforces all these rules
+
+## Test Commands
+
+- Prefer repo tasks such as `bb test ...` for targeted verification
+- Prefer `bb qa` for full verification when the repo provides it
+- Do not default to ad hoc `clojure -M:dev:test` invocation in Polylith workspaces
 
 ## Interface Swappability
 

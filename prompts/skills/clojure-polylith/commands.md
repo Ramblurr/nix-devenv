@@ -80,13 +80,16 @@ poly test project:my-project
 poly test :all
 ```
 
-## Aliases
+## Repo Tasks
 
-Most projects define project-specific test aliases in the root `deps.edn`:
+If the repo provides Babashka tasks, prefer them over ad hoc `clojure -M:...` test aliases:
 
 ```bash
-# Run dev environment tests (check your project's deps.edn for aliases)
-clojure -M:dev:test
+# Run targeted verification using the repo's supported wrapper
+bb test
+
+# Run full verification when available
+bb qa
 ```
 
 ## Stable Points
