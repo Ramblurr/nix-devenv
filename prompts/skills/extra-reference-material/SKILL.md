@@ -9,6 +9,8 @@ The `extra/` directory (gitignored) contains offline reference material: cloned 
 
 Most of the time the entries in there are symlinks to other documents, be careful your search/glob/list tool (whatever its name is) may not list or follow symlinks, so best explore it with a good 'ol `ls extra` in bash.
 
+Related skills: local-git-reference, for material not in extra/
+
 ## Finding extra/ (Critical for Worktrees)
 
 The `extra/` directory lives at the **project root**, NOT in worktrees.
