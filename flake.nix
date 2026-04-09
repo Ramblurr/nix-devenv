@@ -11,7 +11,7 @@
   };
   inputs = {
     #nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1"; # tracks nixpkgs unstable branch
-    nixpkgs.url = "git+https://github.com/ramblurr/nixpkgs?shallow=1&ref=consolidated";
+    nixpkgs.url = "github:ramblurr/nixpkgs/channel/personal-unstable";
     spdx-util.url = "https://flakehub.com/f/ramblurr/spdx-util/0.1.4";
     spdx-util.inputs.nixpkgs.follows = "nixpkgs";
     flakelight.url = "github:nix-community/flakelight";
@@ -22,7 +22,6 @@
     devshell.inputs.nixpkgs.follows = "nixpkgs";
     clojure-nix-locker.url = "github:bevuta/clojure-nix-locker";
     clojure-nix-locker.inputs.nixpkgs.follows = "nixpkgs";
-    #llm-agents.url = "github:numtide/llm-agents.nix";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     fh.url = "https://flakehub.com/f/DeterminateSystems/fh/0.1.*";
