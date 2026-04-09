@@ -1,5 +1,5 @@
 ---
-name: Writing Clojure Docstrings
+name: clojure-docstring
 description: Guidelines for writing effective Clojure docstrings with markdown formatting, wikilinks, code examples, and tables. Always use this skill when writing or reviewing docstrings in Clojure code, or when asked about docstring formatting and style. Triggers on (1) writing new functions/vars/namespaces with docstrings, (2) updating existing docstrings, (3) questions about docstring best practices, (4) reviewing code with docstrings.
 
 ---

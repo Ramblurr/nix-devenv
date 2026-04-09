@@ -1,5 +1,5 @@
 ---
-name: Brainstorming
+name: brainstorming
 description: |
   Refine ideas into detailed designs through Socratic dialogue.
   Use when: user has rough idea, needs to clarify requirements, explore approaches.

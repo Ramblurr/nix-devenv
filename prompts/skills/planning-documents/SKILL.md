@@ -1,5 +1,5 @@
 ---
-name: Planning Documents
+name: planning-documents
 description: Naming conventions for planning documents in prompts/. Use when creating plans, PRDs, research reports, idea capture or other workflow documents. Triggers on (1) creating new planning documents, (2) naming PRDs or research reports, (3) questions about document organization in prompts/.
 ---
 

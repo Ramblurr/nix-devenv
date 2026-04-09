@@ -1,5 +1,5 @@
 ---
-name: scope-capture
+name: clojure-scope-capture
 description: |
   REPL debugging tool for capturing and inspecting local scope at runtime.
   Use when debugging functions, investigating test failures, understanding intermediate values,

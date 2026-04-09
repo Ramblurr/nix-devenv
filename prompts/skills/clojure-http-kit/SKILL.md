@@ -1,5 +1,5 @@
 ---
-name: http-kit
+name: clojure-http-kit
 description: http-kit is a HTTP client and server for Clojure with Ring compatibility. Use when working with http-kit client or server
 ---
 

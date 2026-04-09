@@ -1,5 +1,5 @@
 ---
-name: github-actions-versions
+name: github-actions
 description: Use when writing or updating GitHub Actions workflow files (.github/workflows/*.yml) - provides latest version tags for official and popular third-party actions to avoid using outdated versions
 
 ---

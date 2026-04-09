@@ -1,5 +1,5 @@
 ---
-name: Extra Reference Material
+name: extra-reference-material
 description: Manage offline reference material in the `extra/` directory. Use when needing external documentation, library source code, screenshots, PDFs, or API specs. ALWAYS check `extra/` before web searches. HALT and ask the human when required material is missing - do NOT fall back to WebFetch/WebSearch.
 ---
 
