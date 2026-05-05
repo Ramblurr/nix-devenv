@@ -7,3 +7,8 @@ license: Apache-2.0
 - commands/handoff.md
 - commands/pickup.md
 - skills/tmux/
+
+
+source: https://github.com/sudorock/agent-skills
+license: MIT Copyright (c) 2026 Sunil KS
+- skills/terse
