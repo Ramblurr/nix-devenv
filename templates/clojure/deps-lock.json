@@ -310,11 +310,11 @@
     "dev/weavejester/hashp/0.5.1/hashp-0.5.1.pom": {
       "sha256": "76cb5f1b0f683a643ecf3f406713e938b7c516f5207c97b370a9d291cf617618"
     },
-    "djblue/portal/0.63.1/portal-0.63.1.jar": {
-      "sha256": "0e0c053d8e55e887cb01fbe1adde9b435a1319efa93ef910edfd2368b023a7a3"
+    "djblue/portal/0.64.1/portal-0.64.1.jar": {
+      "sha256": "c3c4e18e6c14d55858930fc7e7122aa8e89a3a1b18ecbf00a9d60b1eec30e282"
     },
-    "djblue/portal/0.63.1/portal-0.63.1.pom": {
-      "sha256": "a9297eecb49e6541b00a7453ca8d583c9da19e6549ae90b4071f6794e22f1ca3"
+    "djblue/portal/0.64.1/portal-0.64.1.pom": {
+      "sha256": "c311a47c2082b784a2c73bedaf7848f60d203b003fc21ab45ea9eecfa6b3f573"
     },
     "expound/expound/0.9.0/expound-0.9.0.jar": {
       "sha256": "d6a372609918e0351bfa6a8bd693d18bc199e8ba7aafaec11e895afae018f95c"
