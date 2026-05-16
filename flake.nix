@@ -25,6 +25,12 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     fh.url = "https://flakehub.com/f/DeterminateSystems/fh/0.1.*";
+    garnix-cli.url = "github:outskirtslabs/garnix-cli";
+    # garnix-cli consumes this flake as its devenv input; follow the root flake
+    # to avoid locking a second copy of nix-devenv.
+    garnix-cli.inputs.devenv.follows = "";
+    garnix-cli.inputs.devshell.follows = "devshell";
+    garnix-cli.inputs.nixpkgs.follows = "nixpkgs";
     #nix2container.url = "github:nlewo/nix2container";
     #nix2container.inputs.nixpkgs.follows = "nixpkgs";
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
@@ -106,12 +112,14 @@
           #catnipContainer = pkgs: (import ./pkgs/catnip-container.nix) { inherit self inputs pkgs; };
           clojure-mcp-light = pkgs: pkgs.callPackage (import ./pkgs/clojure-mcp-light.nix) { };
           deps-lock = pkgs: inputs.clojure-nix-locker.packages.${pkgs.stdenv.hostPlatform.system}.default;
+          garnix-cli = pkgs: inputs.garnix-cli.packages.${pkgs.stdenv.hostPlatform.system}.default;
           ramblurr-global-deps-edn = pkgs: pkgs.callPackage (import ./pkgs/deps-edn.nix) { };
           spdx = pkgs: spdx-util.packages.${pkgs.stdenv.hostPlatform.system}.default;
         };
         devShell = pkgs: {
           packages = [
             pkgs.deps-lock
+            pkgs.garnix-cli
           ];
         };
         checks = mkTemplateChecks;
