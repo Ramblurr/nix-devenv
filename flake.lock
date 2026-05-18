@@ -306,11 +306,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1778918676,
+        "lastModified": 1778923075,
         "narHash": "sha256-3cKxjpsaURrUSVYKcmhbLAaoQrwz+tsRFJQy7VsibGg=",
         "owner": "outskirtslabs",
         "repo": "garnix-cli",
-        "rev": "7ec33d404c86c7b673ffbee465387635eaf4063d",
+        "rev": "b200b9747a49167acc1d6d71e39101932f1d909c",
         "type": "github"
       },
       "original": {
@@ -376,11 +376,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1778905298,
-        "narHash": "sha256-mqzr2uSY3TzBxnpFGocsT7fATE8tqU+eb0V+OhNR53I=",
+        "lastModified": 1779075347,
+        "narHash": "sha256-ZqttlFPw0meQMdABi8/vgle14OWQ3FkIqUkb4/Mrc+0=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "92a8736142944ed3b2c4aba8b364583b6fda15a5",
+        "rev": "08c9d01457badce151aa4a983c475042d9dec018",
         "type": "github"
       },
       "original": {
