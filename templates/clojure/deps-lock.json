@@ -1,5 +1,12 @@
 {
-  "git": {},
+  "git": {
+    "my/dev-repl/3a298ad1d16875ff841079b1bfab087d3ef817ba": {
+      "common_dir": "https/github.com/Ramblurr/clojure-dev-repl",
+      "rev": "3a298ad1d16875ff841079b1bfab087d3ef817ba",
+      "sha256": "00isarmpyyb7ws68jw0y1qbqg4l0mf9z4fwmvhry9095cjm40kmn",
+      "url": "https://github.com/Ramblurr/clojure-dev-repl.git"
+    }
+  },
   "maven": {
     "aero/aero/1.1.6/aero-1.1.6.jar": {
       "sha256": "f4b0a9272da50c8091c5529c9fe355c47234f1eeb95fe92296e2c23f787f3d22"
@@ -402,6 +409,12 @@
     },
     "junit/junit/3.8.1/junit-3.8.1.pom": {
       "sha256": "e68f33343d832398f3c8aa78afcd808d56b7c1020de4d3ad8ce47909095ee904"
+    },
+    "lambdaisland/ansi/0.2.37/ansi-0.2.37.jar": {
+      "sha256": "06d28b80de2ccb12a5ea87b0760f749dfb985acf73b99da42bc6b37b7fe15f78"
+    },
+    "lambdaisland/ansi/0.2.37/ansi-0.2.37.pom": {
+      "sha256": "a5a73f082f2d6812d8d462af8903f3d4977160bc92155e5cb82c460802a0b848"
     },
     "lambdaisland/clj-diff/1.4.78/clj-diff-1.4.78.jar": {
       "sha256": "a28bc6e4b29523cc29a472e57e6eab9580fa0d0368ad7be58b2a47e891a1459c"
