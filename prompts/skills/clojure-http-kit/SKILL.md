@@ -13,13 +13,15 @@ http-kit uses an event-driven, non-blocking I/O model. It's Ring-compatible, has
 
 deps.edn:
 ```clojure
-http-kit/http-kit {:mvn/version "2.8.1"}
+http-kit/http-kit {:mvn/version "2.9.0-beta3"}
 ```
 
 Leiningen:
 ```clojure
-[http-kit/http-kit "2.8.1"]
+[http-kit/http-kit "2.9.0-beta3"]
 ```
+
+Use `2.9.0-beta3` (or later!) even in production until a stable release includes its async channel fix: it restores reliable `:on-close` cleanup for long-lived HTTP streams/SSE and prevents stale subscriber channels after socket close.
 
 See https://clojars.org/http-kit/http-kit for the latest version.
 
