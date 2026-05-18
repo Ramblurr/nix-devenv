@@ -33,7 +33,7 @@
                 com.datomic/dev.datafy        {:git/sha "02f8520912464df6bd55382014c03568aa1d0c36"
                                                :git/tag "v0.1"
                                                :git/url "https://github.com/Datomic/dev.datafy.git"}
-                my/dev-repl                   {:git/sha "42127999fd534b47f5e0fa5689fa68fe34c81752"
+                my/dev-repl                   {:git/sha "3a298ad1d16875ff841079b1bfab087d3ef817ba"
                                                :git/url "https://github.com/Ramblurr/clojure-dev-repl.git"}}
    :main-opts  ["-m" "ol.dev.repl"]}
 
@@ -44,7 +44,7 @@
   {:extra-deps {nrepl/nrepl                   {:mvn/version "1.7.0"}
                 cider/cider-nrepl             {:mvn/version "0.59.0"}
                 refactor-nrepl/refactor-nrepl {:mvn/version "3.12.0"}
-                my/dev-repl                   {:git/sha "42127999fd534b47f5e0fa5689fa68fe34c81752"
+                my/dev-repl                   {:git/sha "3a298ad1d16875ff841079b1bfab087d3ef817ba"
                                                :git/url "https://github.com/Ramblurr/clojure-dev-repl.git"}}
    :main-opts  ["-m" "ol.dev.repl"]}
 
