@@ -4,7 +4,7 @@ description: Use this when you have completed some feature implementation and ha
 ---
 
 <required>
-*CRITICAL* Add the following steps to your Todo list using TodoWrite:
+**CRITICAL: Follow these steps in order:**
 
 1. Use the Task tool to verify tests by using the project's test suite.
 

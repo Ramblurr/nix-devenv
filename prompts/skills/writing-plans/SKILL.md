@@ -4,7 +4,7 @@ description: Use when design is complete and you need detailed implementation ta
 ---
 
 <required>
-*CRITICAL* Add the following steps to your Todo list using TodoWrite:
+**CRITICAL: Follow these steps in order:**
 
 - Read the 'Guidelines'.
 - Create a comprehensive plan that a senior engineer can follow.
