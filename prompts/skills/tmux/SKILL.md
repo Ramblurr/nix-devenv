@@ -18,14 +18,14 @@ This guide emphasizes defensive practices that account for shared terminal sessi
 
 
 ```bash
-tmuxb new -S <agent-name>.sock <session-name> # create a new session in an isolated socket
+tmuxb new # create a new session
 tmuxb capture   # see the screen inside tmux, including the cursor position
 tmuxb capture --if-changed  # get the output, but only if its changed
 tmux send -- '"echo hello world" :Enter' # Send some key sequences, always remeber to add :Enter if needed, :Enter is never pressed automatically
 tmuxb capture --if-changed # view the results
 ```
 
-Using an isolated socket (-S) avoids using the humans' custom tmux config.
+
 <agent-name> should be something like: claude-codex, codex, gemini. etc It must be a valid part of a filename
 <session-name> the name of the tmux session, a good value is the name of the project
 
@@ -44,10 +44,13 @@ tmuxb new myproject
 # {:session "myproject"}
 ```
 
+
+The `-S` flag is an isolated socket which may be handy, but in 99.999% of situations you should not use it.
+
 If you need an isolated tmux server (separate from your normal tmux), use `-S`:
 
 ```bash
-# Creates session on a dedicated socket
+# Creates session on a dedicated socket (ONLY USE -S if there is special need)
 tmuxb new -S myproject.sock myproject
 
 # The file contains:
@@ -55,6 +58,8 @@ tmuxb new -S myproject.sock myproject
 ```
 
 ### Using the Session File
+
+Relying on the tmux-buddy session file is the preferred way of using tmux-buddy.
 
 Once `.tmuxb_session` exists, commands automatically use it:
 
