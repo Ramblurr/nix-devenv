@@ -1,11 +1,15 @@
 ---
-name: planning-documents
-description: Naming conventions for planning documents in prompts/. Use when creating plans, PRDs, research reports, idea capture or other workflow documents. Triggers on (1) creating new planning documents, (2) naming PRDs or research reports, (3) questions about document organization in prompts/.
+name: prompts-documents
+description: Naming conventions for workflow documents in prompts/. Use when creating plans, PRDs, research reports, idea capture or other workflow documents. Triggers on (1) creating new planning documents, (2) naming PRDs or research reports, (3) questions about document organization in prompts/.
 ---
 
 # Planning Documents
 
 All workflow documents live in `prompts/` with a structured naming scheme.
+
+These are not ADRs. ADRs are separate documentation that should be kept up to date. prompts/ docs are workflow docs that by their nature will get out of date.
+
+They are (usually) not tracked in version control. Do not commit them.
 
 ## Primary Documents (PRDs)
 

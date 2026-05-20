@@ -13,7 +13,7 @@ description: Use when design is complete and you need detailed implementation ta
 - Think about questions or areas that require clarity. Add them to the plan.
 - Emphasize how you will test your plan.
 - Present plan to user.
-- Invoke Skill(Planning Documents) to determine document naming (NNN-concept.md pattern).
+- Invoke Skill(prompts-documents) to determine document naming (NNN-concept.md pattern).
 - Write plan to `prompts/NNN-concept.md`.
   </required>
 
@@ -32,7 +32,7 @@ These agents are READ-ONLY - they return information and suggestions only.
 
 Write plan to: `prompts/NNN-concept.md` (primary PRD).
 
-Use `Skill(planning-documents)` to determine the appropriate NNN sequence number.
+Use `Skill(prompts-documents)` to determine the appropriate NNN sequence number.
 Check existing files in `prompts/` to determine the appropriate name.
 
 ## Overview

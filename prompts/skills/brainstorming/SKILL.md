@@ -1,10 +1,6 @@
 ---
 name: brainstorming
-description: |
-  Refine ideas into detailed designs through Socratic dialogue.
-  Use when: user has rough idea, needs to clarify requirements, explore approaches.
-  Triggers: "brainstorm", "discuss idea", "I'm thinking about", "what if",
-  "help me think through", "explore options", "/brainstorm".
+description: Refine ideas into detailed designs through Socratic dialogue. Use when: user has rough idea, needs to clarify requirements, explore approaches. Triggers: "brainstorm", "discuss idea", "I'm thinking about", "what if", "help me think through", "explore options", "/brainstorm".
 ---
 
 # Brainstorming Ideas Into Designs
@@ -46,10 +42,10 @@ Ask: "Ready to create the implementation plan?"
 
 When your human partner confirms (any affirmative response):
 
-- Invoke Planning Document to learn about our document structure
+- Invoke Skill(prompts-documents) to learn about our document structure
 - Announce: "I'm using the Writing Plans skill to create the implementation plan."
 - Invoke Writing Plans skill
-- Create detailed Planning Document and place it under prompts/NNN-concept_plan.md
+- Create a detailed plan document and place it under prompts/NNN-concept_plan.md
 
 ### Phase 5: Worktree Setup (for implementation)
 
