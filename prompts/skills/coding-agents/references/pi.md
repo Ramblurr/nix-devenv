@@ -60,7 +60,9 @@ Standard exit or Ctrl+C
 
 ## Communicating and collaborating with Pi subagents
 
-1. Refer to the pi-link-coordination skill
+1. Refer to the Skill(pi-link-coordination)
 2. Using tmuxb send commands: Give your sub agent a name by running `/link-name <name>`
    a good name is <project-name>-<role> e.g. "cms-coder"
 3. Connect them to the link hub `/link-connect`
+
+Critical instruction: You and your subagent must always use `link_send(triggerTurn: true)`, Do not forget to add the `triggerTurn: true` argument!
