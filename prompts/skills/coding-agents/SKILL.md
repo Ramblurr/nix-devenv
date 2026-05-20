@@ -1,6 +1,6 @@
 ---
 name: coding-agents
-description: Spawn and control external coding agents (Claude Code, Codex, OpenCode, Pi) for delegating tasks. Use when (1) user asks to run another coding agent, (2) delegating subtasks to a different AI tool, (3) running multiple agents in parallel on separate issues, (4) spawning an agent in an isolated environment or worktree, (5) user mentions "codex", "opencode", "pi agent", or running "another claude".
+description: Spawn and control external coding agents (Claude Code, Codex, Pi) for delegating tasks. Use when (1) user asks to run another coding agent, (2) delegating subtasks to a different AI tool, (3) running multiple agents in parallel on separate issues, (4) spawning an agent in an isolated environment or worktree, (5) user mentions "codex", "pi agent", or running "another claude".
 ---
 
 # Coding Agents
@@ -40,8 +40,7 @@ Read the relevant reference file for the agent you need right now:
 
 - [references/claude-code.md](references/claude-code.md) - Anthropic's Claude Code CLI
 - [references/codex.md](references/codex.md) - OpenAI's Codex CLI
-- [references/opencode.md](references/opencode.md) - Open-source coding agent
-- [references/pi.md](references/pi.md) - Lightweight multi-provider agent
+- [references/pi.md](references/pi.md) - Pi, Lightweight multi-provider agent
 
 Each reference includes: invocation, key flags, and completion detection.
 

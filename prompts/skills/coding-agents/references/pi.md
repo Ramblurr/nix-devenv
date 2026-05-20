@@ -7,7 +7,7 @@ Install: `npm install -g @mariozechner/pi-coding-agent`
 ## Invocation
 
 ```bash
-# Interactive
+# Interactive, use this by default unless human instructions otherwise
 pi
 
 # With prompt
@@ -58,10 +58,9 @@ pi --thinking high "Solve this complex problem"
 
 Standard exit or Ctrl+C
 
-## Environment Variables
+## Communicating and collaborating with Pi subagents
 
-- `ANTHROPIC_API_KEY` - Anthropic Claude API key
-- `OPENAI_API_KEY` - OpenAI GPT API key
-- `GEMINI_API_KEY` - Google Gemini API key
-- `GROQ_API_KEY` - Groq API key
-- `OPENROUTER_API_KEY` - OpenRouter API key
+1. Refer to the pi-link-coordination skill
+2. Using tmuxb send commands: Give your sub agent a name by running `/link-name <name>`
+   a good name is <project-name>-<role> e.g. "cms-coder"
+3. Connect them to the link hub `/link-connect`
