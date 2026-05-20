@@ -1,6 +1,6 @@
 ---
 name: brainstorming
-description: Refine ideas into detailed designs through Socratic dialogue. Use when: user has rough idea, needs to clarify requirements, explore approaches. Triggers: "brainstorm", "discuss idea", "I'm thinking about", "what if", "help me think through", "explore options", "/brainstorm".
+description: Refine ideas into detailed designs through Socratic dialogue. Use when user has rough idea, needs to clarify requirements, explore approaches. 
 ---
 
 # Brainstorming Ideas Into Designs
@@ -21,6 +21,9 @@ Transform rough ideas into fully-formed designs through structured questioning a
 - Ask ONE question at a time to refine the idea
 - Prefer multiple choice when possible
 - Gather: Purpose, constraints, success criteria
+- Record: Take notes as you go in a concept document in `prompts/NNN-<thing>_concept.md` Skill(prompts-documents)
+- Backoff: The user controls how deep we go into any branch. When the user indicates to not go any deeper, immediately stop asking more detailed questions in the current branch.
+- Loop
 
 ### Phase 2: Exploration
 
@@ -34,31 +37,17 @@ Transform rough ideas into fully-formed designs through structured questioning a
 - Cover: Architecture, components, data flow, error handling, testing
 - Ask after each section: "Does this look right so far?"
 
-### Phase 4: Planning Handoff
+### Phase 4: Closure
 
-Note the response for later
+Summarize:
+- the problem
+- selected approach
+- rejected alternatives
+- unresolved questions
+- assumptions
+- success criteria
 
-Ask: "Ready to create the implementation plan?"
-
-When your human partner confirms (any affirmative response):
-
-- Invoke Skill(prompts-documents) to learn about our document structure
-- Announce: "I'm using the Writing Plans skill to create the implementation plan."
-- Invoke Writing Plans skill
-- Create a detailed plan document and place it under prompts/NNN-concept_plan.md
-
-### Phase 5: Worktree Setup (for implementation)
-
-When design is approved and implementation will follow:
-
-Ask: "Should I create the worktree for implementation?"
-
-When your human partner confirms (any affirmative response):
-
-- Announce: "I'm using the Using Git Worktrees skill to set up an isolated workspace."
-- Switch to Using Git Worktree skill
-- Follow that skill's process for directory selection, safety verification, and setup
-- Return here when worktree ready
+Update the plan document Skill(writing-plans)
 
 ## When to Revisit Earlier Phases
 
@@ -74,6 +63,7 @@ When your human partner confirms (any affirmative response):
 ## Remember
 
 - One question per message during Phase 1
+- Record/take notes in the concept document
 - Apply YAGNI ruthlessly
 - Explore 2-3 alternatives before settling
 - Present incrementally, validate as you go

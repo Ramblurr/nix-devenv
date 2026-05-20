@@ -14,23 +14,14 @@ description: Use when design is complete and you need detailed implementation ta
 - Emphasize how you will test your plan.
 - Present plan to user.
 - Invoke Skill(prompts-documents) to determine document naming (NNN-concept.md pattern).
-- Write plan to `prompts/NNN-concept.md`.
+- Write plan to `prompts/NNN-<thing>_plan.md`.
   </required>
 
 # Guidelines
 
-## Mandatory Agent Consultation
-
-These agents are READ-ONLY - they return information and suggestions only.
-
-| Agent | When to Consult | What They Return |
-|-------|-----------------|------------------|
-| `clojure-expert` | For Clojure architecture decisions | Idiomatic patterns, namespace organization |
-| `research-agent` | To clarify reference implementations | Pattern explanations, API details |
-
 ## Output Location
 
-Write plan to: `prompts/NNN-concept.md` (primary PRD).
+Write plan to: `prompts/NNN-<thing>_plan.md` (primary PRD).
 
 Use `Skill(prompts-documents)` to determine the appropriate NNN sequence number.
 Check existing files in `prompts/` to determine the appropriate name.

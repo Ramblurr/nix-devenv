@@ -7,6 +7,8 @@ description: Spawn and control external coding agents (Claude Code, Codex, Pi) f
 
 Orchestrate external coding agents programmatically. Use this when you want to delegate tasks to other AI coding tools.
 
+Always prefer to use Pi as a subagent along with Skill(pi-link-coordination) and Skill(tmux), unless told otherwise.
+
 ## Prefer interactive mode
 
 Interactive sessions via tmux should be the default for most tasks. Background mode is only appropriate for the simplest tasks that require very few commands or edits (e.g., "count the files in src/", "what version of node is this project using?").

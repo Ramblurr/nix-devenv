@@ -27,7 +27,7 @@ Use this skill whenever you write prose for humans:
 
 When context is tight:
 1. Write your draft using judgment
-2. Dispatch a subagent with your draft and [`elements-of-style.md`](./elements-of-style.md)
+2. Dispatch a Skill(coding-agents) subagent with your draft and [`elements-of-style.md`](./elements-of-style.md)
 3. Have the subagent copyedit and return the revision
 
 ## All Rules

@@ -60,7 +60,7 @@ rg "pattern" extra/<repo-name>/src/
 - NEVER run `rg` on `extra/` directly - millions of hits in cloned repos
 - Always scope to a specific subpath: `extra/<repo>/src/`, `extra/<name>_docs/`
 - Passing the subpath directly respects the repo's own .gitignore (desirable)
-- For broad searching, use a Task agent instead
+- For broad searching, use Skill(coding-agents) a subagent instead
 
 ## Exploring Reference Material
 
@@ -70,7 +70,7 @@ rg "pattern" extra/<repo-name>/src/
 - Small config files
 - Files you already know the path to
 
-**Large codebases - use Task tool agents:**
+**Large codebases - use Skill(coding-agents):**
 
 Directly reading entire reference codebases pollutes your context window. Instead:
 
@@ -80,7 +80,6 @@ Directly reading entire reference codebases pollutes your context window. Instea
 
 **Example:**
 ```
-Use Task tool with subagent_type=Explore:
 - Prompt: "In extra/ratatui/, find how borders are implemented.
   Return: file paths, key types/functions, and a brief explanation."
 - The subagent explores, you receive a concise summary
