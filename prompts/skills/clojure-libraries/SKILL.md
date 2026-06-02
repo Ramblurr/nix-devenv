@@ -16,6 +16,7 @@ Use this skill as an index. Read only the reference file(s) relevant to the libr
 - [babashka.json](references/babashka-json.md)
 - [babashka.process](references/babashka-process/overview.md) — [API](references/babashka-process/api.md)
 - [charred](references/charred.md)
+- [clj-async-profiler](references/clj-async-profiler.md)
 - [Coffi](references/coffi/overview.md) — [examples](references/coffi/examples.md), [memory](references/coffi/memory.md), [types](references/coffi/types.md)
 - [core.async](references/core-async.md)
 - [core.async.flow](references/core-async-flow.md)
