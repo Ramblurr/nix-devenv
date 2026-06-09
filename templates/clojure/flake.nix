@@ -100,10 +100,11 @@
             export HOME="$tmp/home"
             export GITLIBS="$tmp/home/.gitlibs"
             unset CLJ_CACHE CLJ_CONFIG XDG_CACHE_HOME XDG_CONFIG_HOME XDG_DATA_HOME
+            export GIT_REV="lockfile-generation"
 
             ${clojure}/bin/clojure -Srepro -X:deps prep :aliases "[:dev :kaocha]"
             ${clojure}/bin/clojure -Srepro -P -M:dev:kaocha
-            ${clojure}/bin/clojure -Srepro -P -T:build jar
+            ${clojure}/bin/clojure -Srepro -T:build jar
           '';
       };
       devShell =
