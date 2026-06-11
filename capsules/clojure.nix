@@ -17,7 +17,6 @@ in
   packages = [
     jdk
     clojure
-    pkgs.deps-lock
     pkgs.brepl
     pkgs.clojure-mcp-light
     pkgs.clojure-lsp

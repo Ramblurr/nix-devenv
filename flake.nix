@@ -7,8 +7,6 @@
     treefmt-nix.inputs.nixpkgs.follows = "flakelight/nixpkgs";
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
-    clojure-nix-locker-helpers.url = "github:outskirtslabs/clojure-nix-locker-helpers";
-    clojure-nix-locker-helpers.inputs.nixpkgs.follows = "nixpkgs";
     flake-schemas.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/0.2.0";
   };
   outputs =
@@ -27,11 +25,43 @@
         ...
       }:
       let
+        # Evaluate a template flake for checks. Inputs this flake also has
+        # (nixpkgs, devshell, ...) are taken from it, and `devenv` is the
+        # local checkout, so templates are checked against this revision.
+        # Template-only inputs are resolved from the template's own
+        # flake.lock via fetchTree (pure: the lock carries rev + narHash).
         mkTemplateFlake =
           templateDir:
           let
             template = import (templateDir + "/flake.nix");
-            templateInputs = inputs // {
+            templateLock = builtins.fromJSON (builtins.readFile (templateDir + "/flake.lock"));
+
+            # A lock node reference is either a node name or a `follows` path
+            # walked from the root node
+            nodeFor = ref: if builtins.isString ref then ref else followPath templateLock.root ref;
+            followPath =
+              start: path:
+              builtins.foldl' (cur: attr: nodeFor templateLock.nodes.${cur}.inputs.${attr}) start path;
+
+            resolveDep =
+              name: nodeName: if name == "devenv" then self else inputs.${name} or (callLockedNode nodeName);
+
+            callLockedNode =
+              nodeName:
+              let
+                node = templateLock.nodes.${nodeName};
+                src = builtins.fetchTree node.locked;
+                flake = import (src + "/flake.nix");
+                deps = builtins.mapAttrs (name: ref: resolveDep name (nodeFor ref)) (node.inputs or { });
+                outputs = flake.outputs (deps // { self = result; });
+                result = outputs // {
+                  outPath = src;
+                };
+              in
+              result;
+
+            rootInputs = templateLock.nodes.${templateLock.root}.inputs or { };
+            templateInputs = (builtins.mapAttrs (name: ref: resolveDep name (nodeFor ref)) rootInputs) // {
               self = {
                 outPath = templateDir;
               };
@@ -142,14 +172,7 @@
           brepl = pkgs: pkgs.callPackage (import ./pkgs/brepl.nix) { };
           #catnipContainer = pkgs: (import ./pkgs/catnip-container.nix) { inherit self inputs pkgs; };
           clojure-mcp-light = pkgs: pkgs.callPackage (import ./pkgs/clojure-mcp-light.nix) { };
-          deps-lock =
-            pkgs: inputs.clojure-nix-locker-helpers.packages.${pkgs.stdenv.hostPlatform.system}.deps-lock;
           ramblurr-global-deps-edn = pkgs: pkgs.callPackage (import ./pkgs/deps-edn.nix) { };
-        };
-        devShell = pkgs: {
-          packages = [
-            pkgs.deps-lock
-          ];
         };
         checks =
           pkgs:
@@ -167,7 +190,6 @@
         templates = import ./templates;
         outputs = {
           capsules = import ./capsules;
-          clojure = inputs.clojure-nix-locker-helpers.lib;
           # disable schemas for now, this breaks flakehub
           #schemas = inputs.flake-schemas.schemas // {
           #  capsules = {

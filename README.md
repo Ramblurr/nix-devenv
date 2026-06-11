@@ -61,15 +61,18 @@ Available capsules:
 
 ## Clojure package builders
 
-The `devenv.clojure` output re-exports the library from
-[clojure-nix-locker-helpers]: clj-nix style builders (`mkCljBin`, `mkCljLib`,
+For building Clojure packages, use [clojure-nix-locker-helpers] directly as a
+flake input. It provides clj-nix style builders (`mkCljBin`, `mkCljLib`,
 `mkCljApp`, `customJdk`, `mkGraalBin`, `mkCljCli`) powered by
-[clojure-nix-locker], plus the low-level `mkLockfile` / `mkLocker` escape
-hatches and the `cleanCljSource` / `gitRev` utilities.
+[clojure-nix-locker]. The `clojure` template is wired up this way:
 
 ```nix
+inputs.clj-helpers.url = "github:outskirtslabs/clojure-nix-locker-helpers";
+inputs.clj-helpers.inputs.nixpkgs.follows = "nixpkgs";
+
+# ...
 packages = {
-  default = pkgs: devenv.clojure.mkCljLib {
+  default = pkgs: clj-helpers.lib.mkCljLib {
     inherit pkgs;
     name = "my-lib";
     version = "0.1.0";
@@ -77,7 +80,7 @@ packages = {
     prepAliases = [ "dev" "kaocha" ];
     prefetchAliases = [ "dev:kaocha" ];
     checkCommand = "clojure -Srepro -M:dev:kaocha";
-    gitRev = devenv.clojure.gitRev self;
+    gitRev = clj-helpers.lib.gitRev self;
   };
   locker = pkgs: self.packages.${pkgs.system}.default.locker;
 };

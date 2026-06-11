@@ -6,18 +6,21 @@
     devshell.inputs.nixpkgs.follows = "nixpkgs";
     devenv.url = "https://flakehub.com/f/ramblurr/nix-devenv/*";
     devenv.inputs.nixpkgs.follows = "nixpkgs";
+    clj-helpers.url = "github:outskirtslabs/clojure-nix-locker-helpers";
+    clj-helpers.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs =
     inputs@{
       self,
       devenv,
       devshell,
+      clj-helpers,
       ...
     }:
     let
       package =
         pkgs:
-        devenv.clojure.mkCljLib {
+        clj-helpers.lib.mkCljLib {
           inherit pkgs;
           name = "TODO";
           version = "0.0.TODO";
@@ -28,7 +31,7 @@
           ];
           prefetchAliases = [ "dev:kaocha" ];
           checkCommand = "clojure -Srepro -M:dev:kaocha";
-          gitRev = devenv.clojure.gitRev self;
+          gitRev = clj-helpers.lib.gitRev self;
         };
     in
     devenv.lib.mkFlake ./. {
@@ -54,7 +57,12 @@
             # { package = pkgs.bazqux; }
           ];
           packages = [
-            (if self ? packages then self.packages.${pkgs.system}.locker else pkgs.deps-lock)
+            (
+              if self ? packages then
+                self.packages.${pkgs.system}.locker
+              else
+                clj-helpers.packages.${pkgs.system}.deps-lock
+            )
             # pkgs.foobar
           ];
         };
