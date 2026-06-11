@@ -1,6 +1,6 @@
 # nix-devenv
 
-Reusable Nix Flake [devshells] for my frequently used toolchains, and container/microvm environments sandboxed coding agents.
+Reusable Nix Flake [devshells] for my frequently used toolchains.
 
 This flake also exposes it self as [a flakelight module][flakelight]. It extends your flakelight project to replace the builtin formatter with one powered by treefmt-nix.
 
@@ -100,39 +100,6 @@ Example:
 ```bash
 nix flake new my-project -t "github:ramblurr/nix-devenv#clojure"
 ```
-
-
-
-## Sandboxed Agent Environments
-
-This repo also contains nix config for dev environments for coding agents.
-
-Most of the remote coding agent systems (codex, claude web, terragon) do not
-allow you to bring your own container image.  So this repo serves as a bunch of
-scripts that infect their repo with nix and home-manager. The home-manager
-environment here is intentionally light, because most of the heavy devenv is in
-a per-project flake devshell.
-
-It supports multiple remote agent systems:
-
-- terragon-setup.sh for [Terragon](https://terragonlabs.com )
-- container-setup.sh for [ChatGPT Codex](https://chatgpt.com/codex)
-- .devcontainer/Dockerfile - works with [gitpod/Ona](https://ona.com)
-- Dockerfile.catnip for [catnip](https://github.com/wandb/catnip)
-
-### Build
-
-```bash
-# enter devshell
-nix develop
-
-# build devcontainer
-docker build -t nix-devenv:devcontainer -f .devcontainer/Dockerfile .
-# build catnip container
-docker build -t nix-devenv:catnip -f Dockerfile.catnip .
-# also reference the .github/workflows/
-```
-
 
 [devshell]: https://github.com/numtide/devshell
 [flakelight]: https://github.com/nix-community/flakelight

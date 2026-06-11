@@ -1,6 +1,5 @@
 {
   inputs = {
-    #nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1"; # tracks nixpkgs unstable branch
     nixpkgs.url = "github:ramblurr/nixpkgs/channel/personal-unstable";
     flakelight.url = "github:nix-community/flakelight";
     flakelight.inputs.nixpkgs.follows = "nixpkgs";
@@ -10,9 +9,6 @@
     devshell.inputs.nixpkgs.follows = "nixpkgs";
     clojure-nix-locker.url = "github:bevuta/clojure-nix-locker";
     clojure-nix-locker.inputs.nixpkgs.follows = "nixpkgs";
-    fh.url = "https://flakehub.com/f/DeterminateSystems/fh/0.1.*";
-    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
-    nix.url = "https://flakehub.com/f/DeterminateSystems/nix-src/*";
     flake-schemas.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/0.2.0";
   };
   outputs =
