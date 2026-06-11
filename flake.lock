@@ -277,24 +277,6 @@
         "type": "github"
       }
     },
-    "flakelight_2": {
-      "inputs": {
-        "nixpkgs": "nixpkgs_7"
-      },
-      "locked": {
-        "lastModified": 1753102454,
-        "narHash": "sha256-BG8VtSW9F24bwfDjF8voxolecogiHKS9WC3EEOakGn0=",
-        "owner": "nix-community",
-        "repo": "flakelight",
-        "rev": "5438c55301ab0811214f918fd16a7f6aaa50b73f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "flakelight",
-        "type": "github"
-      }
-    },
     "git-hooks-nix": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -556,22 +538,6 @@
         "type": "github"
       }
     },
-    "nixpkgs_7": {
-      "locked": {
-        "lastModified": 1752950548,
-        "narHash": "sha256-NS6BLD0lxOrnCiEOcvQCDVPXafX1/ek1dfJHX1nUIzc=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "c87b95e25065c028d31a94f06a62927d18763fdf",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "clojure-nix-locker": "clojure-nix-locker",
@@ -583,7 +549,6 @@
         "home-manager": "home-manager",
         "nix": "nix_2",
         "nixpkgs": "nixpkgs_6",
-        "spdx-util": "spdx-util",
         "treefmt-nix": "treefmt-nix"
       }
     },
@@ -602,26 +567,6 @@
         "ref": "nightly",
         "repo": "rust-analyzer",
         "type": "github"
-      }
-    },
-    "spdx-util": {
-      "inputs": {
-        "flakelight": "flakelight_2",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1753356424,
-        "narHash": "sha256-O+GRyi87RL3f43izTgmujJlgFnNd6l4D8a2rmxQr2W0=",
-        "rev": "8b0080dfa30841cbafc63e0a35744effc9d3f798",
-        "revCount": 8,
-        "type": "tarball",
-        "url": "https://api.flakehub.com/f/pinned/ramblurr/spdx-util/0.1.8%2Brev-8b0080dfa30841cbafc63e0a35744effc9d3f798/01983c31-2cde-7a09-b3a2-37aa57a8b8ae/source.tar.gz"
-      },
-      "original": {
-        "type": "tarball",
-        "url": "https://flakehub.com/f/ramblurr/spdx-util/0.1.4"
       }
     },
     "systems": {

@@ -2,8 +2,6 @@
   inputs = {
     #nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1"; # tracks nixpkgs unstable branch
     nixpkgs.url = "github:ramblurr/nixpkgs/channel/personal-unstable";
-    spdx-util.url = "https://flakehub.com/f/ramblurr/spdx-util/0.1.4";
-    spdx-util.inputs.nixpkgs.follows = "nixpkgs";
     flakelight.url = "github:nix-community/flakelight";
     flakelight.inputs.nixpkgs.follows = "nixpkgs";
     treefmt-nix.url = "github:numtide/treefmt-nix";
@@ -23,7 +21,6 @@
       flakelight,
       treefmt-nix,
       home-manager,
-      spdx-util,
       ...
     }@inputs:
     flakelight ./. (
@@ -93,7 +90,6 @@
           clojure-mcp-light = pkgs: pkgs.callPackage (import ./pkgs/clojure-mcp-light.nix) { };
           deps-lock = pkgs: inputs.clojure-nix-locker.packages.${pkgs.stdenv.hostPlatform.system}.default;
           ramblurr-global-deps-edn = pkgs: pkgs.callPackage (import ./pkgs/deps-edn.nix) { };
-          spdx = pkgs: spdx-util.packages.${pkgs.stdenv.hostPlatform.system}.default;
         };
         devShell = pkgs: {
           packages = [
