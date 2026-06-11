@@ -1,14 +1,4 @@
 {
-  nixConfig = {
-    extra-substituters = [
-      "https://cache.numtide.com"
-      "https://install.determinate.systems"
-    ];
-    extra-trusted-public-keys = [
-      "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
-      "cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM="
-    ];
-  };
   inputs = {
     #nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1"; # tracks nixpkgs unstable branch
     nixpkgs.url = "github:ramblurr/nixpkgs/channel/personal-unstable";
@@ -22,11 +12,7 @@
     devshell.inputs.nixpkgs.follows = "nixpkgs";
     clojure-nix-locker.url = "github:bevuta/clojure-nix-locker";
     clojure-nix-locker.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
     fh.url = "https://flakehub.com/f/DeterminateSystems/fh/0.1.*";
-    #nix2container.url = "github:nlewo/nix2container";
-    #nix2container.inputs.nixpkgs.follows = "nixpkgs";
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
     nix.url = "https://flakehub.com/f/DeterminateSystems/nix-src/*";
     flake-schemas.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/0.2.0";
