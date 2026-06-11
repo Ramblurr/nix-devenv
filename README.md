@@ -59,6 +59,33 @@ Available capsules:
 ```
 </details>
 
+## Clojure package builders
+
+The `devenv.clojure` output re-exports the library from
+[clojure-nix-locker-helpers]: clj-nix style builders (`mkCljBin`, `mkCljLib`,
+`mkCljApp`, `customJdk`, `mkGraalBin`, `mkCljCli`) powered by
+[clojure-nix-locker], plus the low-level `mkLockfile` / `mkLocker` escape
+hatches and the `cleanCljSource` / `gitRev` utilities.
+
+```nix
+packages = {
+  default = pkgs: devenv.clojure.mkCljLib {
+    inherit pkgs;
+    name = "my-lib";
+    version = "0.1.0";
+    src = ./.;
+    prepAliases = [ "dev" "kaocha" ];
+    prefetchAliases = [ "dev:kaocha" ];
+    checkCommand = "clojure -Srepro -M:dev:kaocha";
+    gitRev = devenv.clojure.gitRev self;
+  };
+  locker = pkgs: self.packages.${pkgs.system}.default.locker;
+};
+```
+
+Run `nix run .#locker` to (re)generate `deps-lock.json`. See the
+[clojure-nix-locker-helpers] docs for the full API.
+
 ## Automatic checks
 
 `devenv.lib.mkFlake` exposes buildable environment outputs as flake checks so CI can build them with `nix flake check`:
@@ -103,3 +130,5 @@ nix flake new my-project -t "github:ramblurr/nix-devenv#clojure"
 
 [devshell]: https://github.com/numtide/devshell
 [flakelight]: https://github.com/nix-community/flakelight
+[clojure-nix-locker-helpers]: https://github.com/outskirtslabs/clojure-nix-locker-helpers
+[clojure-nix-locker]: https://github.com/bevuta/clojure-nix-locker

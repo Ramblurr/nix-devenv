@@ -4,6 +4,7 @@
       "inputs": {
         "flake-utils": "flake-utils",
         "nixpkgs": [
+          "clojure-nix-locker-helpers",
           "nixpkgs"
         ]
       },
@@ -18,6 +19,27 @@
       "original": {
         "owner": "bevuta",
         "repo": "clojure-nix-locker",
+        "type": "github"
+      }
+    },
+    "clojure-nix-locker-helpers": {
+      "inputs": {
+        "clojure-nix-locker": "clojure-nix-locker",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1781180565,
+        "narHash": "sha256-RkwmAp3FvQ3czih+WUYCF8TZE3viJyF8U6i3ekm8o+Q=",
+        "owner": "outskirtslabs",
+        "repo": "clojure-nix-locker-helpers",
+        "rev": "b72df887ae16d56c9d8e1a3d39b0242830011be6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "outskirtslabs",
+        "repo": "clojure-nix-locker-helpers",
         "type": "github"
       }
     },
@@ -144,7 +166,7 @@
     },
     "root": {
       "inputs": {
-        "clojure-nix-locker": "clojure-nix-locker",
+        "clojure-nix-locker-helpers": "clojure-nix-locker-helpers",
         "devshell": "devshell",
         "flake-schemas": "flake-schemas",
         "flakelight": "flakelight",

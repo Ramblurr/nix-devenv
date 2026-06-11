@@ -4,11 +4,11 @@
 
 When `deps.edn` is updated in a template (e.g., `templates/clojure/deps.edn`), the corresponding `deps-lock.json` must be regenerated or `nix flake check` will fail.
 
-To regenerate:
+To regenerate (from within this repo, the template's `devenv` input must be overridden to the local checkout):
 
 ```bash
 cd templates/clojure
-deps-lock
+nix run --override-input devenv path:../.. .#locker
 ```
 
-`deps-lock` is provided by `clojure-nix-locker` via the `deps-lock` package in this flake overlay and is available in the devshell.
+The locker is derived by `devenv.clojure.mkCljLib` (from [clojure-nix-locker-helpers](https://github.com/outskirtslabs/clojure-nix-locker-helpers)) and runs the same prep/prefetch/build commands as the package build.

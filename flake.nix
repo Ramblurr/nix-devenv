@@ -7,8 +7,8 @@
     treefmt-nix.inputs.nixpkgs.follows = "flakelight/nixpkgs";
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
-    clojure-nix-locker.url = "github:bevuta/clojure-nix-locker";
-    clojure-nix-locker.inputs.nixpkgs.follows = "nixpkgs";
+    clojure-nix-locker-helpers.url = "github:outskirtslabs/clojure-nix-locker-helpers";
+    clojure-nix-locker-helpers.inputs.nixpkgs.follows = "nixpkgs";
     flake-schemas.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/0.2.0";
   };
   outputs =
@@ -142,7 +142,8 @@
           brepl = pkgs: pkgs.callPackage (import ./pkgs/brepl.nix) { };
           #catnipContainer = pkgs: (import ./pkgs/catnip-container.nix) { inherit self inputs pkgs; };
           clojure-mcp-light = pkgs: pkgs.callPackage (import ./pkgs/clojure-mcp-light.nix) { };
-          deps-lock = pkgs: inputs.clojure-nix-locker.packages.${pkgs.stdenv.hostPlatform.system}.default;
+          deps-lock =
+            pkgs: inputs.clojure-nix-locker-helpers.packages.${pkgs.stdenv.hostPlatform.system}.deps-lock;
           ramblurr-global-deps-edn = pkgs: pkgs.callPackage (import ./pkgs/deps-edn.nix) { };
         };
         devShell = pkgs: {
@@ -166,7 +167,7 @@
         templates = import ./templates;
         outputs = {
           capsules = import ./capsules;
-          clojure = import ./lib/clojure.nix { inherit inputs; };
+          clojure = inputs.clojure-nix-locker-helpers.lib;
           # disable schemas for now, this breaks flakehub
           #schemas = inputs.flake-schemas.schemas // {
           #  capsules = {
