@@ -24,7 +24,12 @@
       ...
     }@inputs:
     flakelight ./. (
-      { config, lib, ... }:
+      {
+        config,
+        lib,
+        outputs,
+        ...
+      }:
       let
         mkTemplateFlake =
           templateDir:
@@ -57,6 +62,52 @@
           in
           (mkTemplateChecks' "generic" ./templates/generic)
           // (mkTemplateChecks' "clojure" ./templates/clojure);
+
+        removeAutoCheckOutputs =
+          outputs:
+          let
+            cfg =
+              outputs.__devenvAutoChecks or {
+                enable = true;
+                devShells = true;
+                nixosConfigurations = true;
+                homeConfigurations = true;
+              };
+            enabled = output: (cfg.enable or true) && (cfg.${output} or true);
+            namesFor =
+              system:
+              lib.optionals (!(enabled "devShells")) (
+                map (name: "devShells-${name}") (builtins.attrNames (outputs.devShells.${system} or { }))
+              )
+              ++ lib.optionals (!(enabled "nixosConfigurations")) (
+                lib.concatMap (name: [
+                  "nixos-${name}"
+                  "nixosConfigurations-${name}"
+                ]) (builtins.attrNames (outputs.nixosConfigurations or { }))
+              )
+              ++ lib.optionals (!(enabled "homeConfigurations")) (
+                lib.concatMap (name: [
+                  "home-${name}"
+                  "homeConfigurations-${name}"
+                ]) (builtins.attrNames (outputs.homeConfigurations or { }))
+              );
+          in
+          (builtins.removeAttrs outputs [ "__devenvAutoChecks" ])
+          // lib.optionalAttrs (outputs ? checks) {
+            checks = lib.mapAttrs (
+              system: checks: builtins.removeAttrs checks (namesFor system)
+            ) outputs.checks;
+          };
+
+        wrapMkFlake =
+          mkFlake:
+          mkFlake
+          // {
+            __functor =
+              _: src: root:
+              removeAutoCheckOutputs (mkFlake src root);
+            extend = modules: wrapMkFlake (mkFlake.extend modules);
+          };
       in
       {
         inherit inputs;
@@ -67,9 +118,16 @@
         flakelightModule =
           { lib, ... }:
           {
-            imports = [ ./flakelight-treefmt.nix ];
+            imports = [
+              ./flakelight-treefmt.nix
+              ./flakelight-auto-checks.nix
+            ];
             inputs.treefmt-nix = lib.mkDefault treefmt-nix;
           };
+        lib.mkFlake = lib.mkForce (
+          wrapMkFlake (flakelight.lib.mkFlake.extend [ outputs.flakelightModules.default ])
+        );
+        functor = lib.mkForce (self: self.lib.mkFlake);
         treefmtConfig = {
           programs = {
             nixfmt.enable = true;
@@ -96,7 +154,19 @@
             pkgs.deps-lock
           ];
         };
-        checks = mkTemplateChecks;
+        checks =
+          pkgs:
+          (mkTemplateChecks pkgs)
+          // {
+            auto-checks = import ./tests/auto-checks.nix {
+              inherit
+                inputs
+                lib
+                pkgs
+                self
+                ;
+            };
+          };
         templates = import ./templates;
         outputs = {
           capsules = import ./capsules;

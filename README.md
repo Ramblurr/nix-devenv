@@ -59,6 +59,33 @@ Available capsules:
 ```
 </details>
 
+## Automatic checks
+
+`devenv.lib.mkFlake` exposes buildable environment outputs as flake checks so CI can build them with `nix flake check`:
+
+- `devShells.${system}.${name}` becomes `checks.${system}.devShells-${name}`.
+- Flakelight's NixOS and home-manager checks remain enabled as `checks.${system}.nixos-${name}` and `checks.${system}.home-${name}`.
+
+Opt out per output:
+
+```nix
+{
+  devenv.autoChecks.devShells = false;
+  devenv.autoChecks.nixosConfigurations = false;
+  devenv.autoChecks.homeConfigurations = false;
+}
+```
+
+Or disable all nix-devenv automatic checks for these outputs:
+
+```nix
+{
+  devenv.autoChecks.enable = false;
+}
+```
+
+This does not disable package or formatting checks.
+
 ## Templates
 
 Use `nix flake new` to create new projects.
