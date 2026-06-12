@@ -8,11 +8,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1781250008,
-        "narHash": "sha256-YwmzcWSrgcE1r8ScEy+cJBP1rZe1oFHpGbY/j8qO7RQ=",
+        "lastModified": 1781259445,
+        "narHash": "sha256-TKQrAglrgXCJfqckk5/mwI1paO89hilgxvlXyRHghqg=",
         "owner": "outskirtslabs",
         "repo": "clojure-nix-locker-helpers",
-        "rev": "8bec98cbd033bef68cba96db8b8fb4bf56e4657a",
+        "rev": "d9ece0f13bcb37aa623919185f10fae1c69c90bc",
         "type": "github"
       },
       "original": {
