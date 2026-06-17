@@ -5,17 +5,18 @@ description: Repair unbalanced parentheses, brackets, and braces in Clojure, Clo
 
 # Clojure Parenthesis Repair (how to fix unbalanced brackets/parens)
 
-Use `brepl balance` to fix unbalanced brackets in Clojure files using parmezan:
+Use the `brepl balance` file-repair subcommand, not an nREPL eval form, to fix unbalanced brackets in Clojure files using parmezan:
 
 ```bash
-# Fix file in place (default)
-brepl balance src/myapp/core.clj
-
 # Preview fix to stdout
 brepl balance src/myapp/core.clj --dry-run
+
+# Fix file in place
+brepl balance src/myapp/core.clj
 ```
 
-This is useful for recovering files with bracket errors.
+`--dry-run` only previews; do not copy its output back into the file. Run without `--dry-run` to apply, then review the diff.
+
 ## When to Use
 
 Run this tool when you encounter unbalanced delimiters (parentheses, brackets, braces) in Clojure, ClojureScript, or EDN files.
