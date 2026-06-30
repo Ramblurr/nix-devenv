@@ -10,3 +10,4 @@ extra/
 .direnv
 prompts/skills/.system/
 prompts/PROMPTS.md
+__pycache__
