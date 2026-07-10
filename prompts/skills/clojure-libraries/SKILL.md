@@ -25,6 +25,7 @@ Use this skill as an index. Read only the reference file(s) relevant to the libr
 - [Hato](references/hato.md)
 - [http-kit](references/http-kit.md)
 - [Kaocha](references/kaocha.md)
+- [Lookup](references/lookup.md)
 - [Malli](references/malli/overview.md) — [API reference](references/malli/api-reference.md), [registries](references/malli/registries.md), [schema syntax](references/malli/schema-syntax.md)
 - [Ring core middleware](references/ring-core-middleware.md)
 - [Ring Jetty adapter](references/ring-jetty-adapter.md)
