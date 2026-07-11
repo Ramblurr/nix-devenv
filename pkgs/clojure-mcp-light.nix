@@ -44,11 +44,6 @@ stdenv.mkDerivation rec {
       --add-flags "-cp $out/share/${pname}/src:$out/share/${pname}/bb.edn" \
       --add-flags "-m clojure-mcp-light.hook" \
       --prefix PATH : ${lib.makeBinPath [ parinfer-rust ]}
-    # Create clj-nrepl-eval wrapper
-    makeWrapper ${babashka}/bin/bb $out/bin/clj-nrepl-eval \
-      --add-flags "-cp $out/share/${pname}/src:$out/share/${pname}/bb.edn" \
-      --add-flags "-m clojure-mcp-light.nrepl-eval" \
-      --prefix PATH : ${lib.makeBinPath [ parinfer-rust ]}
     runHook postInstall
   '';
 
