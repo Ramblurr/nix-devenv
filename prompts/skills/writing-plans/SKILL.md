@@ -51,9 +51,9 @@ Each step is one action (2-5 minutes):
 
 This does not apply to clojure docstrings, but to markdown documentation or notes documents.
 
-- Use one sentence per line. A sentence ends with a period (.). This makes reordering/editing easier
+- Put each prose sentence on its own source line so it remains easy to reorder and edit.
 - Never use bold formatting
-- Two new lines between paragraphs
+- Separate consecutive prose sentences with exactly one empty source line: write exactly two newline characters (`First sentence.\n\nSecond sentence.`), never three or more.
 - Never use emoji
 - Add Markdown tables whenever you need to depict tabular data.
 - Add ascii graphics whenever you need to depict integration points and system architecture.
