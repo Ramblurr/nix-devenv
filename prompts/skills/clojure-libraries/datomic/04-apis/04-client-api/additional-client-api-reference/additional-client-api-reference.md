@@ -1,0 +1,473 @@
+<a id="content"></a>
+
+<a id="client-api"></a>
+
+# Client API
+
+All access to Datomic is via the Datomic Client API. This page covers everything you need to use the Datomic Client API:
+
+- How to [install](#installing) the client library.
+- An overview of the two API flavors: [synchronous](#sync) ([clojuredoc](../../03-client-api-clojuredoc/client-api-clojuredoc.md)) and [asynchronous](#async) ([clojuredoc](../../03-client-api-clojuredoc/asynchronous-client-api-clojuredoc/asynchronous-client-api-clojuredoc.md))
+- Key API objects: [clients](#client) and [connections](#connection).
+- Key API concepts: [catalog operations](#catalog-operations), [error handling](#anomalies), [timeouts](#timeouts), [chunking](#chunking), and [offset/limit](#offset-and-limit).
+
+The [Day of Datomic Cloud](https://youtu.be/ZP-E2IgqKfA?t=2032) videos include an overview of the Client API.
+
+<a id="outline-container-installing"></a>
+
+<a id="installing"></a>
+
+## Installing the Client Library
+
+<a id="text-installing"></a>
+
+The Datomic Client library includes both the synchronous and asynchronous APIs, and is provided via [Maven Central.](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22client-cloud%22)
+
+<a id="outline-container-deps"></a>
+
+<a id="deps"></a>
+
+### Clojure CLI
+
+<a id="text-deps"></a>
+
+To use the Client library from a [Clojure CLI REPL](../../../05-operation/02-cloud/11-how-to/how-to.md#clojure-cli), add the following to your [deps.edn](https://clojure.org/guides/deps_and_cli) dependencies map:
+
+``` clojure
+com.datomic/client-cloud {:mvn/version "1.0.131"}
+```
+
+<a id="outline-container-maven"></a>
+
+<a id="maven"></a>
+
+### Maven
+
+<a id="text-maven"></a>
+
+To retrieve the Client library for a Maven project, add the following snippet inside the `<dependencies>` block of your pom.xml file:
+
+``` xml
+<dependency>
+ <groupId>com.datomic</groupId>
+ <artifactId>client-cloud</artifactId>
+ <version>1.0.131</version>
+</dependency>
+```
+
+<a id="outline-container-leiningen"></a>
+
+<a id="leiningen"></a>
+
+### Leiningen
+
+<a id="text-leiningen"></a>
+
+To include the Client library in a Leiningen project, add the following snippet to your [project.clj](https://github.com/technomancy/leiningen#configuration) file in the collection under :dependencies key.
+
+``` clojure
+com.datomic/client-cloud {:mvn/version "1.0.131"}
+```
+
+Make sure that Clojure dependency is set to at least `[org.clojure/clojure "1.9.0"]`.
+
+<a id="outline-container-sync"></a>
+
+<a id="sync"></a>
+
+## Synchronous API
+
+<a id="text-sync"></a>
+
+[Synchronous API](../../03-client-api-clojuredoc/client-api-clojuredoc.md) functions have the following common semantics:
+
+- they block the calling thread if they access a remote resource
+- they return a value
+- they indicate anomalies by [throwing an exception](#anomalies)
+
+The following example shows a simple transaction using the [Synchronous API.](../../03-client-api-clojuredoc/client-api-clojuredoc.md)
+
+``` clojure
+;; load the Synchronous API with prefix 'd'
+(require '[datomic.client.api :as d])
+
+;; transact a movie
+(def result (d/transact conn {:tx-data [{:db/id "goonies"
+                                         :movie/title "The Goonies"
+                                         :movie/genre "action/adventure"
+                                         :movie/release-year 1985}]}))
+
+;; what id was assigned to The Goonies?
+(-> result :tempids (get "goonies"))
+```
+
+<a id="outline-container-async"></a>
+
+<a id="async"></a>
+
+## Asynchronous API
+
+<a id="text-async"></a>
+
+The [Asynchronous API](../../03-client-api-clojuredoc/asynchronous-client-api-clojuredoc/asynchronous-client-api-clojuredoc.md) functions differ from those in the Synchronous API in that
+
+- they return a core.async channel if they access a remote resource
+- they never block the calling thread
+- they place result(s) on the channel
+- they place [anomalies](#anomalies) on the channel
+- A [server type of `:ion`](#client) is only supported by the [synchronous API](#sync)
+
+You must use a channel-taking operator such as [\<!!](https://clojure.github.io/core.async/#clojure.core.async/%3C!!) to retrieve the result of an asynchronous operation, and you must explicitly check for anomalies:
+
+``` clojure
+;; load the Asynchronous API with prefix 'd', plus core.async and anomaly APIs
+(require '[clojure.core.async :refer (<!!)]
+         '[cognitect.anomalies :as anom]
+         '[datomic.client.api.async :as d])
+
+;; transact a movie
+(def result (<!! (d/transact conn {:tx-data [{:db/id "goonies"
+                                              :movie/title "The Goonies"
+                                              :movie/genre "action/adventure"
+                                              :movie/release-year 1985}]})))
+
+;; what id was assigned to The Goonies?
+(when-not (::anom/anomaly result)
+  (-> result :tempids (get "goonies")))
+```
+
+<a id="outline-container-client"></a>
+
+<a id="client"></a>
+
+## Client Object
+
+<a id="text-client"></a>
+
+All use of the Client API begins by [creating a client](../../03-client-api-clojuredoc/asynchronous-client-api-clojuredoc/asynchronous-client-api-clojuredoc.md#var-client). The args map for creating a client uses the following keys:
+
+| Key | Value |
+|----|----|
+| :server-type | :cloud (or :ion for [ion applications](../../../07-datomic-cloud-ions/02-ions-reference/ions-reference.md#server-type-ion)) |
+| :region | AWS region |
+| :system | your system name |
+| :endpoint | compute group endpoint, see below |
+| :timeout | optional msec timeout (default 60000) |
+| :creds-profile | optional [AWS Profile](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html) used to [retrieve keys](../../../05-operation/02-cloud/06-access-control/access-control.md#how-datomic-access-control-works) |
+| :proxy-port | optional local port for SSH tunnel |
+
+For most systems, the `:endpoint` is an API gateway endpoint. You can find the endpoint name under the `ClientApiGatewayEndpoint` [output](../../../05-operation/02-cloud/11-how-to/how-to.md#template-outputs) from your [compute group's CloudFormation template](../../../05-operation/02-cloud/11-how-to/how-to.md#compute-group-name) or use [the CLI tool's `describe-groups` command](../../../05-operation/02-cloud/07-cli-tools/cli-tools.md)
+
+If the `ClientApiGatewayEndpoint` output is missing, you will need to get an `:endpoint` from the Datomic system administrator who configured [intra- and inter- VPC access](../../../05-operation/02-cloud/09-vpc-access/vpc-access.md) or [created a custom API Gateway](../../../05-operation/02-cloud/08-customizing-api-gateways/customizing-api-gateways.md).
+
+Client access through API Gateway is securely managed by [IAM permissions](../../../05-operation/02-cloud/06-access-control/access-control.md#how-datomic-access-control-works).
+
+<a id="outline-container-catalog-operations"></a>
+
+<a id="catalog-operations"></a>
+
+## Catalog Operations
+
+<a id="text-catalog-operations"></a>
+
+The client object can be used to [list](../../03-client-api-clojuredoc/client-api-clojuredoc.md#var-list-databases), [create](../../03-client-api-clojuredoc/client-api-clojuredoc.md#var-create-database) and [delete](../../03-client-api-clojuredoc/client-api-clojuredoc.md#var-delete-database) databases.
+
+Create and delete operations take effect immediately. After a database is deleted, a Primary Compute Node will asynchronously delete all resources associated with a database.
+
+<a id="outline-container-connection"></a>
+
+<a id="connection"></a>
+
+## Connection
+
+<a id="text-connection"></a>
+
+All use of a database is through a connection object. The [connect API](../../03-client-api-clojuredoc/client-api-clojuredoc.md#var-connect) returns a connection, which is then passed as an argument to the transaction and db APIs.
+
+Database values remember their association with a connection, so APIs that work against a single database (e.g. [datoms](../../03-client-api-clojuredoc/client-api-clojuredoc.md#var-datoms)) do not need to redundantly specify a connection argument.
+
+Connections do not require any special handling on the client side:
+
+- Connections are thread safe.
+- Connections do not need to be pooled.
+- Connections do not need to be closed when not in use.
+- Connections do not need to be recreated. On `:cognitect.anomalies/busy`, `cognitect.anomalies/unavailable` or `cognitect.anomalies/interrupted` the same Connection can be reused on retry. The Connection can be reused for other anomalies as well, but they may indicate an issue with the code creating the Connection or using it.
+- Connections are cached automatically, so creating the same connection multiple times is inexpensive.
+
+<a id="outline-container-anomalies"></a>
+
+<a id="anomalies"></a>
+
+## Handling Errors
+
+<a id="text-anomalies"></a>
+
+Errors are represented as an [anomalies map](https://github.com/cognitect-labs/anomalies). In the sync API, you can retrieve the specific anomaly as the ex-data of an exception. In the async API, the anomaly will be placed on the channel.
+
+<a id="outline-container-busy"></a>
+
+<a id="busy"></a>
+
+### ::cognitect.anomalies/busy
+
+<a id="text-busy"></a>
+
+If you get a *busy* response from the Client API, your request rate has temporarily exceeded the capacity of a node, and has already been through an exponential backoff and retry implemented by the client. At this point you have three options:
+
+- For transactions: continue to retry the request at the application level with your own exponential backoff. The [Mbrainz Importer](https://github.com/Datomic/mbrainz-importer) example project demonstrates a [batch import with retry](https://github.com/Datomic/mbrainz-importer/blob/master/src/cognitect/xform/batch.clj#L70-L92).
+- For queries: retry the request as long as the returned anomaly is retryable. If you consistently receive *busy* responses, you may wish to expand the capacity of your system, by choosing new instance sizes or by adding/scaling a [query group](../../../05-operation/02-cloud/01-cloud-architecture/cloud-architecture.md#query-groups).
+- Give up on completing the request.
+
+<a id="outline-container-sync-api-error-example"></a>
+
+<a id="sync-api-error-example"></a>
+
+### Sync API Error Example
+
+<a id="text-sync-api-error-example"></a>
+
+The query below is incorrect because the `:find` clause uses a variable name `?nomen` that is not bound by the query. The sync API will throw an exception:
+
+``` clojure
+(require '[datomic.client.api :as d])
+(d/q '[:find ?nomen
+       :where [_ :artist/name ?name]]
+     db)
+```
+
+``` clojure
+=> ExceptionInfo Query is referencing unbound variables: #{?nomen}
+```
+
+You can discover the category of anomaly by inspecting the `ex-data` of the exception:
+
+``` clojure
+(ex-data *e)
+```
+
+``` clojure
+=>
+{:cognitect.anomalies/category 
+ :cognitect.anomalies/incorrect, 
+ :cognitect.anomalies/message 
+ "Query is referencing unbound variables: #{?nomen}", 
+ ...}
+```
+
+<a id="outline-container-async-api-error-example"></a>
+
+<a id="async-api-error-example"></a>
+
+### Async API Error Example
+
+<a id="text-async-api-error-example"></a>
+
+With the async API, the same anomaly appears as a map on channel:
+
+``` clojure
+(require '[datomic.client.api.async :as d])
+(<!! (d/q {:query '[:find ?nomen
+                    :where [_ :artist/name ?name]]
+           :args [db]}))
+```
+
+``` clojure
+=>
+{:cognitect.anomalies/category 
+ :cognitect.anomalies/incorrect, 
+ :cognitect.anomalies/message 
+ "Query is referencing unbound variables: #{?nomen}", 
+ ...}
+```
+
+<a id="outline-container-timeouts"></a>
+
+<a id="timeouts"></a>
+
+## Timeouts
+
+<a id="text-timeouts"></a>
+
+All APIs that communicate with a remote process enforce a timeout that you can specify via the args map:
+
+| Key      | Meaning                        | Default |
+|----------|--------------------------------|---------|
+| :timeout | max msec wait before giving up | 60000   |
+
+The call to create a client takes a `:timeout` which establishes the default for all API calls through that client.
+
+API timeouts cause an anomaly with category `::anom/unavailable`, as shown below:
+
+``` clojure
+(d/q {:query '[:find (count ?name)
+               :where [_ :artist/name ?name]]
+      :args [db]
+      :timeout 1})
+(ex-data *e)
+```
+
+``` clojure
+=>
+#:cognitect.anomalies{:category :cognitect.anomalies/unavailable, 
+                      :message "Total timeout elapsed"} 
+```
+
+<a id="outline-container-chunking"></a>
+
+<a id="chunking"></a>
+
+## Chunked Results
+
+<a id="text-chunking"></a>
+
+Client APIs that can return an arbitrary number of results return those results in *chunks*. You can control chunking by adding the `:chunk` keyword to argument maps:
+
+| Key    | Meaning                       | Default | Max         |
+|--------|-------------------------------|---------|-------------|
+| :chunk | max results in a single chunk | 1000    | (unlimited) |
+
+The default chunk size delivers good performance, and should only be changed to address a measurable performance need.
+
+- Smaller chunks require more roundtrips and potentially higher latency overall, but require less memory on the client (assuming the client program drops each chunk after use).
+- Larger chunks reverse this tradeoff, delivering results in fewer roundtrips but requiring more memory on the client side.
+
+Note that the chunk size is orthogonal to the actual work done by the server:
+
+- Datalog queries always realize the entire result in memory first, and then chunk the result back to the client.
+- APIs that pull datoms from indexes ([datoms](../../03-client-api-clojuredoc/client-api-clojuredoc.md#var-datoms), [index-range](../../03-client-api-clojuredoc/client-api-clojuredoc.md#var-index-range) and [tx-range](../../03-client-api-clojuredoc/client-api-clojuredoc.md#var-tx-range)) are lazy and realize chunks one at a time on both the server and client.
+
+When you use an [ion client](../../../07-datomic-cloud-ions/01-ions-overview/ions-overview.md), the "client" and "server" are the same process, and the `:chunk` argument is ignored.
+
+[Synchronous API](../../03-client-api-clojuredoc/client-api-clojuredoc.md) functions are designed for convenience. They return a single collection or iterable and do not expose chunks directly. The chunk size argument is nevertheless available and relevant for performance tuning.
+
+The [Asynchronous API](../../03-client-api-clojuredoc/asynchronous-client-api-clojuredoc/asynchronous-client-api-clojuredoc.md) provides more flexibility, exposing the chunks directly, one at a time, on a core.async channel. Processing results by async transduction is the most efficient way to deal with large results, and is demonstrated in the example below.
+
+<a id="outline-container-async-transduce"></a>
+
+<a id="async-transduce"></a>
+
+### Chunked Results Example
+
+<a id="text-async-transduce"></a>
+
+If you wanted to know the average length of an artist name in the mbrainz data set, you could use the following async transduction to process all the names in chunks of 10,000.
+
+``` clojure
+(defn averager
+  "Reducing fn that calculates average of its inputs"
+  ([] [0 0])                  ;; init
+  ([[n total]]                ;; complete
+     (/ total (double n)))
+  ([[n total] count]          ;; step
+     [(inc n) (+ total count)]))
+
+(defn nth-counter
+  "Transform for chunked query results that gets the count of
+the nth item from each result tuple."
+  [n]
+  (comp (halt-when :anom/category)  ;; fail fast
+        cat                         ;; flatten the chunks
+        (map #(nth % n))            ;; nth of chunk
+        (map count)))
+
+(def datoms-query {:limit -1
+                   :chunk 10000
+                   :index :aevt
+                   :components [:artist/name]})
+(->> (async/datoms db datoms-query)
+     (a/transduce (nth-counter 2) averager (averager))
+     <!!)
+```
+
+``` clojure
+=> 13.893066724625081
+```
+
+The decomposition of async programs into named reducing fns and transforms such as `averager` and `nth-counter` makes it easy to test the parts of an async program entirely synchronously, and without the need for mocking and stubbing:
+
+``` clojure
+;; check that averager actually averages
+(transduce identity averager [5 4])
+```
+
+``` clojure
+=> 4.5
+```
+
+noslide
+
+``` clojure
+;; check that nth-counter returns count of nth element in chunk of tuples
+(def chunks [[[:person-1 :name "Flintstone"]
+              [:person-2 :name "Rubble"]]])
+(sequence (nth-counter 2) chunks)
+```
+
+``` clojure
+=> (10 6)
+```
+
+``` clojure
+;; check that the reducing fn and xform compose
+(transduce (nth-counter 2) averager chunks)
+```
+
+``` clojure
+=> 8.0
+```
+
+You should add async transductions to your program when you have e.g. a measured performance need. For this simple example, all the code above could be replaced by a simple API query:
+
+``` clojure
+(d/q '[:find (avg ?ct)
+       :with ?artist
+       :where [?artist :artist/name ?name]
+              [(count ?name) ?ct]]
+     db)
+```
+
+``` clojure
+=> [[13.893066724625081]]
+```
+
+<a id="outline-container-offset-and-limit"></a>
+
+<a id="offset-and-limit"></a>
+
+## Offset and Limit
+
+<a id="text-offset-and-limit"></a>
+
+Client APIs that can return an arbitrary number of results allow you to request only part of these results by specifying the following optional keys in the args map:
+
+| Key     | Meaning                                      | Default |
+|---------|----------------------------------------------|---------|
+| :offset | number of results to omit from the beginning | 0       |
+| :limit  | maximum number of results to return          | 1000    |
+
+You can specify a `:limit` of `-1` to request all results.
+
+<a id="outline-container-offset-and-limit-example"></a>
+
+<a id="offset-and-limit-example"></a>
+
+### Offset and Limit Example
+
+<a id="text-offset-and-limit-example"></a>
+
+The full [mbrainz example](https://github.com/Datomic/mbrainz-importer) has over 600,000 names. The following query uses `:offset` and `:limit` to return 2 names starting with the 10th item in the query result.
+
+``` clojure
+;; query
+{:query '[:find ?name
+          :where [_ :artist/name ?name]]
+          :args [db]
+          :offset 10
+          :limit 2}
+```
+
+``` clojure
+=>
+[["Kenneth Ishak & The Freedom Machines"] 
+ ["The Plastik"]]
+```

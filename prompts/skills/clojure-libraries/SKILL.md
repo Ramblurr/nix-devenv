@@ -5,7 +5,7 @@ description: Reference index for Clojure and ClojureScript libraries, frameworks
 
 # Clojure Libraries
 
-Use this skill as an index. Read only the reference file(s) relevant to the library or task at hand. For libraries with a directory, start with `overview.md`, then read auxiliary files only when needed.
+Use this skill as an index. Read only the reference file(s) relevant to the library or task at hand. For libraries with a directory, start with the entry point linked below, then read auxiliary files only when needed.
 
 ## Alphabetical Index
 
@@ -20,6 +20,7 @@ Use this skill as an index. Read only the reference file(s) relevant to the libr
 - [Coffi](references/coffi/overview.md) — [examples](references/coffi/examples.md), [memory](references/coffi/memory.md), [types](references/coffi/types.md)
 - [core.async](references/core-async.md)
 - [core.async.flow](references/core-async-flow.md)
+- [Datomic](datomic/index.md)
 - [donut.party/system](references/donut-system.md)
 - [Guardrails](references/guardrails/overview.md) — [gspec syntax](references/guardrails/gspec-syntax.md)
 - [Hato](references/hato.md)

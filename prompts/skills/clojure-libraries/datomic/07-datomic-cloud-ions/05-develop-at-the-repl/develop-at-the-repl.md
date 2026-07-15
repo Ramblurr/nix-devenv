@@ -1,0 +1,171 @@
+<a id="content"></a>
+
+<a id="develop"></a>
+
+# Develop
+
+<a id="outline-container-repl"></a>
+
+<a id="repl"></a>
+
+## Develop at the REPL
+
+<a id="text-repl"></a>
+
+You can develop your ion application interactively at the REPL.
+
+The application code for this tutorial is already written so we will use the REPL to explore the code.
+
+<a id="outline-container-configure-connection"></a>
+
+<a id="configure-connection"></a>
+
+### Configure Connection
+
+<a id="text-configure-connection"></a>
+
+The ion-starter project keeps connection arguments in a resource file `resources/datomic/ion/starter/config.edn`. Edit this file to include the [connection arguments](../../04-apis/04-client-api/additional-client-api-reference/additional-client-api-reference.md#client) for your system.
+
+<a id="outline-container-test-your-connection"></a>
+
+<a id="test-your-connection"></a>
+
+### Test Your Connection
+
+<a id="text-test-your-connection"></a>
+
+The core of the tutorial application lives in the [starter.clj](https://github.com/Datomic/ion-starter/blob/master/src/datomic/ion/starter.clj) namespace. Start a REPL from the root of the project to explore and test these functions:
+
+- First, load some namespace aliases:
+
+``` clojure
+(load-file "siderail/user.repl")
+```
+
+- Verify that you can get a client object:
+
+``` clojure
+(def client (starter/get-client))
+```
+
+If this call succeeds, continue to the next step. Otherwise, return to [configure connection](#configure-connection).
+
+<a id="outline-container-setup-db-and-load-dataset"></a>
+
+<a id="setup-db-and-load-dataset"></a>
+
+### Setup DB and Load Dataset
+
+<a id="text-setup-db-and-load-dataset"></a>
+
+The `ensure-sample-dataset` function idempotently creates a database and loads the schema and some sample data. Invoke this function once before using any of the tutorial data functions.
+
+[Review the `ensure-sample-dataset` function](https://github.com/Datomic/ion-starter/blob/master/src/datomic/ion/starter.clj#L39), and then run it at the REPL:
+
+``` clojure
+(starter/ensure-sample-dataset)
+```
+
+``` clojure
+=> :loaded
+```
+
+<a id="outline-container-test-data-functions-at-the-repl"></a>
+
+<a id="test-data-functions-at-the-repl"></a>
+
+### Test Data Functions at the REPL
+
+<a id="text-test-data-functions-at-the-repl"></a>
+
+The inventory application exposes two simple data functions: `get-schema` returns the database schema, and `get-items-by-type` returns inventory items by type (`:dress`, `:hat`, `:pants`, or `:shirt`).
+
+[Review the data functions](https://github.com/Datomic/ion-starter/blob/master/src/datomic/ion/starter.clj), and then test that these functions work at the REPL:
+
+``` clojure
+(def conn (starter/get-connection))
+
+
+@(def db (d/db conn))
+```
+
+``` clojure
+=> {:t 16, :next-t 17, :db-name "datomic-docs-tutorial", :database-id "ab481fe5-b6eb-4c97-8997-7d6a11809b6d", :type :datomic.client/db}
+;; Your result may differ
+```
+
+``` clojure
+(starter/get-schema db)
+```
+
+``` clojure
+=>
+(#:db{:id 39, :ident :fressian/tag, :valueType :db.type/keyword, :cardinality :db.cardinality/one, :doc "Keyword-valued attribute of a value type that specifies the underlying fressian type used for serialization."} #:db{:id 73, :ident :inv/sku, :valueType :db.type/string, :cardinality :db.cardinality/one, :unique #:db{:id 38, :ident :db.unique/identity}} #:db{:id 74, :ident :inv/color, :valueType :db.type/keyword, :cardinality :db.cardinality/one} #:db{:id 75, :ident :inv/size, :valueType :db.type/keyword, :cardinality :db.cardinality/one} #:db{:id 76, :ident :inv/type, :valueType :db.type/keyword, :cardinality :db.cardinality/one} #:db{:id 77, :ident :order/items, :valueType :db.type/ref, :cardinality :db.cardinality/many, :isComponent true} #:db{:id 78, :ident :item/id, :valueType :db.type/ref, :cardinality :db.cardinality/one} #:db{:id 79, :ident :item/count, :valueType :db.type/long, :cardinality :db.cardinality/one} #:db{:id 80, :ident :inv/count, :valueType :db.type/long, :cardinality :db.cardinality/one})
+;; Your result may differ
+```
+
+``` clojure
+(starter/get-items-by-type db :shirt '[:inv/sku :inv/color :inv/size])
+```
+
+``` clojure
+=>
+[[#:inv{:sku "SKU-0", :color :red, :size :small}] [#:inv{:sku "SKU-4", :color :red, :size :medium}] [#:inv{:sku "SKU-8", :color :red, :size :large}] [#:inv{:sku "SKU-12", :color :red, :size :xlarge}] [#:inv{:sku "SKU-16", :color :green, :size :small}] [#:inv{:sku "SKU-20", :color :green, :size :medium}] [#:inv{:sku "SKU-24", :color :green, :size :large}] [#:inv{:sku "SKU-28", :color :green, :size :xlarge}] [#:inv{:sku "SKU-32", :color :blue, :size :small}] [#:inv{:sku "SKU-36", :color :blue, :size :medium}] [#:inv{:sku "SKU-40", :color :blue, :size :large}] [#:inv{:sku "SKU-44", :color :blue, :size :xlarge}] [#:inv{:sku "SKU-48", :color :yellow, :size :small}] [#:inv{:sku "SKU-52", :color :yellow, :size :medium}] [#:inv{:sku "SKU-56", :color :yellow, :size :large}] [#:inv{:sku "SKU-60", :color :yellow, :size :xlarge}]]
+```
+
+<a id="outline-container-test-lambda-entry-points-at-the-repl"></a>
+
+<a id="test-lambda-entry-points-at-the-repl"></a>
+
+### Test Lambda Entry Points at the REPL
+
+<a id="text-test-lambda-entry-points-at-the-repl"></a>
+
+A lambda entry point is just a function with a lambda-compatible signature that receives JSON input, returning an arbitrary string of output.
+
+The lambda entry points are in a separate `lambdas` namespace, so that you can easily notice the difference between domain functions and lambda data marshaling.
+
+[Review the lambda entry points](https://github.com/Datomic/ion-starter/blob/master/src/datomic/ion/starter/lambdas.clj), and then try them from the REPL.
+
+``` clojure
+(lambdas/get-schema nil)
+```
+
+``` clojure
+=>
+(#:db{:id 39,\n      :ident :fressian/tag,\n      :valueType :db.type/keyword,\n      :cardinality :db.cardinality/one,\n      :doc\n      \"Keyword-valued attribute of a value type that specifies the underlying fressian type used for serialization.\"}\n #:db{:id 73,\n      :ident :inv/sku,\n      :valueType :db.type/string,\n      :cardinality :db.cardinality/one,\n      :unique #:db{:id 38, :ident :db.unique/identity}}\n #:db{:id 74,\n      :ident :inv/color,\n      :valueType :db.type/keyword,\n      :cardinality :db.cardinality/one}\n #:db{:id 75,\n      :ident :inv/size,\n      :valueType :db.type/keyword,\n      :cardinality :db.cardinality/one}\n #:db{:id 76,\n      :ident :inv/type,\n      :valueType :db.type/keyword,\n      :cardinality :db.cardinality/one}\n #:db{:id 77,\n      :ident :order/items,\n      :valueType :db.type/ref,\n      :cardinality :db.cardinality/many,\n      :isComponent true}\n #:db{:id 78,\n      :ident :item/id,\n      :valueType :db.type/ref,\n      :cardinality :db.cardinality/one}\n #:db{:id 79,\n      :ident :item/count,\n      :valueType :db.type/long,\n      :cardinality :db.cardinality/one}\n #:db{:id 80,\n      :ident :inv/count,\n      :valueType :db.type/long,\n      :cardinality :db.cardinality/one})
+```
+
+``` clojure
+(lambdas/get-items-by-type {:input (json/write-str "shirt")})
+```
+
+``` clojure
+=>
+[[#:inv{:sku \"SKU-0\", :size :small, :color :red}]\n [#:inv{:sku \"SKU-4\", :size :medium, :color :red}]\n [#:inv{:sku \"SKU-8\", :size :large, :color :red}]\n [#:inv{:sku \"SKU-12\", :size :xlarge, :color :red}]\n [#:inv{:sku \"SKU-16\", :size :small, :color :green}]\n [#:inv{:sku \"SKU-20\", :size :medium, :color :green}]\n [#:inv{:sku \"SKU-24\", :size :large, :color :green}]\n [#:inv{:sku \"SKU-28\", :size :xlarge, :color :green}]\n [#:inv{:sku \"SKU-32\", :size :small, :color :blue}]\n [#:inv{:sku \"SKU-36\", :size :medium, :color :blue}]\n [#:inv{:sku \"SKU-40\", :size :large, :color :blue}]\n [#:inv{:sku \"SKU-44\", :size :xlarge, :color :blue}]\n [#:inv{:sku \"SKU-48\", :size :small, :color :yellow}]\n [#:inv{:sku \"SKU-52\", :size :medium, :color :yellow}]\n [#:inv{:sku \"SKU-56\", :size :large, :color :yellow}]\n [#:inv{:sku \"SKU-60\", :size :xlarge, :color :yellow}]]
+```
+
+<a id="outline-container-test-http-entry-points-at-the-repl"></a>
+
+<a id="test-http-entry-points-at-the-repl"></a>
+
+### Test HTTP Entry Points at the REPL
+
+<a id="text-test-http-entry-points-at-the-repl"></a>
+
+An HTTP entry point is just a function with an [HTTP-compatible signature](../02-ions-reference/ions-reference.md#web-ion) that receives input and output maps that describe web requests and responses.
+
+The HTTP entry points are in separate `http` namespace. Review the HTTP entry points, and then try them from the REPL.
+
+``` clojure
+(http/get-items-by-type {:body (s-edn/input-stream :shirt)})
+```
+
+``` clojure
+=>
+{:status 200, :headers {"Content-Type" "application/edn"}, :body "[[#:inv{:sku \"SKU-0\", :size :small, :color :red}]\n [#:inv{:sku \"SKU-4\", :size :medium, :color :red}]\n [#:inv{:sku \"SKU-8\", :size :large, :color :red}]\n [#:inv{:sku \"SKU-12\", :size :xlarge, :color :red}]\n [#:inv{:sku \"SKU-16\", :size :small, :color :green}]\n [#:inv{:sku \"SKU-20\", :size :medium, :color :green}]\n [#:inv{:sku \"SKU-24\", :size :large, :color :green}]\n [#:inv{:sku \"SKU-28\", :size :xlarge, :color :green}]\n [#:inv{:sku \"SKU-32\", :size :small, :color :blue}]\n [#:inv{:sku \"SKU-36\", :size :medium, :color :blue}]\n [#:inv{:sku \"SKU-40\", :size :large, :color :blue}]\n [#:inv{:sku \"SKU-44\", :size :xlarge, :color :blue}]\n [#:inv{:sku \"SKU-48\", :size :small, :color :yellow}]\n [#:inv{:sku \"SKU-52\", :size :medium, :color :yellow}]\n [#:inv{:sku \"SKU-56\", :size :large, :color :yellow}]\n [#:inv{:sku \"SKU-60\", :size :xlarge, :color :yellow}]]\n"}
+```
+
+Note that the REPL tests provide only the parts of the request map that are needed. This optionality is a benefit over more static systems that might require mocking and stubbing.
+
+Now you are ready to [push and deploy](../06-push-and-deploy/push-and-deploy.md) your ion to Datomic Cloud.

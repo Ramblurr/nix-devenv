@@ -1,0 +1,60 @@
+<a id="content"></a>
+
+<a id="data-structure-literals"></a>
+
+# Data Structure Literals
+
+Datomic is designed to be directly programmable using data. Transactions, queries and query results are all represented as simple collection data structures. The documentation presents these data structures in literal form:
+
+``` clojure
+[:find ?c :where [?c :community/name "belltown"]]
+```
+
+``` clojure
+[:find ?c :in ?x :where [(.getClass ?x) ?c]]
+```
+
+``` clojure
+[{:db/id #db/id[:db.part/user -1] :db/doc "This is an example"}]
+```
+
+- The brackets \[\] and parenthesis () represent a list.
+- The braces {} represent a map.
+- You can put , in between entries in lists or maps if you want to, but they're optional.
+- Lists and maps can contain nested lists and maps, or simple values.
+
+There are two simple values that deserve special attention: keywords and symbols.
+
+- Keywords begin with : and include an optional namespace. In the examples above *:find*, *:in*, *:where*, *:community/name*, *:db/id* and *:db/doc* are keywords.
+- Symbols do not begin with : and include an optional namespace. In the examples above *?c*, *?x*, and *.getClass* are symbols.
+
+Keywords and symbols are different from strings, which are surrounded by "". In the examples above, "belltown" and "This is an example" are strings.
+
+Finally, there are [edn tagged data literals](https://github.com/edn-format/edn/#tagged-elements) for representing Datomic-specific data structures like temporary ids and database functions (#db/id and \#db/fn, respectively).
+
+<a id="outline-container-building-data-structures"></a>
+
+<a id="building-data-structures"></a>
+
+## Building data structures
+
+<a id="text-building-data-structures"></a>
+
+When you program with Datomic, your application will build data structures like these. There are two approaches to creating them. The first approach is to represent them as strings. This code invokes a query using a data structure literal in string form.
+
+``` java
+results = Peer.query("[:find ?c :where [?c :community/name \"belltown\"]]", db)
+```
+
+You can read a single data structure from a string using *datomic.Util.read*. You can read a List of data structures from a Reader using *readAll*.
+
+The second approach is to construct the data structures programmatically. When you do this, you can pass strings in place of keyword or symbol objects and Datomic will convert them to the appropriate type.
+
+The *datomic.Util* class provides *list* and *map* methods to make it easy to build data structures. This code builds a transaction to add a new entity with a given doc string.
+
+``` java
+tx = Util.list(Util.map(":db/doc", "This is an example"));
+conn.transact(tx).get();
+```
+
+When creating data structures programmatically, you should use the constructor functions for datomic built-in types like database functions or temporary entity ids. The rule for choosing between data and code representations is easy: *code should use code, and data should use data*. In other words, your programs should call the APIs, and data files should use data literals.
