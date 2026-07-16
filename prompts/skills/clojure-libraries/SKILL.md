@@ -35,4 +35,5 @@ Use this skill as an index. Read only the reference file(s) relevant to the libr
 - [Sente](references/sente.md)
 - [Telemere](references/telemere/overview.md) — [architecture](references/telemere/architecture.md), [config](references/telemere/config.md), [FAQ](references/telemere/faq.md), [getting started](references/telemere/getting-started.md), [handlers](references/telemere/handlers.md), [tips](references/telemere/tips.md)
 - [test.check](references/test-check/overview.md) — [advanced](references/test-check/advanced.md), [cheatsheet](references/test-check/cheatsheet.md), [examples](references/test-check/examples.md)
+- [juxt/tick](tick/index.md) — [API](tick/API.md)
 - [Trove](references/trove.md)

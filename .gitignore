@@ -11,3 +11,4 @@ extra/
 prompts/skills/.system/
 prompts/PROMPTS.md
 __pycache__
+prompts/skills/plannotator-*
