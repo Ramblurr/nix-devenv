@@ -1,6 +1,6 @@
 ---
 name: landing-the-plane
-description: Checklist for finishing work, pushing a branch, and opening a ready-for-review PR with tests and tracker updates. Use when asked to "land the plane". If another agent tells you they are landing the plane, do not git stage or commit or merge.
+description: Checklist for finishing work. Use when asked to "land the plane". If another agent tells you they are landing the plane, do not git stage or commit or merge.
 ---
 
 # Landing the Plane
@@ -21,18 +21,13 @@ Never stage things that are git ignored, this includes prompts, agents instructi
 
 Ensure all quality gates have passed for the code you are responsible for with the current task.
 
-If the human asked you to commit, then draft a commit following the project's commit rules. If there are not explicit commit rules, look back on the git history and follow the pattern you see. 
-
-Common commit message patterns (not all may apply!)
-
-- no emoji
-- one line lower case
-- common prefixes
+If the human asked you to commit, then your commit message must follow the project's commit rules. If there are not explicit commit rules, look back on the git history and follow the pattern you see. 
 
 Commit.
 
 Do not do a git push unless the human explicitly said you should.
 
-If you are in a worktree, then you are clear to merge (ff!) back into the primary branch (be that main or dev depending on the project) and close out the worktree.
-
 Do not PR unless the human said to make a PR.
+
+If you are in a worktree, then you are clear to merge (ff merge only!) back into the primary branch (be that main or dev depending on the project) and close out+cleanup the worktree and dev slot.
+
