@@ -12,6 +12,8 @@ target/
 extra/
 .direnv
 *.log
-prompts/PROMPTS.md
+prompts/
 result
 .env
+.tmuxb_session
+.worktrees
