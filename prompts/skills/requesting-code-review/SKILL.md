@@ -34,9 +34,13 @@ Invoke the skills:
 Skill(tmux)
 Skill(coding-agents)
 
+If you are a pi agent:
 - Always use a pi agent unless instructed otherwise.
 - Always use local tmuxb session
 - Always use the pi link feature to communicate with your subagent
+
+If you are a Codex agent:
+- Use your collaboration.spawn_agent tool
 
 Fill the template at `./code-reviewer.md` (copy it, dont edit it in the skill dir!)
 
