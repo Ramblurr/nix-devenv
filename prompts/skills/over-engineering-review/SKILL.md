@@ -3,13 +3,14 @@ name: over-engineering-review
 description: >
   Code review focused exclusively on over-engineering. Finds what to delete:
   reinvented standard library, unneeded dependencies, speculative abstractions,
-  dead flexibility. One line per finding: location, what to cut, what replaces
-  it. Use when the user says "review for over-engineering", "what can we
-  delete", "is this over-engineered", "simplify review". Complements correctness-focused review, this one only hunts complexity.
+  dead flexibility. Findings use numbered stable IDs and end with a progress
+  checklist. Use when the user says "review for over-engineering", "what can we
+  delete", "is this over-engineered", or "simplify review". Complements
+  correctness-focused review; this one only hunts complexity.
 ---
 
-Review diffs for unnecessary complexity. One line per finding: location, what
-to cut, what replaces it. The diff's best outcome is getting shorter.
+Review diffs for unnecessary complexity. Give every finding a stable `F<N>` ID,
+the location, what to cut, and what replaces it. The best outcome is a shorter diff.
 
 Invoke Skill(over-engineering) now.
 
@@ -32,8 +33,13 @@ If the report cannot be written, return `BLOCKED` rather than an inline review.
 
 ## Format
 
-`L<line>: <tag> <what>. <replacement>.`, or `<file>:L<line>: ...` for
-multi-file diffs.
+Write each finding on one physical line:
+
+`<ordinal>. F<ordinal> — <locations>: <tag> <what>. <replacement>.`
+
+Use `file:L<line>` or `file:L<start>-<end>` locations.
+Separate multiple locations with commas within one file and semicolons between files.
+Assign IDs in finding order (`F1`, `F2`, ...), and keep those IDs stable if the report is revised.
 
 Tags:
 
@@ -42,28 +48,30 @@ Tags:
 - `extlib:` hand-rolled thing an already existing dependency ships. Name the function.
 - `native:` dependency or code doing what the platform already does. Name the feature.
 - `yagni:` abstraction with one implementation, config nobody sets, layer with one caller.
-- `shrink:` same logic, fewer lines. Show the shorter form, can break onto multiple lines.
+- `shrink:` same logic, fewer lines. Show the shorter form succinctly.
 
 ## Examples
 
-❌ "This EmailValidator class might be more complex than necessary, have you
-considered whether all these validation rules are needed at this stage?"
+1. F1 — src/clj/fairy/box2/model.clj:L35-38,L180-191,L326-338,L489-514; src/clj/fairy/box2/media.clj:L41-93: delete: asynchronous media/player provenance carries physical `presence-epoch` and descriptive `uid` alongside logical `request-id`. Keep `presence-epoch` on RFID/card authority; use only fields that reject a distinct stale case across media and player boundaries.
 
-✅ `L12-38: stdlib: 27-line validator class. "@" in email, 1 line, real validation is the confirmation mail.`
+2. F2 — src/time.clj:L4: native: moment.js imported for one format call. Use `Intl.DateTimeFormat` and remove the dependency.
 
-✅ `L4: native: moment.js imported for one format call. Intl.DateTimeFormat, 0 deps.`
+## Report Ending
 
-✅ `repo.py:L88: yagni: AbstractRepository with one implementation. Inline it until a second one exists.`
+After the findings, write the metric `net: -<N> lines possible.`
 
-✅ `L52-71: delete: retry wrapper around an idempotent local call. Nothing replaces it.`
+The report must end with this section and nothing may follow it:
 
-✅ `L30-44: shrink: manual loop builds dict. dict(zip(keys, values)), 1 line.`
+```markdown
+## Progress
 
-## Scoring
+- [ ] TODO F1
+- [ ] TODO F2
+```
 
-End with the only metric that matters: `net: -<N> lines possible.`
-
-If there is nothing to cut, say `Lean already. Ship.` and stop.
+Include one unchecked `TODO` item for every finding, in finding order.
+If there are no findings, write `Lean already. Ship.`, `net: -0 lines possible.`,
+and end with a `## Progress` section containing `No findings.`
 
 ## Boundaries
 
