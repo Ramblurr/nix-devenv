@@ -76,6 +76,8 @@ Remember: New files don't diff — untracked files are invisible to git diff; al
 
 Your dispatch must be self-contained and sent via `link_send(triggerTurn:true)`.
 
+Do not use `link_prompt` (90s inactivity) would block you and risk timeout.
+
 After triggering a worker, **WAIT** for its callback before any follow-up to it (Golden Rule).
 
 

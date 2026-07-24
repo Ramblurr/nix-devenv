@@ -71,8 +71,15 @@ Common `<role>`s: leader, dev, dev1, dev2, reviewer, researcher
 
 ```bash
 # Read-only mode (no file modifications)
-pi --link-name <scope>@<role> --tools link_list,link_send,read,grep,find,ls -p "Review the code in src/"
+pi --link-name <scope>@<role> --tools link_list,link_send,read,grep,find,ls -p
+# then `link_send(triggerTurn: true)` with prompt "Review the code in src/"
 ```
+
+## Important:
+
+- Your dispatch must be self-contained and sent via `link_send(triggerTurn:true)`.
+- For active work: Do not use `link_prompt` (90s inactivity) would block you and risk timeout.
+- For not active work (Quick pre-start question, etc):  `link_prompt` is fine.
 
 ## Completion Detection
 
