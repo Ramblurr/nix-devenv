@@ -71,7 +71,7 @@ Common `<role>`s: leader, dev, dev1, dev2, reviewer, researcher
 
 ```bash
 # Read-only mode (no file modifications)
-pi --link-name <scope>@<role> --tools link_list,link_send,read,grep,find,ls -p
+pi --link-name <scope>@<role>
 # then `link_send(triggerTurn: true)` with prompt "Review the code in src/"
 ```
 

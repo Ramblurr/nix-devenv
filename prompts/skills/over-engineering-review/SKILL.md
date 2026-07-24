@@ -13,6 +13,23 @@ to cut, what replaces it. The diff's best outcome is getting shorter.
 
 Invoke Skill(over-engineering) now.
 
+## Mandatory Delivery Contract
+
+The review is read-only with respect to implementation files, generated files,
+Git staging, and commits.
+Writing the review report under `prompts/` is required and is the only permitted
+file change.
+
+Use the caller-supplied report path.
+If none was supplied, choose the next appropriate
+`prompts/XXX-_overengreview<X>.md` path.
+
+Write the complete review to disk before reporting completion.
+A Link callback is only a verdict and artifact pointer; it never contains or
+replaces the review.
+
+If the report cannot be written, return `BLOCKED` rather than an inline review.
+
 ## Format
 
 `L<line>: <tag> <what>. <replacement>.`, or `<file>:L<line>: ...` for
@@ -58,5 +75,13 @@ lists them. If the user asks for non-verbose mode, you can explain more.
 
 ## Deliverables
 
-1. Write your report format to the appropriate prompts/XXX-_overengreview<X>.md location. It must be a self-contained file on disk.
-2. If an agent contacted you via link, report back that you are finished via link_send(triggerTurn:true): APPROVE or CHANGES-NEEDED plus the path to your report document.
+1. Write the complete, self-contained review to the designated
+   `prompts/XXX-_overengreview<X>.md` path.
+2. Do not modify implementation files, generated files, the Git index, or
+   commits.
+3. If contacted through Link, send only one of:
+   - `APPROVE <report-path>`
+   - `CHANGES-NEEDED <report-path>`
+   - `BLOCKED <reason>`
+4. Never place the review body in the Link callback or use the callback as a
+   substitute for the report.

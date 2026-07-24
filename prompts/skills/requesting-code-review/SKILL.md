@@ -56,9 +56,36 @@ instructions at exactly that.
 
 3. Dispatch code-reviewer subagent:
 
+Read `./code-reviewer.md` completely before dispatching.
 
-Fill the template at `./code-reviewer.md` (copy it, dont edit it in the skill dir!)
-Aim the checks at THIS task's real risks.
+For a general code review, use its checklist and report format.
+For a specialized review, such as `over-engineering-review`, the specialized
+skill controls the review content and report format, but the delivery contract
+from `code-reviewer.md` remains mandatory.
+
+Choose an explicit report path under `prompts/` and include it in the dispatch.
+The reviewer must write the complete review there before sending its callback.
+
+A read-only review prohibits changes to implementation files, generated files,
+the Git index, and commits.
+Writing the designated review report is the required exception.
+
+For linked reviewers, the callback is only:
+
+`APPROVE <report-path>`
+
+`CHANGES-NEEDED <report-path>`
+
+or:
+
+`BLOCKED <reason>`
+
+Never ask the reviewer to return the complete review in the callback.
+If the reviewer cannot write the report, it must return `BLOCKED` rather than
+substitute an inline review.
+
+Copy `./code-reviewer.md`; do not edit the template in the skill directory.
+Aim the checks at this task's real risks.
 
 Placeholders:
 - `{WHAT_WAS_IMPLEMENTED}` - What you just built
@@ -70,6 +97,7 @@ Placeholders:
 - `{REPO_PATH}` - git root dir
 - `{DIFF}` - git -C <git root> diff -- <relative file path>
 - `{NEW_FILES}` - list of new files one per line
+- `{REPORT_PATH}` - required on-disk destination for the complete review report
 
 
 Remember: New files don't diff — untracked files are invisible to git diff; always route the reviewer at the file itself, or the review silently covers only the modified files.
@@ -82,6 +110,12 @@ After triggering a worker, **WAIT** for its callback before any follow-up to it 
 
 
 4. Act on feedback:
+
+- Before acting, verify that the callback includes a report path and that the
+  self-contained report exists on disk.
+  A callback never substitutes for the report.
+  If the report is absent, send the reviewer back to complete the deliverable.
+
 - Fix Critical issues immediately
 - Fix Important issues before proceeding
 - Note Minor issues for later
@@ -94,6 +128,9 @@ Never:
 - Ignore Critical issues
 - Proceed with unfixed Important issues
 - Argue with valid technical feedback
+- Say “do not modify files” without explicitly permitting the required report
+- Accept review findings embedded only in a link callback
+- Act on feedback before verifying that the report artifact exists
 
 If reviewer is wrong:
 - Push back with technical reasoning
