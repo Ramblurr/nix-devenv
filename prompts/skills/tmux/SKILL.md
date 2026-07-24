@@ -1,53 +1,37 @@
 ---
 name: tmux
-description: Remote control tmux sessions using tmux-buddy (tmuxb) for interactive CLIs (python, gdb, emacs, vim, etc.) by sending keystrokes and scraping pane output.
+description: Remote control tmux sessions using tmux-buddy (tmuxb) for interactive CLIs (python, gdb, emacs, vim, etc.) or sub-agents by sending keystrokes and scraping pane output. Use when you want to use tmux, don't use the vanilla tmux command directly.
 ---
 # Agent Usage Guide for tmuxb
-
 
 Use tmux as a programmable terminal multiplexer for interactive work.
 
 We use a small tmux wrapper called tmux-buddy (cli command: `tmuxb`).
-It provides a few helpers for LLM agents such as yourself when using tmux.
 
 A practical guide for LLM agents using tmuxb to interact with tmux sessions.
 This guide emphasizes defensive practices that account for shared terminal sessions and timing uncertainties.
 
-
-## Quickstart (isolated socket)
+## Quickstart (isolated socket, project scoped)
 
 
 ```bash
-tmuxb new # create a new session
+# from your project CWD
+tmuxb list  # check if a session for your project already exists
+tmuxb new <project-name> # create a new session, creates .tmuxb_session as a side effect. from this point no further commands need the session name explictly passed.
 tmuxb capture   # see the screen inside tmux, including the cursor position
 tmuxb capture --if-changed  # get the output, but only if its changed
-tmux send -- '"echo hello world" :Enter' # Send some key sequences, always remeber to add :Enter if needed, :Enter is never pressed automatically
+tmux send -- '"echo hello world" :Enter' # Send some key sequences, always remember to add :Enter if needed, :Enter is never pressed automatically
 tmuxb capture --if-changed # view the results
 ```
 
-
-<agent-name> should be something like: claude-codex, codex, gemini. etc It must be a valid part of a filename
-<session-name> the name of the tmux session, a good value is the name of the project
+<project-name> should be something like basename("$(pwd)")
 
 ## Session Files: Simplifying Repeated Commands
 
 tmuxb supports a `.tmuxb_session` file that stores the session name and socket path.
-When present, you can omit these from every command.
+When present, you can omit session name and socket path from every command.
 
-### Creating a Session with Auto-Generated File
-
-```bash
-# Simplest form - creates session on default tmux server
-tmuxb new myproject
-
-# The file contains:
-# {:session "myproject"}
-```
-
-
-The `-S` flag is an isolated socket which may be handy, but in 99.999% of situations you should not use it.
-
-If you need an isolated tmux server (separate from your normal tmux), use `-S`:
+tmuxb has an `-S` flag for an isolated socket which may be handy, but in 99.999% of situations you should not use it.
 
 ```bash
 # Creates session on a dedicated socket (ONLY USE -S if there is special need)
@@ -56,8 +40,6 @@ tmuxb new -S myproject.sock myproject
 # The file contains:
 # {:session "myproject", :socket "/run/user/100tmuxb/myproject.sock"}
 ```
-
-### Using the Session File
 
 Relying on the tmux-buddy session file is the preferred way of using tmux-buddy.
 

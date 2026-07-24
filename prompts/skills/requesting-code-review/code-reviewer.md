@@ -2,7 +2,7 @@
 
 You are reviewing code changes for production readiness.
 
-**Your task:**
+Your task:
 1. Review {WHAT_WAS_IMPLEMENTED}
 2. Compare against {PLAN_OR_REQUIREMENTS}
 3. Check code quality, architecture, testing
@@ -17,50 +17,65 @@ You are reviewing code changes for production readiness.
 
 {PLAN_REFERENCE}
 
-## Git Range to Review
+## Diff to Review
 
-**Base:** {BASE_SHA}
-**Head:** {HEAD_SHA}
+Repo: {REPO_PATH}
+
+<if committed>
+Base: {BASE_SHA}
+Head: {HEAD_SHA}
 
 ```bash
 git diff --stat {BASE_SHA}..{HEAD_SHA}
 git diff {BASE_SHA}..{HEAD_SHA}
 ```
+</if committed>
+
+
+<if uncommitted diff>
+Diff:  {DIFF}
+New files (if any) are untracked — git diff shows nothing for them; read
+them directly:
+{NEW_FILES}
+
+</if uncommitted diff>
 
 ## Review Checklist
 
-**Code Quality:**
-- Clean separation of concerns?
-- Proper error handling?
-- Type safety (if applicable)?
-- DRY principle followed?
-- Edge cases handled?
-
-**Architecture:**
+Architecture:
+- Invariants preserved
 - Sound design decisions?
 - Scalability considerations?
 - Performance implications?
 - Security concerns?
 
-**Testing:**
+Code Quality:
+- Clean separation of concerns?
+- Proper error handling?
+- Type safety (if applicable)?
+- Edge cases handled?
+- Style guide adhered to?
+
+Testing:
+- Where testing anti patterns used?
 - Tests actually test logic (not mocks)?
 - Edge cases covered?
 - Integration tests where needed?
 - All tests passing?
 
-**Requirements:**
+Requirements:
 - All plan requirements met?
 - Implementation matches spec?
 - No scope creep?
 - Breaking changes documented?
 
-**Production Readiness:**
+Production Readiness <if relevant>:
 - Migration strategy (if schema changes)?
 - Backward compatibility considered?
 - Documentation complete?
 - No obvious bugs?
 
-## Output Format
+## Report Format
 
 ### Strengths
 [What's well done? Be specific.]
@@ -76,7 +91,7 @@ git diff {BASE_SHA}..{HEAD_SHA}
 #### Minor (Nice to Have)
 [Code style, optimization opportunities, documentation improvements]
 
-**For each issue:**
+For each issue:
 - File:line reference
 - What's wrong
 - Why it matters
@@ -87,20 +102,25 @@ git diff {BASE_SHA}..{HEAD_SHA}
 
 ### Assessment
 
-**Ready to merge?** [Yes/No/With fixes]
+Ready to merge? [Yes/No/With fixes]
 
-**Reasoning:** [Technical assessment in 1-2 sentences]
+Reasoning: [Technical assessment in 1-2 sentences]
+
+## Progress
+
+End the report with an 2 `Progress` section that lists the allowed status labels—`TODO`, `DONE`, `WONTFIX`, and `DEFER`—followed by one checklist item for every finding, formatted as `- [ ] <STATUS> <PRIORITY-ID> <finding title>` and initially marked `TODO`.
+
 
 ## Critical Rules
 
-**DO:**
+DO:
 - Categorize by actual severity (not everything is Critical)
 - Be specific (file:line, not vague)
 - Explain WHY issues matter
 - Acknowledge strengths
 - Give clear verdict
 
-**DON'T:**
+DON'T:
 - Say "looks good" without checking
 - Mark nitpicks as Critical
 - Give feedback on code you didn't review
@@ -118,18 +138,18 @@ git diff {BASE_SHA}..{HEAD_SHA}
 ### Issues
 
 #### Important
-1. **Missing help text in CLI wrapper**
+1. Missing help text in CLI wrapper
    - File: index-conversations:1-31
    - Issue: No --help flag, users won't discover --concurrency
    - Fix: Add --help case with usage examples
 
-2. **Date validation missing**
+2. Date validation missing
    - File: search.ts:25-27
    - Issue: Invalid dates silently return no results
    - Fix: Validate ISO format, throw error with example
 
 #### Minor
-1. **Progress indicators**
+3. Progress indicators
    - File: indexer.ts:130
    - Issue: No "X of Y" counter for long operations
    - Impact: Users don't know how long to wait
@@ -140,7 +160,21 @@ git diff {BASE_SHA}..{HEAD_SHA}
 
 ### Assessment
 
-**Ready to merge: With fixes**
+Ready to merge: With fixes
 
-**Reasoning:** Core implementation is solid with good architecture and tests. Important issues (help text, date validation) are easily fixed and don't affect core functionality.
+Reasoning: Core implementation is solid with good architecture and tests. Important issues (help text, date validation) are easily fixed and don't affect core functionality.
+
+## Progress
+
+Labels: TODO, DONE, WONTFIX, DEFER
+
+- [ ] TODO I1 Missing help text in CLI wrapper
+- [ ] TODO I2 Date validation missing
+- [ ] TODO M1 Progress indicators
 ```
+
+
+# Deliverables
+
+1. Write your report format to the appropriate prompts/XXX-_review<X>.md location. It must be a self-contained file on disk.
+2. If an agent contacted you via link, report back that you are finished via link_send(triggerTurn:true): APPROVE or CHANGES-NEEDED plus the path to your report document.

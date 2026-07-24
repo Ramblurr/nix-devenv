@@ -20,36 +20,39 @@ Optional but valuable:
 
 ## How to Request
 
-1. Get git SHAs:
+1. Have you committed? 
+
+Yes? -> Get git SHAs:
 ```bash
 BASE_SHA=$(git rev-parse HEAD~1)  # or origin/main
 HEAD_SHA=$(git rev-parse HEAD)
 ```
 
+No? -> 
 Or if you haven't committed yet, reference the staged or dirty working tree files.
 
 2. Dispatch code-reviewer subagent:
 
 Invoke the skills:
 Skill(tmux)
-Skill(coding-agents)
-
-If you are a pi agent:
-- Always use a pi agent unless instructed otherwise.
-- Always use local tmuxb session
-- Always use the pi link feature to communicate with your subagent
-
-If you are a Codex agent:
-- Use your collaboration.spawn_agent tool
+Skill(sub-agents)
 
 Fill the template at `./code-reviewer.md` (copy it, dont edit it in the skill dir!)
+Aim the checks at THIS task's real risks.
 
 Placeholders:
 - `{WHAT_WAS_IMPLEMENTED}` - What you just built
 - `{PLAN_OR_REQUIREMENTS}` - What it should do
+- `{PLAN_REFERENCE}` - path to plan file
 - `{BASE_SHA}` - Starting commit
 - `{HEAD_SHA}` - Ending commit
 - `{DESCRIPTION}` - Brief summary
+- `{REPO_PATH}` - git root dir
+- `{DIFF}` - git -C <git root> diff -- <relative file path>
+- `{NEW_FILES}` - list of new files one per line
+
+
+Remember: New files don't diff — untracked files are invisible to git diff; always route the reviewer at the file itself, or the review silently covers only the modified files.
 
 3. Act on feedback:
 - Fix Critical issues immediately
@@ -57,52 +60,7 @@ Placeholders:
 - Note Minor issues for later
 - Push back if reviewer is wrong (with reasoning)
 
-## Example
-
-```
-[Just completed Task 2: Add verification function]
-
-You: Let me request code review before proceeding.
-
-BASE_SHA=$(git log --oneline | grep "Task 1" | head -1 | awk '{print $1}')
-HEAD_SHA=$(git rev-parse HEAD)
-
-[Dispatch superpowers:code-reviewer subagent]
-  WHAT_WAS_IMPLEMENTED: Verification and repair functions for conversation index
-  PLAN_OR_REQUIREMENTS: Task 2 from docs/plans/deployment-plan.md
-  BASE_SHA: a7981ec
-  HEAD_SHA: 3df7661
-  DESCRIPTION: Added verifyIndex() and repairIndex() with 4 issue types
-
-[Subagent returns]:
-  Strengths: Clean architecture, real tests
-  Issues:
-    Important: Missing progress indicators
-    Minor: Magic number (100) for reporting interval
-  Assessment: Ready to proceed
-
-You: [Fix progress indicators]
-[Continue to Task 3]
-```
-
-## Integration with Workflows
-
-Subagent-Driven Development:
-- Review after EACH task
-- Catch issues before they compound
-- Fix before moving to next task
-
-Executing Plans:
-- Review after each batch (3 tasks)
-- Get feedback, apply, continue
-
-Ad-Hoc Development:
-- Review before merge
-- Review when stuck
-
 ## Red Flags
-
-
 
 Never:
 - Skip review because "it's simple"
@@ -114,5 +72,3 @@ If reviewer is wrong:
 - Push back with technical reasoning
 - Show code/tests that prove it works
 - Request clarification
-
-See template at: ./code-reviewer.md

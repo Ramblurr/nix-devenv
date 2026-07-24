@@ -9,7 +9,7 @@ The `extra/` directory (gitignored) contains offline reference material: cloned 
 
 Most of the time the entries in there are symlinks to other documents, be careful your search/glob/list tool (whatever its name is) may not list or follow symlinks, so best explore it with a good 'ol `ls extra` in bash.
 
-Related skills: local-git-reference, for material not in extra/
+Related skills: Skill(local-git-reference), for material not in extra/
 
 ## Finding extra/ (Critical for Worktrees)
 
@@ -60,7 +60,7 @@ rg "pattern" extra/<repo-name>/src/
 - NEVER run `rg` on `extra/` directly - millions of hits in cloned repos
 - Always scope to a specific subpath: `extra/<repo>/src/`, `extra/<name>_docs/`
 - Passing the subpath directly respects the repo's own .gitignore (desirable)
-- For broad searching, use Skill(coding-agents) a subagent instead
+- For broad searching, use Skill(sub-agents) a subagent instead
 
 ## Exploring Reference Material
 
@@ -70,7 +70,7 @@ rg "pattern" extra/<repo-name>/src/
 - Small config files
 - Files you already know the path to
 
-**Large codebases - use Skill(coding-agents):**
+**Large codebases - use Skill(sub-agents):**
 
 Directly reading entire reference codebases pollutes your context window. Instead:
 
