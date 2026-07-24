@@ -106,7 +106,7 @@ Your dispatch must be self-contained and sent via `link_send(triggerTurn:true)`.
 
 Do not use `link_prompt` (90s inactivity) would block you and risk timeout.
 
-After triggering a worker, **WAIT** for its callback before any follow-up to it (Golden Rule).
+After triggering a worker, **WAIT** for its callback before any follow-up to it (Golden Rule). (WAIT = end your turn, do not use sleep to pass time)
 
 
 4. Act on feedback:
