@@ -74,6 +74,11 @@ Placeholders:
 
 Remember: New files don't diff — untracked files are invisible to git diff; always route the reviewer at the file itself, or the review silently covers only the modified files.
 
+Your dispatch must be self-contained and sent via `link_send(triggerTurn:true)`.
+
+After triggering a worker, **WAIT** for its callback before any follow-up to it (Golden Rule).
+
+
 4. Act on feedback:
 - Fix Critical issues immediately
 - Fix Important issues before proceeding
