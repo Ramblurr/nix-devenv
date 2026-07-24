@@ -2,30 +2,40 @@
 
 Lightweight coding agent supporting multiple providers.
 
-Install: `npm install -g @mariozechner/pi-coding-agent`
+This skill about the mechanics of spawning a pi coding agent.
+
+For link tool mechanics (link_send / link_prompt / link_compact / link_list, the
+Golden Rule, delivery shapes, anti-patterns) load Skill(pi-link-coordination)
+and read it first.
+
 
 ## Invocation
 
 ```bash
 # Interactive, use this by default unless human instructions otherwise
-pi
+pi --link-name <scope>@<role>
 
 # With prompt
-pi "Your task"
+pi --link-name <scope>@<role> "Your task"
 
 # Non-interactive (runs and exits)
 pi -p "Your task"
 
 # Include files in prompt
-pi @file.md @image.png "Analyze these"
-
-# Continue previous session
-pi -c "Continue our work"
+pi --link-name <scope>@<role> @file.md @image.png "Analyze these"
 ```
+
+## Naming your subagent
+
+Your subagent's link name must follow this format: `<scope>@<role>`
+
+`<scope>` is basename("$(pwd)")
+
+Common `<role>`s: leader, dev, dev1, dev2, reviewer, researcher
 
 ## Key Flags
 
-- `-p, --print`: Non-interactive mode, runs prompt and exits
+- `--link-name`: see Skill(pi-link-coordination)
 - `--provider <name>`: Provider (default: google). Options: anthropic, openai, google, groq, etc.
 - `--model <id>`: Model ID (default: gemini-2.5-flash)
 - `--api-key <key>`: Override API key
@@ -35,18 +45,13 @@ pi -c "Continue our work"
 - `--thinking <level>`: Thinking level: off, minimal, low, medium, high, xhigh
 - `--system-prompt <text>`: Custom system prompt
 - `--append-system-prompt <text>`: Append to system prompt
+- `-p, --print`: Non-interactive mode, runs prompt and exits. Generally do not use this mode.
 
 ## Examples
 
 ```bash
-# Use OpenAI
-pi --provider openai --model gpt-4o-mini -p "Summarize src/"
-
 # Read-only mode (no file modifications)
-pi --tools read,grep,find,ls -p "Review the code in src/"
-
-# High thinking level for complex tasks
-pi --thinking high "Solve this complex problem"
+pi --link-name <scope>@<role> --tools link_list,link_send,read,grep,find,ls -p "Review the code in src/"
 ```
 
 ## Completion Detection
@@ -59,6 +64,8 @@ pi --thinking high "Solve this complex problem"
 Standard exit or Ctrl+C
 
 ## Communicating and collaborating with Pi subagents
+
+In general, prefer to communicate with the agents using the link tools rather than using Tmux to capture their terminal text.
 
 1. Refer to the Skill(pi-link-coordination)
 2. Using tmuxb send commands: Give your sub agent a name by running `/link-name <name>`

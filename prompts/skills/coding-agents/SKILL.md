@@ -1,52 +1,47 @@
 ---
 name: coding-agents
-description: Spawn and control external coding agents (Claude Code, Codex, Pi) for delegating tasks. Use when (1) user asks to run another coding agent, (2) delegating subtasks to a different AI tool, (3) running multiple agents in parallel on separate issues, (4) spawning an agent in an isolated environment or worktree, (5) user mentions "codex", "pi agent", or running "another claude".
+description: Spawn and control external coding agents (Pi, Claude Code, Codex) for delegating tasks. Use when (1) user asks to run another coding agent, (2) delegating subtasks (such as a code review) to a different AI tool, (3) running multiple agents in parallel on separate issues, (4) spawning an agent in an isolated environment or worktree
 ---
 
 # Coding Agents
 
 Orchestrate external coding agents programmatically. Use this when you want to delegate tasks to other AI coding tools.
 
-If you are a Pi agent:
-- Always prefer to use Pi as a subagent along with Skill(pi-link-coordination) and Skill(tmux), unless told otherwise.
+If you yourself are a Pi agent:
+- Always prefer to spawn additional pi subagents (unless told otherwise). Communicate with them using Skill(pi-link-coordination). If you are not connected to the link hub, that is an error condition, abort and ask the human to fix that right away.
+- Use `link_list` to see if you need to spawn additional agents according to your collaboration policy. 
 
 If you are a Codex agent:
-- Use your collaboration.spawn_agent tool, not the tmux workflow documented here
+- Always prefer your collaboration.spawn_agent tool (unless told otherwise) to spawn subagents.
+- Only use the tmux workflow when controlling non-pi agents.
 
-## Prefer interactive mode
+## Use tmux for interactive agent orchestration
 
-Interactive sessions via tmux should be the default for most tasks. Background mode is only appropriate for the simplest tasks that require very few commands or edits (e.g., "count the files in src/", "what version of node is this project using?").
+Use interactive tmux sessions for agent orchestration.
 
-Why interactive is better:
-- You can observe progress and catch issues early
-- You can respond if the agent asks clarifying questions
-- You can interrupt if the agent goes off track
-- Agents often need multiple turns to complete real work
-- Debugging is much easier when you can see what happened
+tmux provides a persistent, observable environment where you can monitor progress, respond to questions, interrupt incorrect work, and debug issues without losing session state.
 
-Use background mode only when:
-- The task is trivial (one or two simple commands)
-- You are confident the agent will complete without interaction
-- You are running many parallel tasks and cannot watch them all
+The Skill(tmux) defines the required orchestration patterns, including:
 
-## Interactive mode requires the tmux Skill
+* Use of `tmuxb`, tmux buddy tool.
+* The "Orchestrating Claude Code sub-agents" recipe
+* Socket conventions and session management
+* Sending input to agents
+* Monitoring agent output
+* Detecting completion
+* Cleaning up sessions
 
-For interactive sessions, you MUST use the tmux Skill. The tmux Skill contains:
-- "Orchestrating Claude Code sub-agents" recipe - the primary pattern for this use case
-- Socket conventions and session management
-- Sending input, monitoring output, cleanup
+You MUST read and follow Skill(tmux) whenever orchestrating an interactive agent session.
 
-Read and follow the tmux Skill for all interactive agent orchestration.
-
-For parallel work on multiple issues, use the git worktrees Skill to create isolated branches.
+For parallel work on multiple issues, use the git Skill(using-git-worktrees)  to create isolated branches and avoid conflicts.
 
 ## Available agents
 
 Read the relevant reference file for the agent you need right now:
 
+- [references/pi.md](references/pi.md) - Pi, Lightweight multi-provider agent
 - [references/claude-code.md](references/claude-code.md) - Anthropic's Claude Code CLI
 - [references/codex.md](references/codex.md) - OpenAI's Codex CLI
-- [references/pi.md](references/pi.md) - Pi, Lightweight multi-provider agent
 
 Each reference includes: invocation, key flags, and completion detection.
 
