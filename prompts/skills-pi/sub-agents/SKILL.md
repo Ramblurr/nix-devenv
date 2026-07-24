@@ -9,9 +9,11 @@ This skill about the mechanics of spawning a pi coding agent.
 
 Orchestrate external coding agents programmatically. Use this when you want to delegate tasks to other AI coding tools.
 
-If you yourself are a Pi agent:
-- Always prefer to spawn additional pi subagents (unless told otherwise). Communicate with them using Skill(pi-link-coordination). If you are not connected to the link hub, that is an error condition, abort and ask the human to fix that right away.
-- Use `link_list` to see if you need to spawn additional agents according to your collaboration policy. 
+Communicate with them using Skill(pi-link-coordination).
+
+PRE FLIGHT CHECK :If you are not connected to the link hub, and don't have `link_*` tools that is an error condition. Abort now and ask the human to fix that right away.
+
+Use `link_list` to see if you need to spawn additional agents according to your collaboration policy.
 
 For `link_*` tool mechanics (link_send / link_prompt / link_compact / link_list, the
 Golden Rule, delivery shapes, anti-patterns) load Skill(pi-link-coordination)

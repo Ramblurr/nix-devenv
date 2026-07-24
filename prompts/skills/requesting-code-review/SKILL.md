@@ -31,11 +31,31 @@ HEAD_SHA=$(git rev-parse HEAD)
 No? -> 
 Or if you haven't committed yet, reference the staged or dirty working tree files.
 
-2. Dispatch code-reviewer subagent:
+2. Pre flight
 
 Invoke the skills:
 Skill(tmux)
 Skill(sub-agents)
+
+Start your subagent, or re-use an existing one if they are not busy.
+
+Compact (`link_compact`) any reviewer whose window may not fit the
+coming task — judge the fit BEFORE dispatching, not once the window is already
+full. The hazard is Pi's auto-compaction firing MID-TASK, which can shed the
+dispatch brief's details at the worst moment; orchestrated compaction while the
+worker is idle (`link_compact` blocks, then returns) exists to pre-empt exactly
+that.  Compact right before a large or sensitive task so it runs in a clean
+window.  Compaction is a TASK-BOUNDARY operation: never compact a worker between
+its IMPLEMENT and that task's commit — a CONVERGE relay or gate-red retry needs
+the very in-flight state compaction sheds; if the window truly can't fit the
+fix, escalate to the user instead. Because dispatches are self-contained (§3.2),
+the next brief re-supplies everything task-specific; the only irrecoverable loss
+is what the worker learned that is NOT in the plan — aim the compaction
+instructions at exactly that.
+
+
+3. Dispatch code-reviewer subagent:
+
 
 Fill the template at `./code-reviewer.md` (copy it, dont edit it in the skill dir!)
 Aim the checks at THIS task's real risks.
@@ -54,7 +74,7 @@ Placeholders:
 
 Remember: New files don't diff — untracked files are invisible to git diff; always route the reviewer at the file itself, or the review silently covers only the modified files.
 
-3. Act on feedback:
+4. Act on feedback:
 - Fix Critical issues immediately
 - Fix Important issues before proceeding
 - Note Minor issues for later
