@@ -31,9 +31,12 @@ arguments, indent each argument by one space.
  (range 1 10))
 ```
 
-### Alignment
+### Alignment & Structural Line Breaks
 
-Vertically align `let` bindings and map keys:
+Vertically align `let` bindings and map keys. Keep structural partners on
+the same line: a callee with a short configuration map, a map key with its
+value, and a binding with its expression. Use line breaks to separate sibling
+forms, not an introducer from its immediate structural value.
 
 ```clojure
 (let [thing1 "x"
@@ -42,7 +45,44 @@ Vertically align `let` bindings and map keys:
 
 {:name "Bruce"
  :age  30}
+
+{{:keys [several things here]} :sub-map
+ {:keys [several things]}      :sub-map2
+ :keys                         [direct values]
+ :as                           everything}
+
+;; Keep a callee with its options map and a key with its value.
+(state {:id      :workflow/running
+        :initial :workflow/idle}
+       (transition {:event  :system/cooling
+                    :target :workflow/cooling}
+                   (Send {:event   :resources/cleanup-requested
+                          :content cleanup-effect})))
+
+
+{:interaction-feedback  {:enabled?   true
+                         :last-card  nil
+                         :seen-count 0}
+ :media-preparation     {:current   nil
+                         :installed nil}}
+
+;; When the value spans lines, keep its opening form on the key's line.
+{:max-volume (get-in data
+                     [:settings :audio :max-volume])}
+
+;; Avoid separating structural partners.
+;; BAD
+(state
+ {:id :workflow/running})
+
+;;BAD
+{:interaction-feedback
+ {:enabled? true}}
 ```
+
+Break before a value only when needed to preserve the line-length limit or
+make a substantial nested expression clearer. When a value spans lines, align
+its continuation beneath the value.
 
 ### Line Length & Whitespace
 
