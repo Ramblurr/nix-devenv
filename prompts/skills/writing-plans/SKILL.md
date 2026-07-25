@@ -1,150 +1,112 @@
 ---
 name: writing-plans
-description: Use when design is complete and you need detailed implementation tasks for engineers with zero codebase context - creates comprehensive implementation plans with exact file paths, complete code examples, and verification steps assuming engineer has minimal domain knowledge
+description: Turns an approved design into a short, ordered implementation plan of observable capability slices. Use when design is complete and implementation needs decomposition, ordering, touchpoints, and concrete proof without scripted code.
 ---
 
-<required>
-**CRITICAL: Follow these steps in order:**
+# Writing Plans
 
-- Read the 'Guidelines'.
-- Create a comprehensive plan that a senior engineer can follow.
-<system-reminder>Any absolute paths in your plan MUST take into account any worktrees that may have been created</system-reminder>
-- Think about edge cases. Add them to the plan.
-- Think about questions or areas that require clarity. Add them to the plan.
-- Emphasize how you will test your plan.
-- Present plan to user.
-- Invoke Skill(prompts-documents) to determine document naming (NNN-concept.md pattern).
-- Write plan to `prompts/NNN-<thing>_plan.md`.
-  </required>
+Turn a spec into a short, ordered list of **vertical slices**. A slice is one observable capability cut through every part it needs — **working on its own** and **verifiable on its own**.
 
-# Guidelines
+The spec already says WHAT and WHY. The plan adds only three things: how the work is **sliced**, in what **order**, and the **end-to-end behavior** that proves each slice works. Assume a skilled executor with the codebase and the convention skills — they know HOW. Do not script it.
 
-## Output Location
+Announce at the start: "I'm using the writing-plans skill to create the implementation plan."
 
-Write plan to: `prompts/NNN-<thing>_plan.md` (primary PRD).
+## Before planning
 
-Use `Skill(prompts-documents)` to determine the appropriate NNN sequence number.
-Check existing files in `prompts/` to determine the appropriate name.
+Use this skill only after the design is settled.
+Read the design, affected code, project instructions, and relevant convention skills.
+If a blocking product or architecture question remains, stop and resolve it instead of burying it in the plan.
+Reference applicable skills and project documents; never restate them.
+Use Skill(prompts-documents) to choose the plan path and filename.
 
-## Overview
+## The one rule: slice vertically, never horizontally
 
-Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste. Document everything they need to know: which files to touch for each task, code, testing, docs they might need to check, how to test it. Give them the whole plan as bite-sized tasks. DRY. YAGNI. TDD.
+Each task is a **vertical slice**, never a technical layer.
+A slice is correct only when all three are true:
 
-Assume they are a talented developer. However, assume that they know almost nothing about our toolset or problem domain. Assume they don't know good test design very well.
+- **Works on its own:** it leaves the system working with one more coherent capability.
+- **Verifiable on its own:** it has a concrete observation that proves the capability.
+- **One capability:** describe an outcome for a user, caller, operator, or system—not an implementation category.
 
-Do not add code, but include enough detail that the necessary code is obvious.
+```text
+❌ HORIZONTAL — value appears only after the final task
+   Task 0: Write all tests to test the universe
+   Task 1: Define all schemas and records
+   Task 2: Implement all domain functions and handlers
+   Task 3: Wire all interfaces
+   Task 4: Integrate everything and verify the finished feature
 
-Plan files are written in the workflow directory refer to the AGENTS.workflow.md information.
+✅ VERTICAL — each task delivers and proves an outcome
+   App:     A member can view saved links; then add one; then mark one read
+   Library: A caller can decode a valid document; then diagnose an invalid one
+```
 
-## Bite-Sized Task Granularity
+A slice may touch one file or many layers; layer count does not matter.
+Fold shared groundwork into the first slice that consumes it.
+If groundwork must stand alone, make it the smallest independently verifiable task and state why it cannot be folded.
+Allow plain tasks for documentation, migrations, operational work, and final housekeeping; give each task its own proof.
 
-Each step is one action (2-5 minutes):
+## Require concrete proof
 
-- "Write the failing test for `behavior`" - step
-- "Write the failing test for `other behavior`"
-- "Run it to make sure it fails" - step
-- "Implement the minimal code to make the test pass" - step
-- "Run the tests and make sure they pass" - step
-- "Commit" - step
+Every slice and plain task names the observation that demonstrates completion.
+Choose the cheapest proof at the highest meaningful boundary: a focused test, REPL observation, request, public API call, CLI invocation, build evaluation, or manual check.
+Here, **end-to-end** means through the highest meaningful boundary for that capability; it does not require a browser or multiple architectural layers.
+State the input or action and the expected result.
 
-## Markdown Writing Style
+| Weak proof | Strong proof |
+|---|---|
+| "Test that parsing works." | "Calling the public decoder with a truncated header returns an `invalid-header` error and no partial result." |
+| "Run CI." | "Loading the package in a clean process and calling its public entry point returns the documented value." |
 
-This does not apply to clojure docstrings, but to markdown documentation or notes documents.
+Proof is a completion criterion, not execution ceremony.
+Do not prescribe repeated red-green steps, full-suite runs, CI runs, or commits inside each slice.
+Reserve project-wide verification for the completion gate.
 
-- Put each prose sentence on its own source line so it remains easy to reorder and edit.
-- Never use bold formatting
-- Separate consecutive prose sentences with exactly one empty source line: write exactly two newline characters (`First sentence.\n\nSecond sentence.`), never three or more.
-- Never use emoji
-- Add Markdown tables whenever you need to depict tabular data.
-- Add ascii graphics whenever you need to depict integration points and system architecture.
-- Use codeblocks where needed.
-- Do NOT include line numbers. This is extremely brittle documentation.
+For Clojure execution, require Skill(clojure-repl-driven-development) and Skill(clojure-eval).
+The plan states behavior to observe through the running program; those skills own the source-on-disk, reload, evaluation, and preservation workflow.
+A focused test may preserve behavior after REPL exploration; the plan must not impose test-first discovery.
 
-## Plan Document Header
-
-Every plan MUST start with this header:
+## Use this plan shape
 
 ```markdown
-# [Feature Name] Implementation Plan
+# [Feature] Implementation Plan
+Goal: [one sentence]
+Design: [path to the approved design]
+Constraints: [only cross-cutting constraints that are easy to miss; omit if empty]
 
-Goal: [One sentence describing what this builds]
+## Slices
+### Slice 1: [observable outcome]
+- Delivers: [new capability or preserved invariant]
+- Touchpoints: [important repo-relative files, namespaces, interfaces, or state boundaries]
+- Proof: [action or input and expected observation]
+- Notes: [only non-obvious decisions, risks, or dependencies; omit if empty]
 
-Architecture: [2-3 sentences about approach]
-
-Tech Stack: [Key technologies/libraries]
-
-Related:  [Supercedes|Relates to|Builds on|etc] <other planning docs in the dir>
-
-## Problem statement
-
-[Prose/exposition about the background and what is being solved]
-
+## Completion gate
+- [project-wide checks required once after the slices]
+- [non-slice documentation or operational verification, if needed]
 ```
 
-## Test Section
+Use one checkbox for each slice or plain task when tracking is useful; do not turn every field into a checkbox.
+Touchpoints identify architecture, not an exhaustive file inventory.
 
-Every plan MUST have a test section. This should be written first, and should
-document how you plan to test the *behavior*.
+## Keep it reviewable
 
-```markdown
+Use as few slices as the work needs; most plans should stay within 1–7 slices and fewer than 100 lines.
+If the plan grows beyond that, remove duplicated design and routine implementation detail first; then split independent scope into separate plans.
 
-## Testing Plan
+Exclude routine code, command transcripts, expected test-run output, per-file instructions, repeated constraints, and speculative abstractions.
+Include exact commands or data details only when safety, destructive operations, migrations, or unusual configuration require them.
+Never use placeholders such as "handle edge cases," "similar to above," or "implement later."
 
-I will add an integration test that ensures foo behaves like blah. The
-integration test will mock A/B/C. The test will then call function/cli/etc.
+## Self-review
 
-I will add a unit test that ensures baz behaves like qux...
-```
+Before saving, verify:
 
-You should end EVERY testing plan section by writing:
+1. Every requirement maps to a slice or plain task with concrete, appropriate proof.
+2. Each slice names an outcome rather than a technical layer.
+3. Later slices depend only on earlier slices.
+4. Groundwork is folded into its first consumer unless a stated constraint prevents it.
+5. The plan references rather than repeats the design and other skills.
+6. The plan stays within the length target or explains why the scope cannot split.
 
-```markdown
-NOTE: I will write *all* tests before I add any implementation behavior.
-```
-
-Invoke `Skill(test-driven-development)` for all implementation.
-
-<system-reminder>Your tests should NOT contain tests for datastructures or
-types. Your tests should NOT simply test mocks. Always test actual behavior.</system-reminder>
-
-If you are given an alternate Plan Document Structure that has a testing section, 
-then incorporate the above instructions into it.
-This is non-negotiable, regardless of your other instructions arre.
-
-## Plan Document Footer
-
-Every plan MUST end with this footer:
-
-```markdown
-## Testing Details
-
-[Brief description of what tests are being added and how they specifically test BEHAVIOR and NOT just implementation]
-
-## Implementation Details
-[maximum 10 bullets about key details]
-
-## Question
-
-[any questions or concerns that may be relevant that need answers]
-
----
-```
-
-## Final Output
-
-After completing planning, output:
-
-```
-## Planning Complete
-
-PRD Document: prompts/NNN-concept.md
-
-Ready for implementation.
-```
-
-## Remember
-
-- Exact file paths always, taking into account worktrees
-- Exact commands with expected output
-- Reference relevant skills with @ syntax
-- DRY, YAGNI, TDD
+Fix failures inline, save the plan, and report its path for review.
