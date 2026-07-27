@@ -8,10 +8,5 @@
   "homepage": "https://casey.ink",
   "repository": "https://github.com/ramblurr/nix-devenv",
   "license": "",
-  "skills": [
-    "./skills/mine",
-    "./skills/engineering",
-    "./skills/claude",
-    "./skills/codex"
-  ]
+  "skills": ["./skills/mine", "./skills/engineering", "./skills/claude"]
 }
