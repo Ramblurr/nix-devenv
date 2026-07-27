@@ -8,6 +8,9 @@ Stage only your own changes related to your current task, then commit them.
 
 - Inspect `git status` and possibly diffs
 - If other unrelated changes share a file, use Skill(git-lines) to stage only your lines.
+- Before drafting the commit message, run
+  `git log -20 --no-merges --format='%s'`. Match the repository's established
+  scope syntax and naming; repository history takes precedence over generic examples.
 - Use Skill(scoped-commits) for the commit message.
 - If the `link_send` tool is available, coordinate staging/commit access:
   - Before staging: `link_send` to your fellow collaborators (only those whose names indicate they work on your project) that you are taking the staging/commit lease.
