@@ -1,6 +1,6 @@
 ---
 name: local-git-reference
-description: NEVER read, search, unzip, extract, or otherwise inspect source from dependency caches such as ~/.gitlibs, ~/.m2, ~/.cache/maven, or analogous build-tool caches use this skill instead. Use whenever looking up project or dependency source code, documentation, examples, specs, or upstream context. 
+description: NEVER read, search, unzip, extract, or otherwise inspect source from dependency caches such as /nix/store, ~/.gitlibs, ~/.m2, ~/.cache/maven, or analogous build-tool caches use this skill instead. Use whenever looking up project or dependency source code, documentation, examples, specs, or upstream context. 
 ---
 
 # Local Git Reference
