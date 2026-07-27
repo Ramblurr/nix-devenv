@@ -18,12 +18,13 @@ Invoke Skill(over-engineering) now.
 
 The review is read-only with respect to implementation files, generated files,
 Git staging, and commits.
-Writing the review report under `prompts/` is required and is the only permitted
-file change.
+Writing the review report under the appropriate
+`.scratch/NNN-<feature-or-concept>/` directory is required and is the only
+permitted file change.
 
 Use the caller-supplied report path.
 If none was supplied, choose the next appropriate
-`prompts/XXX-_overengreview<X>.md` path.
+`.scratch/NNN-<feature-or-concept>/overengreview<N>.md` path.
 
 Write the complete review to disk before reporting completion.
 A Link callback is only a verdict and artifact pointer; it never contains or
@@ -84,7 +85,7 @@ lists them. If the user asks for non-verbose mode, you can explain more.
 ## Deliverables
 
 1. Write the complete, self-contained review to the designated
-   `prompts/XXX-_overengreview<X>.md` path.
+   `.scratch/NNN-<feature-or-concept>/overengreview<N>.md` path.
 2. Do not modify implementation files, generated files, the Git index, or
    commits.
 3. If contacted through Link, send only one of:
