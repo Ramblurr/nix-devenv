@@ -8,8 +8,7 @@ result
 .env
 extra/
 .direnv
-!prompts
-prompts/skills/.system/
+skills/skills/.system/
 prompts/PROMPTS.md
 __pycache__
-prompts/skills/plannotator-*
+skills/skills/plannotator-*
