@@ -22,6 +22,7 @@ Use this skill as an index. Read only the reference file(s) relevant to the libr
 - [core.async.flow](references/core-async-flow.md)
 - [Datomic](datomic/index.md)
 - [donut.party/system](references/donut-system.md)
+- [Fulcro Spec](references/fulcro-spec.md)
 - [Guardrails](references/guardrails/overview.md) — [gspec syntax](references/guardrails/gspec-syntax.md)
 - [Hato](references/hato.md)
 - [http-kit](references/http-kit.md)

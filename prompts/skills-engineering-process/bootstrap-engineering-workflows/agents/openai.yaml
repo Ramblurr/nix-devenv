@@ -1,0 +1,5 @@
+interface:
+  display_name: "Bootstrap Engineering Workflows"
+  short_description: "Configure a repo for engineering workflows"
+policy:
+  allow_implicit_invocation: false

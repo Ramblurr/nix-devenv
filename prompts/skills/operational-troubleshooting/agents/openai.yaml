@@ -1,0 +1,3 @@
+interface:
+  display_name: "Operational Troubleshooting"
+  short_description: "Diagnose running systems through evidence"

@@ -1,0 +1,49 @@
+Matt Pocock skills attribution
+
+Upstream repository: https://github.com/mattpocock/skills
+
+The following local skills are copied or adapted from upstream:
+
+- `prompts/skills-engineering-process/bootstrap-engineering-workflows/` ← [`skills/engineering/setup-matt-pocock-skills/`](https://github.com/mattpocock/skills/tree/main/skills/engineering/setup-matt-pocock-skills)
+- `prompts/skills-engineering-process/codebase-design/` ← [`skills/engineering/codebase-design/`](https://github.com/mattpocock/skills/tree/main/skills/engineering/codebase-design)
+- `prompts/skills-engineering-process/code-review/` ← [`skills/engineering/code-review/`](https://github.com/mattpocock/skills/tree/main/skills/engineering/code-review)
+- `prompts/skills-engineering-process/diagnosing-bugs/` ← [`skills/engineering/diagnosing-bugs/`](https://github.com/mattpocock/skills/tree/main/skills/engineering/diagnosing-bugs)
+- `prompts/skills-engineering-process/domain-modeling/` ← [`skills/engineering/domain-modeling/`](https://github.com/mattpocock/skills/tree/main/skills/engineering/domain-modeling)
+- `prompts/skills-engineering-process/grilling/` ← [`skills/productivity/grilling/`](https://github.com/mattpocock/skills/tree/main/skills/productivity/grilling)
+- `prompts/skills-engineering-process/grill-with-docs/` ← [`skills/engineering/grill-with-docs/`](https://github.com/mattpocock/skills/tree/main/skills/engineering/grill-with-docs)
+- `prompts/skills-engineering-process/handoff/` ← [`skills/productivity/handoff/`](https://github.com/mattpocock/skills/tree/main/skills/productivity/handoff)
+- `prompts/skills-engineering-process/implement/` ← [`skills/engineering/implement/`](https://github.com/mattpocock/skills/tree/main/skills/engineering/implement)
+- `prompts/skills-engineering-process/improve-codebase-architecture/` ← [`skills/engineering/improve-codebase-architecture/`](https://github.com/mattpocock/skills/tree/main/skills/engineering/improve-codebase-architecture)
+- `prompts/skills-engineering-process/prototype/` ← [`skills/engineering/prototype/`](https://github.com/mattpocock/skills/tree/main/skills/engineering/prototype)
+- `prompts/skills-engineering-process/research/` ← [`skills/engineering/research/`](https://github.com/mattpocock/skills/tree/main/skills/engineering/research)
+- `prompts/skills-engineering-process/resolving-merge-conflicts/` ← [`skills/engineering/resolving-merge-conflicts/`](https://github.com/mattpocock/skills/tree/main/skills/engineering/resolving-merge-conflicts)
+- `prompts/skills-engineering-process/tdd/` ← [`skills/engineering/tdd/`](https://github.com/mattpocock/skills/tree/main/skills/engineering/tdd)
+- `prompts/skills-engineering-process/to-spec/` ← [`skills/engineering/to-spec/`](https://github.com/mattpocock/skills/tree/main/skills/engineering/to-spec)
+- `prompts/skills-engineering-process/to-tickets/` ← [`skills/engineering/to-tickets/`](https://github.com/mattpocock/skills/tree/main/skills/engineering/to-tickets)
+- `prompts/skills-engineering-process/triage/` ← [`skills/engineering/triage/`](https://github.com/mattpocock/skills/tree/main/skills/engineering/triage)
+- `prompts/skills-engineering-process/wayfinder/` ← [`skills/engineering/wayfinder/`](https://github.com/mattpocock/skills/tree/main/skills/engineering/wayfinder)
+
+The original MIT license follows.
+
+MIT License
+
+Copyright (c) 2026 Matt Pocock
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+

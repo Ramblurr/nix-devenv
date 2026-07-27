@@ -166,6 +166,83 @@ foo'    - A variation of `foo`
 
 Follow project conventions when they differ from this table.
 
+### Interface pattern: Public Namespace / `impl` Namespace Split
+
+For a substantial new module, prefer the **public namespace / `impl` namespace
+split**. The public namespace presents the module's stable, documented interface;
+one or more `.impl` namespaces contain its implementation. Prefer the short
+namespace segment `impl` over `internal` or `private`.
+
+Use this pattern by default when designing a large new system. It does not belong
+in every namespace. Before introducing it into an existing codebase, ask the human
+whether they want the pattern. Keep a small or simple module in one namespace when
+the split would add only navigation.
+
+Public namespace rules:
+
+- Treat every interned var as caller-facing API. Do not add `defn-`, `^:private`,
+  support constants, helper functions, or other implementation details.
+- Put the canonical docstrings on the public functions. Define their complete
+  arglists, arities, type hints, and other caller-visible metadata there.
+- Delegate function bodies directly to the implementation namespace. Keep business
+  logic out of the public namespace.
+- A public namespace may delegate to multiple `.impl` namespaces when distinct
+  implementation areas require it. Do not force every public function through one
+  implementation namespace.
+- Require only the public namespace from caller code.
+
+Implementation namespace rules:
+
+- Place implementation namespaces below `.impl`, such as
+  `project.automation.impl.system`. The namespace path, rather than var metadata,
+  marks them as implementation details.
+- Keep implementation vars syntactically public. Prefer `defn` and `def` to
+  `defn-` and `^:private` so developers can call them directly from the REPL and
+  tests.
+- Give each implementation entry point that backs a public function a short
+  docstring that links to the canonical public docstring. Use a fully qualified
+  wikilink such as `See [[project.automation/create]].` instead of duplicating the
+  contract.
+
+```clojure
+;; src/project/automation.clj
+(ns project.automation
+  "Controls certificate automation."
+  (:require
+   [project.automation.impl.system :as system]))
+
+(defn create
+  "Creates an automation system without starting it."
+  [config]
+  (system/create config))
+
+(defn start
+  "Starts `system` and returns it."
+  [system]
+  (system/start system))
+
+;; src/project/automation/impl/system.clj
+(ns project.automation.impl.system
+  "Implementation of [[project.automation]].")
+
+(defn create
+  "See [[project.automation/create]]."
+  [config]
+  {:config config
+   :started? (atom false)})
+
+(defn start
+  "See [[project.automation/start]]."
+  [system]
+  (reset! (:started? system) true)
+  system)
+```
+
+This split is an intentional exception to trivial wrapper indirection: the
+delegating functions establish a documented namespace-level interface for a
+substantial module. The rule against trivial wrappers still applies inside both
+namespaces.
+
 ### Function Naming
 
 Follow Stuart Sierra's conventions:

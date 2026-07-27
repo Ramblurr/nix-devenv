@@ -26,10 +26,9 @@ Do not improvise on a live system. Inspect first, write the commands down, prefl
 
 Persist the ledger before changing the target system.
 
-Preferred locations:
+Preferred location:
 
-1. If `./prompts/` exists, invoke Skill(prompts-documents) and create a new document or update the one you are working from. OCP ledgers are workflow documents; do not commit them unless the operator asks.
-2. Otherwise, if the current project directory is writable, create `.agents/ocp/YYYYMMDDTHHMMSSZ-<slug>.md`.
+If the current project directory is writable, create `.scratch/ocp/YYYYMMDDTHHMMSSZ-<slug>.md`.
 
 Record `Ledger path:` at the top. For remote operations, prefer storing the ledger on the operator workstation or project workspace, not on the target host, unless the operator wants target-local records.
 
