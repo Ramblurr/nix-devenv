@@ -1,6 +1,6 @@
 ---
 name: local-git-reference
-description: Use when looking up project docs, source, examples, specs, or upstream context, and extra/ does not contain what you need. Check ~/src first, clone relevant repos with ghq, and prefer local inspection/search over remote browsing.
+description: NEVER read, search, unzip, extract, or otherwise inspect source from dependency caches such as ~/.gitlibs, ~/.m2, ~/.cache/maven, or analogous build-tool caches use this skill instead. Use whenever looking up project or dependency source code, documentation, examples, specs, or upstream context. 
 ---
 
 # Local Git Reference
@@ -9,7 +9,7 @@ description: Use when looking up project docs, source, examples, specs, or upstr
 
 Use it for any git repo that may contain information relevant to the task, not just code repositories. That includes docs repos, examples, specs, infra repos, deployment repos, and companion repos related to a project.
 
-Be proactive. If a project, tool, library, or service seems relevant, look for likely repos and clone them into `~/src` so you can inspect and search them locally.
+Be proactive. If a project, tool, dependency, library, or service seems relevant, look for likely repos and clone them into `~/src` so you can inspect and search them locally.
 
 Related skills: extra-reference-material for material in extra/
 
@@ -79,7 +79,7 @@ Prioritize the files most likely to answer the question:
 - `examples/`
 - tests
 - configuration files
-- source files implementing the relevant feature
+- source code implementing the relevant feature
 
 Use local repo contents as primary reference material whenever practical.
 
