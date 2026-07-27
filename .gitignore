@@ -8,7 +8,7 @@ result
 .env
 extra/
 .direnv
-skills/skills/.system/
+skills/mine/.system/
 prompts/PROMPTS.md
 __pycache__
 skills/skills/plannotator-*

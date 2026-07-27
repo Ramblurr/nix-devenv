@@ -1,0 +1,17 @@
+{
+  "name": "my",
+  "version": "0.0.1",
+  "description": "my skills",
+  "author": {
+    "name": "Ramblurr"
+  },
+  "homepage": "https://casey.ink",
+  "repository": "https://github.com/ramblurr/nix-devenv",
+  "license": "",
+  "skills": [
+    "./skills/mine",
+    "./skills/engineering",
+    "./skills/claude",
+    "./skills/codex"
+  ]
+}

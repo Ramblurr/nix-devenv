@@ -12,3 +12,7 @@ nix run .#locker
 ```
 
 The locker is derived by `clj-helpers.lib.mkCljLib` (from [clojure-nix-locker-helpers](https://github.com/outskirtslabs/clojure-nix-locker-helpers), a direct input of the template) and runs the same prep/prefetch/build commands as the package build.
+
+## Maintaining the Claude plugin skill list
+
+Whenever you add, rename, or delete a skill under `skills/`, update the `skills` array in `.claude-plugin/plugin.json` so it lists every skill directory.
