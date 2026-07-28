@@ -9,8 +9,6 @@ This skill about the mechanics of spawning a pi coding agent.
 
 Orchestrate external coding agents programmatically. Use this when you want to delegate tasks to other AI coding tools.
 
-Communicate with them using Skill(pi-link-coordination).
-
 PRE FLIGHT CHECK :If you are not connected to the link hub, and don't have `link_*` tools that is an error condition. Abort now and ask the human to fix that right away.
 
 Use `link_list` to see if you need to spawn additional agents according to your collaboration policy.
@@ -37,7 +35,9 @@ Tmux rules:
 - One tmux session per project. REPL, dev watchers, agents, all go in one tmux session
 
 
-## Invocation
+## Booting Sub Agents
+
+If you use the `link_list` tool and notice there are no suitable agents with your project scope, then you should boot them up inside your tmux session in an appropriately named tmux pane.
 
 ```bash
 # Interactive, use this by default unless human instructions otherwise
@@ -50,7 +50,7 @@ pi -p "Your task"
 pi --link-name <scope>@<role> @file.md @image.png "Analyze these"
 ```
 
-## Naming your subagent
+### Naming your subagent
 
 Your subagent's link name must follow this format: `<scope>@<role>`
 
@@ -58,7 +58,7 @@ Your subagent's link name must follow this format: `<scope>@<role>`
 
 Common `<role>`s: leader, dev, dev1, dev2, reviewer, researcher
 
-## Key Flags
+### Key Flags
 
 - `--link-name`: see Skill(pi-link-coordination)
 - `--tools <list>`: Comma-separated tools to enable. Use this rarely.
@@ -67,7 +67,7 @@ Common `<role>`s: leader, dev, dev1, dev2, reviewer, researcher
 
 `pi --help` for more info
 
-## Examples
+### Examples
 
 ```bash
 # Read-only mode (no file modifications)
@@ -75,17 +75,34 @@ pi --link-name <scope>@<role>
 # then `link_send(triggerTurn: true)` with prompt "Review the code in src/"
 ```
 
-## Important:
+## Dispatching Tasks to Subagents
 
-- Your dispatch must be self-contained and sent via `link_send(triggerTurn:true)`.
-- For active work: Do not use `link_prompt` (90s inactivity) would block you and risk timeout.
-- For not active work (Quick pre-start question, etc):  `link_prompt` is fine.
+Read Skill(pi-link-coordination) before using the Link tools.
 
-## Completion Detection
+### Choose the mode
 
-- Non-interactive mode: program exits
-- Interactive mode: returns to Pi TUI prompt
+- **Quick consultation:** One bounded question, answerable mostly from existing context with little tool use and predictably short execution. Use `link_prompt`. No issue is required.
+- **Delegated task:** Research, implementation, substantial tool use, multiple stages, or uncertain execution time. Follow the workflow below.
 
-## Exit Command
+### Dispatch a delegated task
 
-Ctrl+C
+1. Ensure an independently executable task exists in the issue tracker. Create it first if necessary. The issue is the single source of truth; do not repeat its requirements in the dispatch.
+2. Use `link_list` to select a suitable idle worker. Assign at most one active task to each worker.
+3. Manage context at the task boundary:
+   - Dispatch directly to a fresh worker.
+   - Before switching a worker to a different task, compact it while idle.
+   - Preserve its context throughout the current task.
+
+   A task remains active until its final callback is accepted and no follow-up is expected. Fixes, blocked-question responses, validation retries, convergence, and commit work remain part of the same task. Never compact during this period.
+4. Send the assignment with `link_send(triggerTurn: true)`. Include only:
+   - Task name and issue ID
+   - This callback contract:
+     - Reply to the orchestrator's exact Link name with `link_send(triggerTurn: true)`.
+     - Include the task ID and `DONE` or `BLOCKED`.
+     - Include the deliverable file path, or state `no deliverable file`.
+     - For `BLOCKED`, include the blocker or question.
+5. Track the task and worker as outstanding. Dispatch independent tasks to distinct workers before yielding.
+
+### Wait for completion
+
+Continue unrelated work or end the turn. The callback is the completion signal; do not sleep or poll for progress.
