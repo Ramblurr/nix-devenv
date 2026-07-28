@@ -17,27 +17,29 @@ For `link_*` tool mechanics (link_send / link_prompt / link_compact / link_list,
 Golden Rule, delivery shapes, anti-patterns) load Skill(pi-link-coordination)
 and read it first.
 
-## Use tmux for interactive agent orchestration
+## Project scope boundary
 
-Use interactive tmux sessions for agent orchestration.
+The Link hub is shared by agents from many unrelated projects. Treat `link_list` as a global directory, not as a pool of workers available to your project.
 
-tmux provides a persistent, observable environment where you can monitor progress, respond to questions, interrupt incorrect work, and debug issues without losing session state.
+Before selecting a worker, determine your `<scope>` as defined under **Naming your subagent**. A terminal is eligible only when its Link name begins with the exact `<scope>@` prefix. Filter by scope before considering role, status, cwd, or repository access; a matching role such as `reviewer` never makes a foreign-scope terminal eligible.
 
-The Skill(tmux) defines the required orchestration patterns, including:
+Never send tasks or prompts to, or compact, an out-of-scope terminal. Ignore those terminals. If too few eligible terminals exist, boot new agents in your project scope as described below.
 
-* Use of `tmuxb`, tmux buddy tool.
-* Socket conventions and session management
-* Sending input to tmux
-* Monitoring agent output in tmux
+This `<scope>@<role>` policy overrides generic naming examples in Skill(pi-link-coordination).
 
-Tmux rules:
-- You MUST read and follow Skill(tmux) whenever orchestrating an interactive agent session.
-- One tmux session per project. REPL, dev watchers, agents, all go in one tmux session
+## Use one tmux session per project
 
+Use interactive tmux sessions for agent orchestration. They provide a persistent, observable environment where you can monitor progress, answer questions, interrupt incorrect work, and debug without losing session state.
+
+Before booting an agent, read and follow Skill(tmux), then run `tmuxb list` from the project cwd. Reuse the project's existing tmux session when one exists. A `.tmuxb_session` file identifies that session when present.
+
+The project session may already contain REPLs, watchers, dev servers, or other long-lived processes. Preserve them. Launch each new agent in its own window or pane inside that same project session; never create a tmux session per agent, role, or reviewer.
+
+If the project has no tmux session, create exactly one project-scoped session with `tmuxb new <scope>`. Put all agents and long-lived project processes in that session. Follow Skill(tmux) for session discovery, pane control, capture-before-send, and verification.
 
 ## Booting Sub Agents
 
-If you use the `link_list` tool and notice there are no suitable agents with your project scope, then you should boot them up inside your tmux session in an appropriately named tmux pane.
+When `link_list` shows too few eligible agents in your project scope, boot them in new windows or panes of the shared project tmux session.
 
 ```bash
 # Interactive, use this by default unless human instructions otherwise
@@ -87,7 +89,7 @@ Read Skill(pi-link-coordination) before using the Link tools.
 ### Dispatch a delegated task
 
 1. Ensure an independently executable task exists in the issue tracker. Create it first if necessary. The issue is the single source of truth; do not repeat its requirements in the dispatch.
-2. Use `link_list` to select a suitable idle worker. Assign at most one active task to each worker.
+2. Use `link_list` to select an eligible idle worker under the **Project scope boundary**. Assign at most one active task to each worker.
 3. Manage context at the task boundary:
    - Dispatch directly to a fresh worker.
    - Before switching a worker to a different task, compact it while idle.

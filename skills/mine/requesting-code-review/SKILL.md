@@ -5,19 +5,19 @@ description: Dispatch code-review subagents through Pi Link. Use when Skill(code
 
 # Requesting Code Review
 
-This skill owns reviewer transport. The calling review skill owns policy, review content, templates, report-path allocation, and findings.
+This skill owns reviewer transport and enforces the project scope boundary from Skill(sub-agents). The calling review skill owns review policy, content, templates, report-path allocation, and findings.
 
-Before step 1, read Skill(pi-link-coordination) completely. It is the single source of truth for Link tool choice, terminal state, context management, async callbacks, and the Golden Rule.
+Before step 1, read Skill(sub-agents) completely for project-scope and worker-eligibility rules. Then read Skill(pi-link-coordination) completely for Link tool choice, terminal state, context management, async callbacks, and the Golden Rule.
 
 ## 1. Acquire reviewers
 
-Run `link_list` and assign a different idle terminal to each independent review. Confirm each target can access the repository and its report path. Every brief uses absolute paths.
+Run `link_list`. Apply the project scope boundary from Skill(sub-agents) before considering role, status, cwd, or repository access. Assign a different eligible idle terminal to each independent review. Confirm each target can access the repository and its report path. Every brief uses absolute paths.
 
-When there are too few suitable terminals, use Skill(sub-agents) to start them, wait for them to connect, then run `link_list` again.
+When there are too few eligible same-scope terminals, follow Skill(sub-agents) to start them, wait for them to connect, then run `link_list` again.
 
 Run `link_compact` on every selected reviewer after it becomes idle and before each new review, regardless of reported context usage. Wait for each compaction to complete before dispatch. If compaction declines or times out, use `link_list` to confirm the target's state and repeat preflight until compaction succeeds.
 
-**Complete when:** every review has one distinct, idle target with repository access and a completed pre-dispatch compaction.
+**Complete when:** every review has one distinct, eligible same-scope, idle target with repository access and a completed pre-dispatch compaction.
 
 ## 2. Assemble each brief
 
