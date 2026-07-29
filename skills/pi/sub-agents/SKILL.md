@@ -72,9 +72,12 @@ Common `<role>`s: leader, dev, dev1, dev2, reviewer, researcher
 ### Examples
 
 ```bash
-# Read-only mode (no file modifications)
 pi --link-name <scope>@<role>
 # then `link_send(triggerTurn: true)` with prompt "Review the code in src/"
+
+# Launch an agent into the project's tmux session
+tmux new-window -t <project-session> -n reviewer2 -c "$PWD" \
+     'pi --link-name <scope>@reviewer1'
 ```
 
 ## Dispatching Tasks to Subagents

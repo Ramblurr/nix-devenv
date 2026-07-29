@@ -11,6 +11,17 @@ We use a small tmux wrapper called tmux-buddy (cli command: `tmuxb`).
 A practical guide for LLM agents using tmuxb to interact with tmux sessions.
 This guide emphasizes defensive practices that account for shared terminal sessions and timing uncertainties.
 
+## Tool Boundary
+
+Use `tmuxb` for listing, capture, watching, and sending input. Use native
+`tmux` when `tmuxb` does not expose a required window or pane lifecycle
+operation, such as `new-window`, `split-window`, `kill-pane`,
+`rename-window`, or `respawn-pane`.
+
+Keep subagents in the existing project session, use the same tmux socket, and
+verify changes afterward with `tmuxb windows`, `tmuxb panes`, or
+`tmuxb capture`.
+
 ## Quickstart (isolated socket, project scoped)
 
 
