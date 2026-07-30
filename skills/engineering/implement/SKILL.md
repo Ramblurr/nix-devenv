@@ -1,7 +1,6 @@
 ---
 name: implement
 description: Implements a piece of work from a spec or set of tickets.
-disable-model-invocation: true
 ---
 
 Implement the work described by the user in the spec or tickets.
@@ -23,6 +22,6 @@ Take the findings with a grain of salt, reviewers are not infallible. If you sus
 - Request clarification
 - Loop in the human
 
-If working from a local markdown ticket (`.scratch/…/issues/<NN>-<slug>.md`), update its `**Status:**` field to `resolved` as part of the same commit, so the resolved state and the code land atomically. If .scratch is gitignored, thats fine leave it that way.
+If working from a local markdown ticket (`.scratch/…/issues/<NN>-<slug>.md`), tick off any checkboxes tracking the work inside and update its `**Status:**` field to `resolved` as part of the same commit, so the resolved state and the code land atomically. If .scratch is gitignored, thats fine leave it that way.
 
 Blocking edges on other tickets read this field to determine when they can start, so leaving it as `ready-for-agent` after the work is done silently holds up the frontier.
