@@ -18,13 +18,9 @@ Invoke Skill(over-engineering) now.
 
 The review is read-only with respect to implementation files, generated files,
 Git staging, and commits.
-Writing the review report under the appropriate
-`.scratch/NNN-<feature-or-concept>/` directory is required and is the only
-permitted file change.
+Writing the Org mode review report under the appropriate `.scratch-org/NNN-<feature-or-concept>/` directory is required and is the only permitted file change.
 
-Use the caller-supplied report path.
-If none was supplied, choose the next appropriate
-`.scratch/NNN-<feature-or-concept>/overengreview<N>.md` path.
+Use the caller-supplied report path. If none was supplied, choose the next appropriate `.scratch-org/NNN-<feature-or-concept>/overengreview<N>.org` path.
 
 Write the complete review to disk before reporting completion.
 A Link callback is only a verdict and artifact pointer; it never contains or
@@ -63,16 +59,15 @@ After the findings, write the metric `net: -<N> lines possible.`
 
 The report must end with this section and nothing may follow it:
 
-```markdown
-## Progress
+```org
+* Progress
 
 - [ ] TODO F1
 - [ ] TODO F2
 ```
 
 Include one unchecked `TODO` item for every finding, in finding order.
-If there are no findings, write `Lean already. Ship.`, `net: -0 lines possible.`,
-and end with a `## Progress` section containing `No findings.`
+If there are no findings, write `Lean already. Ship.`, `net: -0 lines possible.`, and end with a `* Progress` section containing `No findings.`
 
 ## Boundaries
 
@@ -84,8 +79,7 @@ lists them. If the user asks for non-verbose mode, you can explain more.
 
 ## Deliverables
 
-1. Write the complete, self-contained review to the designated
-   `.scratch/NNN-<feature-or-concept>/overengreview<N>.md` path.
+1. Write the complete, self-contained Org review to the designated `.scratch-org/NNN-<feature-or-concept>/overengreview<N>.org` path.
 2. Do not modify implementation files, generated files, the Git index, or
    commits.
 3. If contacted through Link, send only one of:

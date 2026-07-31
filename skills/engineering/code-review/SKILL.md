@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Review changes since a fixed point along two axes — Standards and Spec — using parallel sub-agents. Writes the complete review to a numbered file under the feature's scratch directory and returns only its path. Use when the user wants to review a branch, PR, work-in-progress changes, or asks to "review since X".
+description: Review changes since a fixed point along Standards and Spec axes using parallel sub-agents. Writes an Org report under the feature's local work-item directory and returns only its path. Use for branch, PR, or work-in-progress reviews.
 ---
 
 Two-axis review of the diff between `HEAD` and a fixed point the user supplies:
@@ -28,7 +28,7 @@ Look for the originating spec, in this order:
 
 1. Issue references in the commit messages (`#123`, `Closes #45`, GitLab `!67`, etc.) — fetch via the workflow in `docs/agents/issue-tracker.md`.
 2. A path the user passed as an argument.
-3. A PRD/spec file under `docs/`, `specs/`, or `.scratch/NNN-<feature>/spec.md` matching the branch name or feature.
+3. A PRD/spec file under `docs/`, `specs/`, or `.scratch-org/NNN-<feature>/spec.org` matching the branch name or feature.
 4. If nothing is found, ask the user where the spec is. If they say there isn't one, the **Spec** sub-agent will skip and report "no spec available".
 
 ### 3. Identify the standards sources
@@ -57,20 +57,20 @@ Each smell reads *what it is* → *how to fix*; match it against the diff:
 
 ### 4. Resolve the report paths
 
-Every review is an on-disk artifact. Never send a review body through agent chat or a link callback.
+Every review is an Org mode artifact on disk. Never send a review body through agent chat or a link callback.
 
-Choose the appropriate `.scratch/NNN-<feature-or-concept>/` directory:
+Choose the appropriate `.scratch-org/NNN-<feature-or-concept>/` directory:
 
-1. Use the directory containing the originating spec when it is `.scratch/NNN-<feature>/spec.md`.
-2. Otherwise, use the single existing `.scratch/NNN-<feature-or-concept>/` directory that clearly matches the branch or change.
+1. Use the directory containing the originating spec when it is `.scratch-org/NNN-<feature>/spec.org`.
+2. Otherwise, use the single existing `.scratch-org/NNN-<feature-or-concept>/` directory that clearly matches the branch or change.
 3. If none exists, create one using the next `NNN` from the shared repo-wide sequence.
 4. If multiple directories plausibly match, ask instead of guessing.
 
-Inspect existing `review*.md` files in that directory. Let `<N>` be one greater than the highest review-round number in any canonical or axis report, or `1` when none exist. Reserve three distinct paths and never overwrite them:
+Inspect existing `review*.org` files in that directory. Let `<N>` be one greater than the highest review-round number in any canonical or axis report, or `1` when none exist. Reserve three distinct paths and never overwrite them:
 
-- Standards: `.scratch/NNN-<feature-or-concept>/review<N>-standards.md`
-- Spec: `.scratch/NNN-<feature-or-concept>/review<N>-spec.md`
-- Aggregate: `.scratch/NNN-<feature-or-concept>/review<N>.md`
+- Standards: `.scratch-org/NNN-<feature-or-concept>/review<N>-standards.org`
+- Spec: `.scratch-org/NNN-<feature-or-concept>/review<N>-spec.org`
+- Aggregate: `.scratch-org/NNN-<feature-or-concept>/review<N>.org`
 
 ### 5. Spawn both sub-agents in parallel
 
@@ -102,11 +102,11 @@ If the spec is missing, skip the Spec sub-agent and do not create its axis repor
 
 Proceed only after Skill(requesting-code-review) returns verified paths for every dispatched axis report.
 
-Read [code-review-template.md](code-review-template.md) completely, then read the axis reports from disk and write the canonical aggregate to `review<N>.md` using its `<code-review-report-template>`. Keep Standards and Spec separate and do not rerank findings across axes.
+Read [code-review-template.md](code-review-template.md) completely, then read the axis reports from disk and write the canonical Org aggregate to `review<N>.org` using its `<code-review-report-template>`. Keep Standards and Spec separate and do not rerank findings across axes.
 
-Assign final finding numbers as one sequence starting at `1`: number all Standards findings first, then continue through Spec findings. Add exactly one unchecked `TODO` item to `## Progress` for every numbered finding, using the same number and title.
+Assign final finding numbers as one sequence starting at `1`: number all Standards findings first, then continue through Spec findings. Add exactly one unchecked `TODO` item to `* Progress` for every numbered finding, using the same number and title.
 
-Never present the review body through chat. Return only the canonical `review<N>.md` path. If the aggregate cannot be written, report `BLOCKED` rather than substituting an inline review.
+Never present the review body through chat. Return only the canonical `review<N>.org` path. If the aggregate cannot be written, report `BLOCKED` rather than substituting an inline review.
 
 ## Why two axes
 

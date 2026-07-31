@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 This skill takes the current conversation context and codebase understanding and produces a spec (you may know this document as a PRD). Do NOT interview the user — just synthesize what you already know.
 
-The issue tracker and triage label vocabulary should have been provided to you — run Skill(bootstrap-engineering-workflows) if not.
+The issue tracker and triage state mapping should have been provided to you — run Skill(bootstrap-engineering-workflows) if not.
 
 ## Process
 
@@ -16,60 +16,39 @@ The issue tracker and triage label vocabulary should have been provided to you �
 
 Check with the user that these seams match their expectations.
 
-3. Write the spec using the template below, then publish it to the project issue tracker. Apply the `ready-for-agent` triage label - no need for additional triage.
+3. Write the spec using the structure below, then publish it. For the local tracker, create `.scratch-org/NNN-<slug>/spec.org`, use Org mode syntax, and put `READY-FOR-AGENT` on the first heading. Render the same structure in the platform's native format for a remote tracker.
 
 <spec-template>
 
-## Problem Statement
+```org
+* READY-FOR-AGENT <Spec title>
 
-The problem that the user is facing, from the user's perspective.
+** Problem Statement
+The problem the user faces, from the user's perspective.
 
-## Solution
+** Solution
+The solution from the user's perspective.
 
-The solution to the problem, from the user's perspective.
+** User Stories
+Write an extensive numbered list that covers all aspects of the feature:
 
-## User Stories
+1. As an <actor>, I want <feature>, so that <benefit>.
 
-A LONG, numbered list of user stories. Each user story should be in the format of:
+For example: =As a mobile bank customer, I want to see my account balances, so that I can make informed spending decisions.=
 
-1. As an <actor>, I want a <feature>, so that <benefit>
+** Implementation Decisions
+Record the modules and interfaces affected, technical clarifications, architecture and schema decisions, API contracts, and specific interactions.
 
-<user-story-example>
-1. As a mobile bank customer, I want to see balance on my accounts, so that I can make better informed decisions about my spending
-</user-story-example>
+Do not include paths or snippets that will go stale. A prototype snippet may be included only when it expresses a durable decision more precisely than prose; trim it to the decision-rich shape and identify its source.
 
-This list of user stories should be extremely extensive and cover all aspects of the feature.
+** Testing Decisions
+Record the agreed external-behavior seams, modules tested, and relevant testing precedent. Prefer the highest existing seam and the fewest seams.
 
-## Implementation Decisions
+** Out of Scope
+State explicit boundaries.
 
-A list of implementation decisions that were made. This can include:
-
-- The modules that will be built/modified
-- The interfaces of those modules that will be modified
-- Technical clarifications from the developer
-- Architectural decisions
-- Schema changes
-- API contracts
-- Specific interactions
-
-Do NOT include specific file paths or code snippets. They may end up being outdated very quickly.
-
-Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (interface, map shapes, state machine, reducer, schema, type shape), inline it within the relevant decision and note briefly that it came from a prototype. Trim to the decision-rich parts — not a working demo, just the important bits.
-
-## Testing Decisions
-
-A list of testing decisions that were made. Include:
-
-- A description of what makes a good test (only test external behavior, not implementation details)
-- Which modules will be tested
-- Prior art for the tests (i.e. similar types of tests in the codebase)
-
-## Out of Scope
-
-A description of the things that are out of scope for this spec.
-
-## Further Notes
-
-Any further notes about the feature.
+** Further Notes
+Record any remaining durable context.
+```
 
 </spec-template>

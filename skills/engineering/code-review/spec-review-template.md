@@ -4,56 +4,40 @@
 
 Report path: `{REPORT_PATH}`
 
-The review is read-only with respect to implementation files, generated files, Git staging, and commits. Writing the complete, self-contained report at the path above is required and is the only permitted file change.
+The review is read-only except for writing the complete Org mode report at that path. Never return the body through agent chat or a Link callback.
 
-Never return the review body through agent chat or a link callback. The only review reference sent between agents is its file path.
-
-**Link delivery is strict:** after the report exists on disk, use `link_send(triggerTurn:true)` to send exactly one of:
-
-`APPROVE {REPORT_PATH}`
-
-`CHANGES-NEEDED {REPORT_PATH}`
-
-If the report cannot be written, send:
-
-`BLOCKED <reason>`
-
-Never substitute an inline review for the report or include review findings in the Link message.
-
-## Report Template
+After the report exists, use `link_send(triggerTurn:true)` to send exactly `APPROVE {REPORT_PATH}` or `CHANGES-NEEDED {REPORT_PATH}`. If it cannot be written, send `BLOCKED <reason>`.
 
 <spec-review-template>
 
-# Spec Review
+```org
+#+title: Spec Review
 
-**Fixed point:** <commit, branch, tag, or merge-base>
-**Head:** <reviewed head>
-**Spec:** <path or issue reference>
+* Metadata
+- Fixed point :: <commit, branch, tag, or merge-base>
+- Head :: <reviewed head>
+- Spec :: <path or issue reference>
 
-## Findings
-
+* Findings
 <For each finding, use:>
 
-### <temporary finding ID>. <finding title>
-
-- **Severity:** <Critical / Important / Minor / Judgement call>
-- **Location:** <file and line or hunk>
-- **Evidence:** <the relevant spec requirement>
-- **Impact:** <why it matters>
-- **Recommendation:** <how to address it>
+** <temporary finding ID>. <finding title>
+- Severity :: <Critical / Important / Minor / Judgement call>
+- Location :: <file and line or hunk>
+- Evidence :: <the relevant spec requirement>
+- Impact :: <why it matters>
+- Recommendation :: <how to address it>
 
 <If there are no findings, write "No findings.">
 
-## Axis Summary
+* Axis Summary
+- Findings :: <count>
+- Worst issue :: <temporary finding ID and title, or "None">
 
-- Findings: <count>
-- Worst issue: <temporary finding ID and title, or "None">
-
-## Assessment
-
-Verdict: <APPROVE / CHANGES-NEEDED>
-
-Reasoning: <one or two sentences>
+* Assessment
+- Verdict :: <APPROVE / CHANGES-NEEDED>
+- Reasoning :: <one or two sentences>
+```
 
 </spec-review-template>
 

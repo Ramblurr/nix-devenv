@@ -22,6 +22,6 @@ Take the findings with a grain of salt, reviewers are not infallible. If you sus
 - Request clarification
 - Loop in the human
 
-If working from a local markdown ticket (`.scratch/…/issues/<NN>-<slug>.md`), tick off any checkboxes tracking the work inside and update its `**Status:**` field to `resolved` as part of the same commit, so the resolved state and the code land atomically. If .scratch is gitignored, thats fine leave it that way.
+If working from a local Org ticket (`.scratch-org/…/issues/<NN>-<slug>.org`), check its completed acceptance criteria, append resolution evidence under `** Answer` or `** Resolution`, and change the first heading's TODO state to `RESOLVED` before reporting completion.
 
-Blocking edges on other tickets read this field to determine when they can start, so leaving it as `ready-for-agent` after the work is done silently holds up the frontier.
+The tracker directory is deliberately outside Git: save the ticket but never stage or commit it. Blocking edges read the Org TODO state, so leaving the ticket `READY-FOR-AGENT`, `IN-PROGRESS`, or `CLAIMED` silently holds up the frontier.

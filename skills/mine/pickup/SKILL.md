@@ -7,7 +7,7 @@ disable-model-invocation: true
 
 # Pickup
 
-Pick up a handoff from `.scratch/handoffs/`.
+Pick up an Org mode handoff from `.scratch-org/handoffs/`.
 
 If the user supplied a path, filename, or three-digit number, resolve it to one existing handoff. If they supplied nothing, list the handoffs in numeric order and ask which one to use. Ask when a partial reference matches more than one file.
 

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Human-in-the-loop reproduction loop.
-# Copy this file to .scratch/NNN-<bug-slug>/hitl-loop.sh, edit the steps below, and run it.
+# Copy this file to .scratch-org/NNN-<bug-slug>/hitl-loop.sh, edit the steps below, and run it.
 # The agent runs the script; the user follows prompts in their terminal.
 #
 # Usage:
-#   bash .scratch/NNN-<bug-slug>/hitl-loop.sh
+#   bash .scratch-org/NNN-<bug-slug>/hitl-loop.sh
 #
 # Two helpers:
 #   step "<instruction>"          → show instruction, wait for Enter

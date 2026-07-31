@@ -1,31 +1,55 @@
-# Issue tracker: Local Markdown
+# Issue tracker: Local Org mode
 
-Issues and specs (you may know a spec as a PRD) for this repo live as markdown files in `.scratch/`.
+Issues and specs (you may know a spec as a PRD) for this repo live as Org mode files in `.scratch-org/`. This directory is local working state: never stage, commit, or otherwise add it to Git.
 
 ## Conventions
 
-- One work item per directory: `.scratch/NNN-<slug>/`
+- One work item per directory: `.scratch-org/NNN-<slug>/`
 - `NNN` comes from one shared repo-wide three-digit sequence. Features, concepts, efforts, and every other top-level work-item kind use the same sequence.
-- The spec is `.scratch/NNN-<slug>/spec.md`
-- Implementation issues are one file per ticket at `.scratch/NNN-<slug>/issues/<NN>-<slug>.md`, numbered from `01` within the work item — never a single combined tickets file
-- Triage state is recorded as a `Status:` line near the top of each issue file (see `triage-labels.md` for the role strings)
-- Comments and conversation history append to the bottom of the file under a `## Comments` heading
+- A work-item directory has no status of its own. Its number and slug identify the concept.
+- The spec is `.scratch-org/NNN-<slug>/spec.org`.
+- Implementation tickets are one file each at `.scratch-org/NNN-<slug>/issues/<NN>-<slug>.org`, numbered from `01` within the work item.
+- The canonical ticket ID combines both numbers: `NNN-NN`. Use it whenever referring to a ticket outside its own file.
+- The first top-level Org heading carries the ticket state as a TODO keyword: `NEEDS-TRIAGE`, `NEEDS-INFO`, `READY-FOR-AGENT`, `READY-FOR-HUMAN`, `IN-PROGRESS`, `CLAIMED`, `RESOLVED`, or `WONTFIX`.
+- Store the canonical ID in a `TICKET_ID` property. Store canonical blocker IDs in `BLOCKED_BY`, and the claimant in `ASSIGNEE`.
+- Use the heading tags `bug` or `enhancement` for the triage category.
+- Append comments and conversation history under a `** Comments` heading.
+
+A local ticket starts with this shape:
+
+```org
+* READY-FOR-AGENT Ticket title :enhancement:
+:PROPERTIES:
+:TICKET_ID: 006-02
+:BLOCKED_BY: 006-01
+:ASSIGNEE:
+:END:
+
+** What to build
+The end-to-end behavior this ticket delivers.
+
+** Acceptance criteria
+- [ ] A testable criterion
+
+** Comments
+```
 
 ## When a skill says "publish to the issue tracker"
 
-Create a new file under `.scratch/NNN-<slug>/` (creating the directory if needed). Choose the next available `NNN` from the shared sequence across all top-level `.scratch/` work-item directories.
+Create an Org file under `.scratch-org/NNN-<slug>/`, creating the directory when needed. Choose the next available `NNN` from the shared sequence across all top-level numbered `.scratch-org/` work-item directories.
 
 ## When a skill says "fetch the relevant ticket"
 
-Read the file at the referenced path. The user will normally pass the path or the issue number directly.
+Resolve a canonical `NNN-NN` ID to `.scratch-org/NNN-<work-item>/issues/NN-<ticket>.org`, then read that file. A user may also pass the path directly.
 
 ## Wayfinding operations
 
-Used by Skill(wayfinder). The **map** is a file with one **child** file per ticket.
+Used by Skill(wayfinder). The **map** is one Org file with one **child** Org file per ticket.
 
-- **Map**: `.scratch/NNN-<effort>/map.md` — the Notes / Decisions-so-far / Fog body.
-- **Child ticket**: `.scratch/NNN-<effort>/issues/NN-<slug>.md`, numbered from `01` within the effort, with the question in the body. A `Type:` line records the ticket type (`research`/`prototype`/`grilling`/`task`); a `Status:` line records `claimed`/`resolved`.
-- **Blocking**: a `Blocked by: NN, NN` line near the top. A ticket is unblocked when every file it lists is `resolved`.
-- **Frontier**: scan `.scratch/NNN-<effort>/issues/` for files that are open, unblocked, and unclaimed; first by number wins.
-- **Claim**: set `Status: claimed` and save before any work.
-- **Resolve**: append the answer under an `## Answer` heading, set `Status: resolved`, then append a context pointer (gist + link) to the map's Decisions-so-far in `map.md`.
+- **Map**: `.scratch-org/NNN-<effort>/map.org` — the Destination / Notes / Decisions-so-far / Fog body.
+- **Child ticket**: `.scratch-org/NNN-<effort>/issues/NN-<slug>.org`. Its first heading carries the TODO state; a `TYPE` property records `research`, `prototype`, `grilling`, or `task`.
+- **Research report**: `.scratch-org/NNN-<effort>/research/NN-<slug>.org`, linked from its child ticket. Parallel research tickets always receive distinct report paths.
+- **Blocking**: `BLOCKED_BY` contains canonical ticket IDs separated by spaces. A ticket is unblocked when every listed ticket is `RESOLVED`.
+- **Frontier**: scan the effort's `issues/` directory for tickets whose blockers are resolved, whose state is open, and whose `ASSIGNEE` is empty; lowest ticket number wins.
+- **Claim**: change the TODO state to `CLAIMED`, set `ASSIGNEE`, and save before any work.
+- **Resolve**: append the answer under `** Answer`, check completed acceptance criteria, change the TODO state to `RESOLVED`, then append an Org file link plus one-line gist to the map's `** Decisions so far`.

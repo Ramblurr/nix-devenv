@@ -13,7 +13,7 @@ Do not run state-changing commands until a persisted operation ledger exists for
 
 Before the first state-changing command:
 
-1. Create a Markdown operation ledger on disk.
+1. Create an Org mode operation ledger on disk.
 2. Record scope, execution context, exact commands, command preflight, baseline checks, rollback, validation, and abort criteria.
 3. Keep the ledger current as commands run and observations change.
 4. Present the ledger and get an explicit go/no-go unless the operator already authorized this exact plan.
@@ -28,7 +28,7 @@ Persist the ledger before changing the target system.
 
 Preferred location:
 
-If the current project directory is writable, create `.scratch/ocp/YYYYMMDDTHHMMSSZ-<slug>.md`.
+If the current project directory is writable, create `.scratch-org/ocp/YYYYMMDDTHHMMSSZ-<slug>.org`.
 
 Record `Ledger path:` at the top. For remote operations, prefer storing the ledger on the operator workstation or project workspace, not on the target host, unless the operator wants target-local records.
 
@@ -61,7 +61,7 @@ Destructive and irreversible commands require explicit scope proof. Avoid irreve
 
 ## Ledger workflow
 
-Create one ledger and keep it updated in place. Use grouped blocks, not wide Markdown tables.
+Create one Org mode ledger and keep it updated in place. Use headings, property drawers, lists, and source blocks rather than wide tables.
 
 ### 1. Scope
 
@@ -100,18 +100,20 @@ If using SSH, sudo, containers, Kubernetes, chroot, virtualenv, tmux, screen, a 
 
 For each command, add a block:
 
-```markdown
-#### Planned step N: <purpose>
+```org
+*** Planned step N: <purpose>
 
-- Context: <host> / <user> / <working directory>
-- Command type: read-only | preflight/build | idempotent | reversible | destructive | irreversible
-- Command:
-    <exact command>
-- Why this command is needed:
-- Preflight done or required:
-- Expected result:
-- Evidence to capture:
-- Stop or rollback if:
+:PROPERTIES:
+:CONTEXT: <host> / <user> / <working directory>
+:COMMAND_TYPE: read-only | preflight/build | idempotent | reversible | destructive | irreversible
+:END:
+
+- Command :: <exact command>
+- Why needed ::
+- Preflight done or required ::
+- Expected result ::
+- Evidence to capture ::
+- Stop or rollback if ::
 ```
 
 Separate read-only checks from state-changing commands. Do not hide changes inside unexplained scripts, aliases, shell functions, or copied one-liners. If a script is used, inspect it first, summarize what it changes, verify syntax, and identify rollback steps.
@@ -293,17 +295,16 @@ Record:
 
 Run planned commands in order. After each command, append:
 
-```markdown
-#### Executed step N: <purpose>
+```org
+*** Executed step N: <purpose>
 
-- Command:
-    <exact command>
-- Exit code:
-- Output summary:
-- Evidence captured:
-- Observed state:
-- Expected result met: yes | no | unclear
-- Decision: continue | stop | rollback | revise plan
+- Command :: <exact command>
+- Exit code ::
+- Output summary ::
+- Evidence captured ::
+- Observed state ::
+- Expected result met :: yes | no | unclear
+- Decision :: continue | stop | rollback | revise plan
 ```
 
 Do not batch unrelated changes. Do not keep going to “see if the next step fixes it.” If output differs from expectation, stop, record the observation, and reassess.
@@ -341,22 +342,25 @@ During an incident, use a compressed persisted ledger. The goal is stabilization
 
 Minimum fields:
 
-```markdown
-# Incident Operation Ledger: <short title>
+```org
+* Incident Operation Ledger: <short title>
 
-- Ledger path:
-- Incident symptom:
-- Immediate objective:
-- Target system/service:
-- Risk:
-- Fast baseline command(s):
-- Proposed mitigation command(s):
-- Rollback command(s):
-- Abort condition:
-- Validation command(s):
-- Go/no-go decision:
-- Execution log:
-- Result:
+:PROPERTIES:
+:LEDGER_PATH: <path>
+:END:
+
+- Incident symptom ::
+- Immediate objective ::
+- Target system/service ::
+- Risk ::
+- Fast baseline command(s) ::
+- Proposed mitigation command(s) ::
+- Rollback command(s) ::
+- Abort condition ::
+- Validation command(s) ::
+- Go/no-go decision ::
+- Execution log ::
+- Result ::
 ```
 
 Prefer the smallest safe mitigation: restart one failed service, disable one bad config, roll back one deploy, restore one known-good file, drain one host, or revert one feature flag.

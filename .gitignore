@@ -12,3 +12,5 @@ skills/mine/.system/
 prompts/PROMPTS.md
 __pycache__
 skills/skills/plannotator-*
+.scratch/
+.scratch-org/

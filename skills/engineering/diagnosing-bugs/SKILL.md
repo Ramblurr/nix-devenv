@@ -25,12 +25,12 @@ Spend disproportionate effort here. **Be aggressive. Be creative. Refuse to give
 2. **Curl / HTTP script** against a running dev server.
 3. **CLI invocation** with a fixture input, diffing stdout against a known-good snapshot.
 4. **Headless browser script** (Playwright / Puppeteer) — drives the UI, asserts on DOM/console/network.
-5. **Replay a captured trace.** Save a real network request, payload, or event log under `.scratch/NNN-<bug-slug>/debug/`; replay it through the code path in isolation.
+5. **Replay a captured trace.** Save a real network request, payload, or event log under `.scratch-org/NNN-<bug-slug>/debug/`; replay it through the code path in isolation.
 6. **Throwaway harness.** Spin up a minimal subset of the system (one service, mocked deps) that exercises the bug code path with a single function call.
 7. **Property / fuzz loop.** If the bug is "sometimes wrong output", run 1000 random inputs and look for the failure mode.
 8. **Bisection harness.** If the bug appeared between two known states (commit, dataset, version), automate "boot at state X, check, repeat" so you can `git bisect run` it.
 9. **Differential loop.** Run the same input through old-version vs new-version (or two configs) and diff outputs.
-10. **HITL bash script.** Last resort. If a human must click, copy `scripts/hitl-loop.template.sh` to `.scratch/NNN-<bug-slug>/hitl-loop.sh` and drive _them_ with it so the loop is still structured. Captured output feeds back to you.
+10. **HITL bash script.** Last resort. If a human must click, copy `scripts/hitl-loop.template.sh` to `.scratch-org/NNN-<bug-slug>/hitl-loop.sh` and drive _them_ with it so the loop is still structured. Captured output feeds back to you.
 
 Build the right feedback loop, and the bug is 90% fixed.
 
@@ -132,7 +132,7 @@ Required before declaring done:
 - [ ] Original repro no longer reproduces (re-run the Phase 1 loop)
 - [ ] Regression test passes (or absence of seam is documented)
 - [ ] All `[DEBUG-...]` instrumentation removed (`grep` the prefix)
-- [ ] Throwaway prototypes deleted (or moved to `.scratch/NNN-<bug-slug>/debug/`)
+- [ ] Throwaway prototypes deleted (or moved to `.scratch-org/NNN-<bug-slug>/debug/`)
 - [ ] The hypothesis that turned out correct is stated in the commit / PR message — so the next debugger learns
 
 **Then ask: what would have prevented this bug?** If the answer involves architectural change (no good test seam, tangled callers, hidden coupling), hand off to Skill(improve-codebase-architecture) with the specifics. Make the recommendation **after** the fix is in, not before — you have more information now than when you started.

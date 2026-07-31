@@ -5,7 +5,7 @@ description: Resolves an in-progress Git merge or rebase conflict while preservi
 
 1. **See the current state** of the merge/rebase. Check git history, and the conflicting files.
 
-2. **Find the primary sources** for each conflict. Understand deeply why each change was made and what the original intent was. Read commit messages and the originating PRs or issues. Use `docs/agents/issue-tracker.md` when present; otherwise inspect referenced local Markdown issue files directly. Do not bootstrap or reconfigure the tracker during conflict resolution.
+2. **Find the primary sources** for each conflict. Understand deeply why each change was made and what the original intent was. Read commit messages and the originating PRs or issues. Use `docs/agents/issue-tracker.md` when present; otherwise inspect referenced local Org mode issue files directly. Do not bootstrap or reconfigure the tracker during conflict resolution.
 
 3. **Resolve each hunk.** Preserve both intents where possible. Where incompatible, pick the one matching the merge's stated goal and note the trade-off. Do **not** invent new behaviour. Always resolve; never `--abort`.
 

@@ -5,9 +5,9 @@ argument-hint: "What will the next session be used for?"
 disable-model-invocation: true
 ---
 
-Write a handoff document summarizing the current conversation so a fresh agent can continue the work.
+Write an Org mode handoff document summarizing the current conversation so a fresh agent can continue the work.
 
-Save it as `.scratch/handoffs/NNN-<slug>.md`. Scan only `.scratch/handoffs/` for the highest existing three-digit prefix and increment it, starting at `001`; this handoff sequence is independent of the shared `.scratch/NNN-<work-item>/` sequence. Create the directory when needed and never overwrite an existing handoff.
+Save it as `.scratch-org/handoffs/NNN-<slug>.org`. Scan only `.scratch-org/handoffs/` for the highest existing three-digit prefix and increment it, starting at `001`; this handoff sequence is independent of the shared `.scratch-org/NNN-<work-item>/` sequence. Create the directory when needed and never overwrite an existing handoff.
 
 Include a "suggested skills" section in the document, which suggests skills that the agent should invoke.
 
