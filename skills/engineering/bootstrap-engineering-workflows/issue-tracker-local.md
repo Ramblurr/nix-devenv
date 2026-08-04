@@ -2,6 +2,8 @@
 
 Issues and specs (you may know a spec as a PRD) for this repo live as Org mode files in `.scratch-org/`. This directory is local working state: never stage, commit, or otherwise add it to Git.
 
+Use Skill(local-org-issues-cli) to inspect tracker metadata, readiness, and dependency health.
+
 ## Conventions
 
 - One work item per directory: `.scratch-org/NNN-<slug>/`
@@ -14,6 +16,8 @@ Issues and specs (you may know a spec as a PRD) for this repo live as Org mode f
 - Store the canonical ID in a `TICKET_ID` property. Store canonical blocker IDs in `BLOCKED_BY`, and the claimant in `ASSIGNEE`.
 - Use the heading tags `bug` or `enhancement` for the triage category.
 - Append comments and conversation history under a `** Comments` heading.
+- If `.scratch-org/` is not already committed/tracked in git, do not start tracking or commit it.
+- Also if `.scratch-org/` is not committed/tracked in git, do not mention ticket issue numbers in commit messages
 
 A local ticket starts with this shape:
 
