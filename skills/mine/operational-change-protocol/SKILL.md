@@ -400,7 +400,7 @@ find "$DIR" -maxdepth 1 -type f -print
 
 For purely read-only investigation, use ordinary diagnostic reasoning. Still label commands as read-only and avoid accidental mutation.
 
-For a trivial local development change with no live-system impact, a short persisted note is enough: objective, command, expected result, undo step, and validation.
+For a local development change, or development that may be remove (like a CI build), changes with no live-system impact, a short persisted note is enough: no OCP is necessary.
 
 For any live server, production-adjacent system, security boundary, persistent data store, remote access path, or critical personal infrastructure, use the full protocol.
 
