@@ -1,6 +1,6 @@
 ---
 name: pandoc-markdown
-description: Convert Markdown files to HTML with pandoc, optionally add TOC + header backlinks via Lua filter, and optionally serve HTML remotely via a background Python HTTP server.
+description: Convert Markdown files to responsive standalone HTML with pandoc, optionally add TOC + header backlinks via Lua filter, and optionally serve HTML remotely via a background Python HTTP server.
 ---
 
 # Pandoc Markdown to HTML
@@ -19,6 +19,7 @@ Optional behaviors:
 
 - Markdown source file path
 - Optional output HTML path
+- Optional page title
 - Whether TOC is requested
 - Whether heading backlinks to TOC are requested
 - Whether remote viewing is requested
@@ -32,12 +33,17 @@ Example:
 - Input: `/path/docs/ROADMAP.md`
 - Output: `/path/docs/ROADMAP.html`
 
+Generate standalone HTML by default. Pandoc's default standalone template adds
+viewport metadata and responsive CSS for narrow-screen body spacing, scrollable
+tables, and overflow-safe code blocks. A plain conversion without
+`--standalone` emits an HTML fragment without those mobile-reading features.
+
 ## Core conversion workflow
 
 1. Validate source file exists.
 2. Check `pandoc` is installed.
-3. Convert Markdown to HTML.
-4. Confirm output file exists.
+3. Convert Markdown to responsive standalone HTML.
+4. Confirm output file exists and contains mobile viewport metadata.
 5. Report output path.
 
 Commands:
@@ -49,11 +55,18 @@ Commands:
 # 2) check pandoc
 command -v pandoc
 
-# 3) convert (basic)
-pandoc "$INPUT_MD" -o "$OUTPUT_HTML"
+# 3) choose a browser title and convert
+PAGE_TITLE="${PAGE_TITLE:-$(basename "${INPUT_MD%.*}")}"
+pandoc --standalone \
+  --metadata pagetitle="$PAGE_TITLE" \
+  "$INPUT_MD" -o "$OUTPUT_HTML"
 
-# 4) verify
-[ -f "$OUTPUT_HTML" ] && file "$OUTPUT_HTML"
+# 4) verify standalone, mobile-readable output
+[ -s "$OUTPUT_HTML" ] && file "$OUTPUT_HTML"
+rg -n '<!DOCTYPE html>' "$OUTPUT_HTML"
+rg -n '<meta name="viewport"' "$OUTPUT_HTML"
+rg -n '@media \(max-width:' "$OUTPUT_HTML"
+rg -n 'overflow-x: auto' "$OUTPUT_HTML"
 ```
 
 ## Optional: TOC output
@@ -61,7 +74,9 @@ pandoc "$INPUT_MD" -o "$OUTPUT_HTML"
 Use this when user asks for a table of contents in the generated HTML.
 
 ```bash
-pandoc --standalone --toc "$INPUT_MD" -o "$OUTPUT_HTML"
+pandoc --standalone --toc \
+  --metadata pagetitle="$PAGE_TITLE" \
+  "$INPUT_MD" -o "$OUTPUT_HTML"
 ```
 
 ## Optional: TOC backlinks on headings (Lua filter)
@@ -122,6 +137,7 @@ Run pandoc with TOC + filter:
 
 ```bash
 pandoc --standalone --toc \
+  --metadata pagetitle="$PAGE_TITLE" \
   --lua-filter pandoc-toc-backlink.lua \
   "$INPUT_MD" -o "$OUTPUT_HTML"
 ```
@@ -214,7 +230,7 @@ After execution, report:
 
 - Input markdown path
 - Output HTML path
-- Whether conversion succeeded
+- Whether conversion and responsive standalone checks succeeded
 - Whether TOC was included
 - Whether TOC backlink filter was applied
 - If remote serving was requested:
