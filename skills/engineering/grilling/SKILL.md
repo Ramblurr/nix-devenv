@@ -7,6 +7,8 @@ Interview me relentlessly about every aspect of this until we reach a shared und
 
 Ask the questions one at a time, waiting for feedback on each question before continuing. Asking multiple questions at once is bewildering.
 
+Make each question resolve exactly one decision. Phrase it so every possible answer has an unambiguous meaning. For multiple-choice decisions, present distinct labeled options and identify the recommendation among them. Never combine confirmation of a recommendation with additional alternatives in the same question.
+
 If a *fact* can be found by exploring the environment (filesystem, tools, etc.), look it up rather than asking me. The *decisions*, though, are mine — put each one to me and wait for my answer.
 
 Do not act on it until I confirm we have reached a shared understanding.

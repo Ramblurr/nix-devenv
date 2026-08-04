@@ -27,9 +27,13 @@ The map is an **index**, not a store. It lists the decisions made and points at 
 ### The map body
 
 The whole map at low resolution, loaded once per session. Open tickets are **not** listed — they are open child issues, found by query.
+The map heading uses `IN-PROGRESS` so it appears in the local Org agenda; its `TYPE` property identifies it as a map.
 
 ```org
-* <Map title>
+* IN-PROGRESS <Map title>
+:PROPERTIES:
+:TYPE: wayfinder:map
+:END:
 
 ** Destination
 <what reaching the end looks like; one or two lines>

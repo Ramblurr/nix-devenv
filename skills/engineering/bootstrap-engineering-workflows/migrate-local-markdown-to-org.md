@@ -27,7 +27,7 @@ Immediately verify `diff -qr -- .scratch .scratch-org` succeeds. The destination
 Reuse the project's existing tmux session, or create its single project session according to Skill(tmux). Open one conversion window whose working directory is the absolute `.scratch-org/` path. If the user explicitly requests parallel conversion, give agents disjoint explicit write lists plus the complete source-to-destination mapping so they can rewrite cross-partition references. Start each window with this exact command:
 
 ```sh
-pi --no-session --provider openai-codex --model gpt-5.6-luna --thinking high
+pi --no-session --provider openai-codex --model gpt-5.6-luna --thinking high --fast
 ```
 
 Do not add another model or thinking flag. Send the agent a prompt containing the absolute destination path, source counts, complete source-to-destination mapping, and these requirements:
