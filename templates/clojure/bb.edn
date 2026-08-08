@@ -4,12 +4,15 @@
  :paths []
  :tasks {:requires
          ([clojure.string :as str]
-                            [clojure.pprint :refer [print-table]]
-                            [babashka.tasks :refer [shell]]
-                            [ol.bb-tasks.publish-clojars :as publish-clojars])
+          [clojure.pprint :refer [print-table]]
+          [babashka.tasks :refer [shell]]
+          [ol.bb-tasks.publish-clojars :as publish-clojars])
 
          :init
-         (do (def paths ["src" "test"]))
+         (do (def paths ["src" "test"])
+             (defn timeout
+               ([cmd] (timeout "60s" cmd))
+               ([duration cmd] (apply shell "timeout" "--kill-after=5s" (str duration) cmd))))
 
          dev
          {:doc  "Start a local development server"
@@ -17,7 +20,7 @@
 
          test
          {:doc  "Run all tests or specific test suites"
-          :task (apply clojure "-M:dev:kaocha" *command-line-args*)}
+          :task (timeout (into ["clojure" "-M:dev:test"] *command-line-args*))}
 
          fmt
          {:doc  "Format code with cljfmt"
@@ -53,15 +56,15 @@
          {:doc     "Run CI checks: test, format check, and lint"
           :depends [test fmt:check lint]}
 
-         jar     {:override-builtin true
-                  :depends          [clean]
-                  :doc              "Build an jar"
-                  :task             (shell "clojure -T:build jar")}
+         jar       {:override-builtin true
+                    :depends          [clean]
+                    :doc              "Build an jar"
+                    :task             (shell "clojure -T:build jar")}
 
-         clean   {:override-builtin true
-                  :doc              "Clean build artifacts"
-                  :task             (shell "clojure -T:build clean")}
+         clean     {:override-builtin true
+                    :doc              "Clean build artifacts"
+                    :task             (shell "clojure -T:build clean")}
 
-         publish {:doc     "Publish the clojure sdk libs to clojars"
-                  :depends [jar]
-                  :task    (publish-clojars/publish!)}}}
+         publish   {:doc     "Publish the clojure sdk libs to clojars"
+                    :depends [jar]
+                    :task    (publish-clojars/publish!)}}}
