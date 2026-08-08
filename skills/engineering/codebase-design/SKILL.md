@@ -88,3 +88,13 @@ When designing an interface, ask:
 
 - **Deepening a cluster given its dependencies** — see [DEEPENING.md](DEEPENING.md): dependency categories, seam discipline, and replace-don't-layer testing.
 - **Exploring alternative interfaces** — see [DESIGN-IT-TWICE.md](DESIGN-IT-TWICE.md): use Skill(sub-agents) to spin up parallel agents that design the interface several radically different ways, then compare on depth, locality, and seam placement.
+
+
+## Clojure Specific
+
+One of the fundamental principles of good Clojure design - is to just give
+developers the data. Provide a value, not an interface. Clojure devs have good
+tools for easily manipulating data. This approach is simple, and deeply
+flexible. But it’s at odds with the typical enterprise-y Java frame - where
+everything needs to happen through layers of classes and encapsulation
+
