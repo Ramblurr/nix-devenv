@@ -69,3 +69,12 @@ These words often signal weak writing. When you spot them, consider revision:
 - very -- Use sparingly; prefer words strong in themselves
 - however -- Not to come first in its sentence when meaning "nevertheless"
 - literally -- Often incorrectly used to support exaggeration
+
+When writing comments, docstrings, documentation of any form you are forbidden from using these terms:
+
+- own / owns / owning, etc
+- boundary (exception: the fixed phrase 'bounded context')
+- gate
+
+These are LLM/Agent jargon words that are meaningless and obscure the true meaning.
+Figure out how to say what you are trying to say there in plain english, it might require more words.
