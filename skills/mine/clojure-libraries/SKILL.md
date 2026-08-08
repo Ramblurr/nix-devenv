@@ -18,6 +18,7 @@ Use this skill as an index. Read only the reference file(s) relevant to the libr
 - [charred](references/charred.md)
 - [clj-async-profiler](references/clj-async-profiler.md)
 - [Coffi](references/coffi/overview.md) — [examples](references/coffi/examples.md), [memory](references/coffi/memory.md), [types](references/coffi/types.md)
+- [Criterium](references/criterium.md)
 - [core.async](references/core-async.md)
 - [core.async.flow](references/core-async-flow.md)
 - [Datomic](datomic/index.md)
