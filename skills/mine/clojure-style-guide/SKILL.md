@@ -32,8 +32,6 @@ style when changing existing code.
 Unless a higher-precedence convention overrides them:
 
 - Use spaces, never tabs.
-- Prefer 80-character lines; never exceed 120 characters.
-- Use Unix line endings and end every file with a newline.
 - Put one blank line between top-level forms, except grouped related `def`s.
 - Do not add explanatory comments when clear names and structure suffice.
 - Keep tests isolated, deterministic, focused, and explicit about expected

@@ -86,8 +86,6 @@ its continuation beneath the value.
 
 ### Line Length & Whitespace
 
-- Prefer a maximum line length of 120 characters.
-- Use Unix line endings and a newline at EOF.
 - Do not leave trailing whitespace.
 - Put one blank line between top-level forms. Related `def` forms may be
   grouped without blank lines.
