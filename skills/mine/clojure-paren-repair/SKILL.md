@@ -21,8 +21,12 @@ brepl balance src/myapp/core.clj
 
 Run this tool when you encounter unbalanced delimiters (parentheses, brackets, braces) in Clojure, ClojureScript, or EDN files.
 
-**IMPORTANT:** Do NOT try to manually repair parenthesis errors. If you encounter a file with unbalanced parentheses or delimiters, run `brepl balance` on that file instead of attempting to fix the delimiters yourself.
 
 ## If the Tool Fails
 
-If brepl doesn't fix the problem, report to the user that they need to fix the delimiter error manually. Do not continue attempting repairs.
+If brepl doesn't fix the problem, then analyze the issue surgically and make a normal edit to fix it in several small targeted changes. Target the smallest number of lines changes needed. 
+
+Common mistakes are:
+
+- missing a closing " on a docstring
+- brepl balance "fixed" the issue by inserting a closing paren at EOF instead of where it needs to go
