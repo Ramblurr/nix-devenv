@@ -30,6 +30,8 @@ A **seam** is the public boundary you test at: the interface where you observe b
 
 Ask: "What's the public interface, and which seams should we test?"
 
+When the interface shape or seam placement is unclear, consult Skill(codebase-design) before writing tests. It defines the shared vocabulary for modules, interfaces, depth, seams, adapters, leverage, and locality.
+
 ## Anti-patterns
 
 - **Implementation-coupled** — mocks internal collaborators, tests private methods, or verifies through a side channel (querying the database instead of using the interface). The tell: the test breaks when you refactor but behavior hasn't changed.

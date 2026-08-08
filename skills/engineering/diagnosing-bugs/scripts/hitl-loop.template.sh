@@ -11,6 +11,8 @@
 #   capture VAR "<question>"      → show question, read response into VAR
 #
 # At the end, captured values are printed as KEY=VALUE for the agent to parse.
+# Capture observations only. Use `step` for signing in or entering credentials:
+# values printed under Captured can be read by the agent.
 
 set -euo pipefail
 

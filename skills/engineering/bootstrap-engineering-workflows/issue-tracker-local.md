@@ -1,6 +1,6 @@
 # Issue tracker: Local Org mode
 
-Issues and specs (you may know a spec as a PRD) for this repo live as Org mode files in `.scratch-org/`. This directory is local working state: never stage, commit, or otherwise add it to Git.
+Issues and specs for this repo live as Org mode files in `.scratch-org/`. This directory is local working state: never stage, commit, or otherwise add it to Git.
 
 Use Skill(local-org-issues-cli) to inspect tracker metadata, readiness, and dependency health.
 
