@@ -165,11 +165,11 @@ strs/normalize).
 (require '[clojure.repl :as repl]
          '[clojure.string])
 
-(repl/doc clojure.core/map)
-(repl/source clojure.core/map)
-(repl/dir clojure.string)
-(repl/apropos "join")
-(repl/find-doc "concatenate")
+(with-out-str (repl/doc clojure.core/map))
+(with-out-str (repl/source clojure.core/map))
+(with-out-str (repl/dir clojure.string))
+(with-out-str (repl/apropos "join"))
+(with-out-str (repl/find-doc "concatenate"))
 ```
 
 Use `doc` for contracts, `source` for implementation details, `dir` for a known

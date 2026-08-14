@@ -19,7 +19,7 @@ Use this skill as an index. Read only the reference file(s) relevant to the libr
 - [clj-async-profiler](references/clj-async-profiler.md)
 - [Coffi](references/coffi/overview.md) — [examples](references/coffi/examples.md), [memory](references/coffi/memory.md), [types](references/coffi/types.md)
 - [Criterium](references/criterium.md)
-- [core.async](references/core-async.md)
+- [core.async](references/core-async.md) — workload/task selection for `1.10.874-alpha3+` on JDK 25+
 - [core.async.flow](references/core-async-flow.md)
 - [Datomic](datomic/index.md)
 - [donut.party/system](references/donut-system.md)

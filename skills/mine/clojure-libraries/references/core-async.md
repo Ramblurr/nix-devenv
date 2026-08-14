@@ -1,295 +1,113 @@
-# core.async
+# clojure.core.async
 
-A Clojure library for async programming and communication using CSP (Communicating Sequential Processes) with channels.
+Use this reference for `org.clojure/core.async` `1.10.874-alpha3+` on JDK 25+.
+It covers execution choices; use the REPL for the full API and implementation.
 
-core.async enables writing asynchronous code that looks synchronous, avoiding callback hell through channels and lightweight processes (go blocks).
+## Choose by workload
 
-## Setup
+| Work | Construct | Execution | Channel operations |
+|---|---|---|---|
+| Short channel coordination | `go` / `go-loop` | Virtual threads when available | `<!`, `>!`, `alts!` park |
+| Blocking I/O (`:io`) | `io-thread` | Prefer a virtual thread | `<!!`, `>!!`; blocking calls allowed |
+| Blocking plus compute (`:mixed`) | `thread` | Platform-thread executor | Blocking operations allowed |
+| Compute (`:compute`) | Normal Clojure plus a suitable executor | Platform-thread executor by default | Application choice |
 
-deps.edn:
+Keep compute short in `:io`; exclude blocking I/O from `:compute`. `core.async`
+has no compute task construct. Use direct Java virtual-thread APIs only when the
+application needs explicit lifecycle or executor configuration.
+
+A `go-loop` is a compiler-generated state machine, not a callback or permanent
+worker thread. Channel operations park it for later resumption. Keep each step
+short and non-blocking: virtual-thread support does not make a go body suitable
+for blocking I/O or extended computation.
+
+`io-thread` and `thread` launch tasks and immediately return result channels.
+Each channel receives its task's return value, then closes. Long-lived consumers
+must exit when their input channels close so their tasks can finish.
+
+## Choose channel operations by context
+
+| Operation | Context | Behavior |
+|---|---|---|
+| `<!`, `>!` | `go` / `go-loop` | Park the go state machine; occupy no thread while waiting |
+| `<!!`, `>!!` | `io-thread`, `thread`, or an ordinary thread | Block the selected thread |
+| `take!`, `put!` | Any | Return immediately; invoke a callback on completion |
+| `poll!`, `offer!` | Any | Return immediately with the current result |
+
+`put!` and `take!` callbacks may run on the caller when the operation completes
+immediately. Pass `false` as `on-caller?` to dispatch the callback instead. Keep
+callbacks non-blocking because they may run on a core.async dispatch thread;
+send blocking callback work to `io-thread`.
+
+For producers, choose the construct that obtains the event:
+
+| Producer | Choice |
+|---|---|
+| Event already in memory | `put!` or the component's publish function |
+| Waits on channels or timers | `go-loop` |
+| Reads a blocking socket, file, or database API | `io-thread` |
+| Mixes blocking calls and compute | `thread` |
+| Performs only compute | Normal function or compute executor |
+
+Direct puts follow the producer's context:
+
 ```clojure
-org.clojure/core.async {:mvn/version "1.8.741"}
+(async/go (async/>! output event))        ; park
+(async/io-thread (async/>!! output event)) ; block
+(async/put! output event)                  ; asynchronous
+(async/offer! output event)                ; immediate attempt
 ```
 
-Leiningen:
-```clojure
-[org.clojure/core.async "1.8.741"]
-```
+## Consumer patterns
 
-See https://search.maven.org (search: org.clojure/core.async) for latest version.
-
-## Quick Start
+All long-lived patterns stop when the input channel closes:
 
 ```clojure
-(require '[clojure.core.async :as a :refer [<! >! <!! >!! chan go]])
-
-;; Create a buffered channel
-(def c (chan 10))
-
-;; Put and take from ordinary threads (blocking)
-(>!! c "hello")
-(<!! c)  ; => "hello"
-
-;; Use go blocks for lightweight async processes
-(let [c (chan)]
-  (go (>! c "world"))
-  (println (<!! (go (<! c)))))  ; => "world"
-
-;; Timeout after 100ms
-(a/alts!! [(chan) (a/timeout 100)])
-```
-
-## Core Concepts
-
-### Channels
-
-Channels are queues that carry values between processes.
-
-```clojure
-(chan)                            ; unbuffered (rendezvous)
-(chan 10)                         ; fixed buffer
-(chan (a/dropping-buffer 10))    ; drops newest when full
-(chan (a/sliding-buffer 10))     ; drops oldest when full
-(chan 10 (map inc))               ; with transducer (must be buffered)
-(a/close! c)                      ; close channel
-```
-
-Important: Channels cannot carry `nil` - `nil` from a take means channel is closed and drained.
-
-### Put and Take Operations
-
-```clojure
-;; BLOCKING (>!!, <!!) - use in ordinary threads, NOT in go blocks
-(>!! c "msg")    ; blocks until accepted
-(<!! c)          ; blocks until available
-
-;; PARKING (>!, <!) - ONLY inside go blocks
-(go
-  (>! c "msg")   ; parks go block, doesn't block thread
-  (<! c))        ; parks until available
-
-;; ASYNC (put!, take!) - callbacks, works anywhere
-(a/put! c "msg" #(println "put completed"))
-(a/take! c #(println "got:" %))
-
-;; NON-BLOCKING (offer!, poll!) - immediate or fail
-(a/offer! c "msg")  ; returns true if succeeded
-(a/poll! c)         ; returns value if available, nil otherwise
-```
-
-Mnemonic: `>` points into channel (put), `<` points out (take).
-
-### Go Blocks and Thread
-
-```clojure
-;; go block - lightweight process (parking ops only)
-(go
-  (let [v (<! some-chan)]
-    (>! result-chan (inc v))))
-
-;; go-loop - infinite processing
-(go-loop []
-  (when-let [v (<! c)]
-    (println v)
+;; Short, non-blocking handling
+(async/go-loop []
+  (when-some [event (async/<! events)]
+    (handle-event event)
     (recur)))
 
-;; thread - for blocking I/O
-(a/thread
-  (Thread/sleep 1000)  ; blocking OK here
-  (<!! some-chan)
-  "result")
+;; Blocking I/O, preferably on a virtual thread
+(async/io-thread
+  (loop []
+    (when-some [event (async/<!! events)]
+      (write-to-blocking-database event)
+      (recur))))
+
+;; Mixed blocking and compute on a platform-thread executor
+(async/thread
+  (loop []
+    (when-some [event (async/<!! events)]
+      (process-event event)
+      (recur))))
+
+;; Callback integration
+(async/take! events #(handle-event %) false)
 ```
 
-CRITICAL: NEVER use blocking ops (`<!!`, `>!!`, `Thread/sleep`, blocking I/O) inside go blocks!
+Never call `<!!`, `>!!`, `Thread/sleep`, or blocking network, file, or database
+APIs in a go loop. Use `io-thread` for I/O-heavy workers; use `thread` for mixed
+work.
 
-### alts - Waiting on Multiple Channels
+Virtual threads make waiting on blocking I/O cheap; they do not make the code
+non-blocking. Platform threads remain the default for mixed and compute work.
+
+## Inspect the runtime
+
+Check resolved versions when behavior matters:
 
 ```clojure
-;; alts! in go block (parking)
-(go
-  (let [[v ch] (a/alts! [c1 c2 c3])]
-    (println "Got" v "from" ch)))
-
-;; alts!! outside go blocks (blocking)
-(a/alts!! [c1 c2 (a/timeout 1000)])
-
-;; With default (non-blocking)
-(a/alts!! [c1 c2] :default :nothing)
-
-;; Include puts
-(a/alts! [[out-c "value"] in-c])
-
-;; alt - alts with pattern matching
-(go
-  (a/alt!
-    c1 ([v] (println "c1:" v))
-    c2 ([v] (println "c2:" v))
-    (a/timeout 1000) ([_] (println "timeout"))))
+(clojure-version)
+(System/getProperty "java.version")
 ```
 
-## Common Patterns
-
-### Pipeline Processing
+Use `clojure.repl/doc`, `source`, or `dir` to inspect the relevant API:
 
 ```clojure
-;; pipeline - computational work (non-blocking)
-(a/pipeline 4 out (map #(* % %)) in)
+(require '[clojure.repl :as repl])
 
-;; pipeline-blocking - I/O work
-(a/pipeline-blocking 4 out
-  (map (fn [url]
-         (Thread/sleep 100)  ; blocking OK here
-         (fetch url)))
-  in)
-
-;; pipeline-async - async callbacks
-(defn async-fetch [url result-chan]
-  (http/get url (fn [response]
-                  (a/put! result-chan response)
-                  (a/close! result-chan))))
-
-(a/pipeline-async 10 out async-fetch in)
+(with-out-str (repl/doc clojure.core.async/io-thread))
+(with-out-str (repl/source clojure.core.async/chan))
 ```
-
-### Pub/Sub
-
-```clojure
-;; Create publication with topic function
-(def publication (a/pub in-chan :msg-type))
-
-;; Subscribe channels to topics
-(a/sub publication :greeting greeting-chan)
-(a/sub publication :farewell farewell-chan)
-
-;; Publish messages (to original in-chan)
-(>!! in-chan {:msg-type :greeting :text "Hi"})
-
-;; With topic-specific buffers
-(a/pub in-chan :type
-  (fn [topic]
-    (case topic
-      :critical (a/dropping-buffer 1000)
-      :normal (a/sliding-buffer 10)
-      1)))
-```
-
-### Mult/Tap - Broadcasting
-
-```clojure
-;; Create mult from source (copies to ALL taps)
-(def m (a/mult source-chan))
-(a/tap m listener1)
-(a/tap m listener2)
-(>!! source-chan "broadcast")  ; all listeners receive
-```
-
-### Collection Helpers
-
-```clojure
-(a/onto-chan! c [1 2 3])        ; put coll onto channel
-(<!! (a/into [] c))              ; take into vector
-(<!! (a/reduce + 0 c))           ; reduce over channel
-(a/merge [c1 c2 c3])             ; merge channels
-(a/pipe in-chan out-chan)        ; pipe one to another
-```
-
-## Key Gotchas
-
-### 1. Blocking in Go Blocks
-
-NEVER do blocking operations in go blocks - they will block the entire thread pool:
-
-```clojure
-;; BAD
-(go
-  (<!! some-chan)           ; WRONG - use <! instead
-  (Thread/sleep 1000)       ; WRONG - use (<! (timeout 1000))
-  (.read socket))           ; WRONG - use thread instead
-
-;; GOOD
-(a/thread
-  (<!! some-chan)           ; OK
-  (Thread/sleep 1000)       ; OK
-  (.read socket))           ; OK
-```
-
-Enable go checking in development: `-Dclojure.core.async.go-checking=true`
-
-### 2. Function Boundaries in Go Blocks
-
-Parking ops don't work across function boundaries:
-
-```clojure
-;; BAD: <! inside fn created by map/for
-(go (map <! channels))
-(go (for [c cs] (<! c)))
-
-;; GOOD: doseq/loop don't create closures
-(go (doseq [c cs] (println (<! c))))
-(go-loop [cs channels]
-  (when-let [c (first cs)] (println (<! c)) (recur (rest cs))))
-```
-
-### 3. Buffering and Deadlocks
-
-```clojure
-;; BAD: unbuffered channel deadlocks
-(let [c (chan)] (>!! c "msg") (<!! c))  ; blocks forever
-
-;; GOOD: use buffer or separate process
-(let [c (chan 1)] (>!! c "msg") (<!! c))
-(let [c (chan)] (go (>! c "msg")) (<!! c))
-```
-
-### 4. nil Values and Closing
-
-```clojure
-;; Never put nil - it's the "closed channel" signal
-(>!! c nil)      ; BAD - throws
-(>!! c ::none)   ; GOOD - sentinel value
-
-;; Close from producer, check on consumer
-(a/close! c)
-(go-loop []
-  (when-let [v (<! c)]  ; nil when closed
-    (process v)
-    (recur)))
-```
-
-### 5. Pub/Sub Blocking
-
-If ANY subscriber can't accept, WHOLE publication blocks - always buffer subscribers:
-
-```clojure
-(a/sub pub :topic (chan 100))  ; GOOD - buffered
-```
-
-### 6. Prefer put! over (go (>! ...))
-
-```clojure
-(a/put! c val (fn [_] nil))  ; efficient
-(go (>! c val))               ; wasteful
-```
-
-## Advanced
-
-```clojure
-;; Promise channel - single-value (like futures)
-(def p (a/promise-chan))
-(>!! p "first")
-(<!! p)  ; => "first" (cached, all readers get same value)
-
-;; Fan-out: one -> many workers
-(dotimes [_ 5] (go-loop [] (when-let [v (<! in)] (process v) (recur))))
-
-;; Fan-in: many -> one (use merge)
-(a/merge [producer1 producer2 producer3])
-```
-
-## References
-
-- API Docs: https://clojure.github.io/core.async/
-- GitHub: https://github.com/clojure/core.async
-- Rationale: https://clojure.github.io/core.async/rationale.html
-- Rich Hickey Talk: https://www.youtube.com/watch?v=yJxFPoxqzWE
-- Code Walkthrough: https://github.com/clojure/core.async/blob/master/examples/walkthrough.clj

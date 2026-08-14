@@ -39,8 +39,8 @@ A dev and its reviewers form a pod and may communicate directly with each other.
    | Role               | Provider       | Model           | Thinking |
    |--------------------|----------------|-----------------|----------|
    | Dev                | `openai-codex` | `gpt-5.6-terra` | `high`   |
-   | Standards reviewer | `openai`       | `gpt-5.6-luna`  | `xhigh`  |
-   | Spec reviewer      | `openai`       | `gpt-5.6-sol`   | `medium` |
+   | Standards reviewer | `openai-codex`       | `gpt-5.6-luna`  | `xhigh`  |
+   | Spec reviewer      | `openai-codex`       | `gpt-5.6-sol`   | `medium` |
 
    Pass all three settings explicitly when starting each agent, for example `pi --provider openai-codex --model gpt-5.6-terra --thinking high`. Reuse an existing agent for a new orchestration only when its role and effective provider, model, and thinking level match the requested or default configuration.
 
