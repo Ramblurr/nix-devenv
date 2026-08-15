@@ -1,6 +1,6 @@
 ---
 name: domain-modeling
-description: Build and sharpen a project's domain model. Use when the user wants to pin down domain terminology or a ubiquitous language, record an architectural decision, or when another skill needs to maintain the domain model.
+description: Build and sharpen a project's domain model. Use when discussing codebase terminology, writing or editing a CONTEXT.md, or recording or editing an ADR.
 ---
 
 # Domain Modeling
@@ -16,8 +16,8 @@ Most repos have a single context:
 ├── CONTEXT.md
 ├── docs/
 │   └── adr/
-│       ├── 001-event-sourced-orders.md
-│       └── 002-postgres-for-write-model.md
+│       ├── 0001-event-sourced-orders.md
+│       └── 0002-postgres-for-write-model.md
 └── src/
 ```
 

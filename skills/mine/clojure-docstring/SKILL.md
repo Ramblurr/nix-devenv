@@ -6,7 +6,8 @@ description: Guidelines for writing effective Clojure docstrings with markdown f
 
 # Clojure Docstring Guidelines
 
-Write clear, scannable docstrings using markdown formatting. All docstrings are interpreted as Markdown on cljdoc and Codox.
+Write docstrings, comments and test descriptions succinctly. Use Simplified Technical English.
+Docstrings use markdown formatting. All docstrings are interpreted as Markdown on cljdoc and Codox.
 
 ## Core Principles
 
