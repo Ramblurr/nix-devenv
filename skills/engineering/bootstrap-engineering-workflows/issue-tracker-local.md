@@ -12,7 +12,7 @@ Use Skill(local-org-issues-cli) to inspect tracker metadata, readiness, and depe
 - The spec is `.scratch-org/NNN-<slug>/spec.org`.
 - Implementation tickets are one file each at `.scratch-org/NNN-<slug>/issues/<NN>-<slug>.org`, numbered from `01` within the work item.
 - The canonical ticket ID combines both numbers: `NNN-NN`. Use it whenever referring to a ticket outside its own file.
-- The first top-level Org heading carries the ticket state as a TODO keyword: `NEEDS-TRIAGE`, `NEEDS-INFO`, `READY-FOR-AGENT`, `READY-FOR-HUMAN`, `IN-PROGRESS`, `CLAIMED`, `RESOLVED`, or `WONTFIX`.
+- The first top-level Org heading carries the ticket state as a TODO keyword: `NEEDS-TRIAGE`, `NEEDS-INFO`, `READY-FOR-AGENT`, `READY-FOR-HUMAN`, `IN-PROGRESS`, `CLAIMED`, `DEFERRED`, `RESOLVED`, or `WONTFIX`.
 - Store the canonical ID in a `TICKET_ID` property. Store canonical blocker IDs in `BLOCKED_BY`, and the claimant in `ASSIGNEE`.
 - Use the heading tags `bug` or `enhancement` for the triage category.
 - Append comments and conversation history under a `** Comments` heading.
@@ -38,6 +38,28 @@ The end-to-end behavior this ticket delivers.
 ** Comments
 ```
 
+## Deferred work
+
+Use `DEFERRED` for fully specified work that cannot start yet. Record dates with native Org planning syntax directly below the first heading, not as drawer properties:
+
+```org
+* DEFERRED Ticket title :enhancement:
+SCHEDULED: <2026-10-30 Fri> DEADLINE: <2026-11-06 Fri>
+:PROPERTIES:
+:TICKET_ID: 006-03
+:BLOCKED_BY:
+:ASSIGNEE:
+:END:
+```
+
+`SCHEDULED` is the earliest start time. `DEADLINE` is a separate completion target and never postpones readiness.
+
+- A `DEFERRED` ticket requires a valid active `SCHEDULED` timestamp and an empty `ASSIGNEE`.
+- A future deferred ticket is unavailable. It becomes eligible when its scheduled time arrives, every blocker is resolved, its metadata is valid, and `ASSIGNEE` remains empty.
+- Claim eligible deferred work by changing `DEFERRED` directly to `CLAIMED`, setting `ASSIGNEE`, and saving before work. Keep its planning lines as history.
+- Every `CLAIMED` ticket requires a non-empty `ASSIGNEE`.
+- Use `DEFERRED`, rather than a ready state, when a future scheduled time prevents work from starting.
+
 ## When a skill says "publish to the issue tracker"
 
 Create an Org file under `.scratch-org/NNN-<slug>/`, creating the directory when needed. Choose the next available `NNN` from the shared sequence across all top-level numbered `.scratch-org/` work-item directories.
@@ -54,6 +76,6 @@ Used by Skill(wayfinder). The **map** is one Org file with one **child** Org fil
 - **Child ticket**: `.scratch-org/NNN-<effort>/issues/NN-<slug>.org`. Its first heading carries the TODO state; a `TYPE` property records `research`, `prototype`, `grilling`, or `task`.
 - **Research report**: `.scratch-org/NNN-<effort>/research/NN-<slug>.org`, linked from its child ticket. Parallel research tickets always receive distinct report paths.
 - **Blocking**: `BLOCKED_BY` contains canonical ticket IDs separated by spaces. A ticket is unblocked when every listed ticket is `RESOLVED`.
-- **Frontier**: scan the effort's `issues/` directory for tickets whose blockers are resolved, whose state is open, and whose `ASSIGNEE` is empty; lowest ticket number wins.
-- **Claim**: change the TODO state to `CLAIMED`, set `ASSIGNEE`, and save before any work.
+- **Frontier**: scan the effort's `issues/` directory for unassigned open tickets whose blockers are resolved. Exclude future `DEFERRED` tickets; include them once their scheduled time arrives. Lowest ticket number wins.
+- **Claim**: change the TODO state to `CLAIMED`, set `ASSIGNEE`, and save before any work. A due `DEFERRED` ticket follows this transition directly and keeps its planning lines.
 - **Resolve**: append the answer under `** Answer`, check completed acceptance criteria, change the TODO state to `RESOLVED`, then append an Org file link plus one-line gist to the map's `** Decisions so far`.

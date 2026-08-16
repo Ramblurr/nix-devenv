@@ -44,7 +44,7 @@ Ensure the repository's root `.gitignore` contains exact `.scratch/` and `.scrat
 
 **Section B — Triage states.** Skip this section entirely if Skill(triage) is not installed.
 
-Use the fixed local mapping: `needs-triage` → `NEEDS-TRIAGE`, `needs-info` → `NEEDS-INFO`, `ready-for-agent` → `READY-FOR-AGENT`, `ready-for-human` → `READY-FOR-HUMAN`, and `wontfix` → `WONTFIX`. Also document the workflow-only states `IN-PROGRESS`, `CLAIMED`, and `RESOLVED`. There is no label-vocabulary question for the local tracker.
+Use the fixed local mapping: `needs-triage` → `NEEDS-TRIAGE`, `needs-info` → `NEEDS-INFO`, `ready-for-agent` → `READY-FOR-AGENT`, `ready-for-human` → `READY-FOR-HUMAN`, and `wontfix` → `WONTFIX`. Also document `IN-PROGRESS`, `CLAIMED`, `DEFERRED`, and `RESOLVED`. `DEFERRED` requires native Org `SCHEDULED` syntax and an empty assignee. When its start time arrives, claim it directly as `CLAIMED` and set the required assignee. There is no label-vocabulary question for the local tracker.
 
 **Section C — Domain docs.** Default to **single-context** — one `CONTEXT.md` + `docs/adr/` at the repo root. This fits almost every repo; write it without asking.
 

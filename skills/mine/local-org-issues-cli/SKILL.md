@@ -11,14 +11,15 @@ Run it from the repository, or put `--root PATH` before the subcommand to query 
 
 ## Commands
 
-- `local-issues list [--all] [--work-item NNN] [--format table|json]` lists ticket states, readiness, direct unresolved blockers, assignees, and titles.
-- `local-issues suggest [--limit N] [--work-item NNN] [--format table|json]` selects unassigned, dependency-ready `READY-FOR-AGENT` work. By default, it returns one candidate and its absolute canonical ticket path.
-- `local-issues why TICKET_ID [--all] [--format table|json]` explains dependency readiness and every unresolved blocker branch for one ticket.
-- `local-issues doctor [--format table|json]` reports malformed metadata and dependency-integrity failures. It exits nonzero when it finds any problem.
+- `local-issues list [--all] [--work-item NNN] [--format table|json]` lists ticket states, readiness, direct unresolved blockers, assignees, native scheduled and deadline values, and titles.
+- `local-issues suggest [--limit N] [--work-item NNN] [--format table|json]` selects unassigned, dependency-ready `READY-FOR-AGENT` work and valid `DEFERRED` work whose native `SCHEDULED` time has arrived. Its reason explains when deferred work became due. By default, it returns one candidate and its absolute canonical ticket path.
+- `local-issues why TICKET_ID [--all] [--format table|json]` explains dependency readiness and every unresolved blocker branch for one ticket. Its ticket records include the same scheduled and deadline values as `list`.
+- `local-issues doctor [--format table|json]` reports malformed metadata, dependency failures, invalid planning dates, assigned deferred tickets, and unassigned claimed tickets. It exits nonzero when it finds any problem.
 
 ## Usage rules
 
 - The CLI supplies metadata, not ticket instructions. Read the canonical ticket returned by `suggest` before claiming or implementing it.
+- Claim a suggested `DEFERRED` ticket by changing it directly to `CLAIMED`, setting `ASSIGNEE`, and preserving its `SCHEDULED` and `DEADLINE` lines.
 - Respect any selection order imposed by the calling skill; use the CLI to verify eligibility and readiness.
 - Treat an empty `suggest` result as success, not a tracker failure.
 - Use `doctor` for authoritative whole-tracker health checks.

@@ -53,16 +53,17 @@ Org conversion:
 - Produce idiomatic Org headings, lists, checkboxes, links, emphasis, tables, quotes, and source blocks. Do not merely rename files.
 - Preserve prose and metadata without inventing decisions.
 - Using the complete mapping, rewrite formal links and inline paths to copied Markdown files; `.scratch/X.md` becomes `.scratch-org/X.org`, while unrelated `.md` references remain unchanged.
-- For a plain or bold Markdown Status field in the header, move the state onto the first top-level Org heading and remove the redundant field. Map the canonical roles and workflow states to their uppercase TODO keywords; additionally map legacy `open` to `NEEDS-TRIAGE` and `active` to `IN-PROGRESS`. A ticket with a missing or unknown legacy state becomes `NEEDS-TRIAGE`.
+- For a plain or bold Markdown Status field in the header, move the state onto the first top-level Org heading and remove the redundant field. Map the canonical roles and workflow states to their uppercase TODO keywords, including `deferred` to `DEFERRED`; additionally map legacy `open` to `NEEDS-TRIAGE` and `active` to `IN-PROGRESS`. A ticket with a missing or unknown legacy state becomes `NEEDS-TRIAGE`.
 - For every path NNN-work-item/issues/NN-ticket.org, add or update the first heading's property drawer with TICKET_ID set to NNN-NN. BLOCKED_BY contains only space-separated canonical IDs: bare NN uses the current work item, `work item NNN ticket NN` uses the named item, and `None` becomes empty. Keep descriptive or ambiguous blocker prose outside the drawer.
 - Recognize plain and bold Type, Blocked by, Assignee, and Claimant header fields. Preserve Type as TYPE and an existing claimant as ASSIGNEE.
+- Convert valid Scheduled and Deadline fields or drawer properties to native Org `SCHEDULED` and `DEADLINE` planning lines directly below the first heading. A `DEFERRED` ticket requires `SCHEDULED` and an empty `ASSIGNEE`; a `CLAIMED` ticket requires a non-empty `ASSIGNEE`. Report `BLOCKED` on contradictory legacy metadata rather than guessing or discarding it.
 - Preserve What to build, acceptance criteria, Resolution, Answer, Comments, specs, maps, reviews, handoffs, and operation ledgers.
 
 Validation:
 - Confirm the working directory is still .scratch-org.
 - Confirm no .md files remain.
 - Confirm every original Markdown relative path has one .org replacement and no extra files were created.
-- Confirm every ticket's first heading has a canonical TODO state and property drawer, and no mapped legacy Status field remains in any converted document.
+- Confirm every ticket's first heading has a canonical TODO state and property drawer, planning dates use native Org syntax, deferred tickets have schedules and no assignee, claimed tickets have assignees, and no mapped legacy Status field remains in any converted document.
 - Confirm no Markdown fence lines remain and every reference to a converted tracker file resolves under `.scratch-org/`.
 - Inspect representative ticket, spec, map, review, handoff, and operation-ledger files.
 - Parse every .org file with Org when Emacs is available.
@@ -81,7 +82,7 @@ After `DONE`, validate without modifying either tree:
 - Every snapshotted non-Markdown path, including each symlink itself, remains present and unchanged.
 - No files exist outside the expected mapping.
 - Every Org file parses successfully when Emacs is available.
-- Org recognizes every ticket under the canonical TODO sequence; property drawers contain only canonical metadata; no Markdown fence lines remain; converted tracker references resolve under `.scratch-org/`; checkboxes and representative source blocks are correct.
+- Org recognizes every ticket under the canonical TODO sequence; property drawers contain only canonical metadata; planning dates use native syntax; deferred tickets have schedules and no assignee; claimed tickets have assignees; no Markdown fence lines remain; converted tracker references resolve under `.scratch-org/`; checkboxes and representative source blocks are correct.
 - `git check-ignore` recognizes both trees, and `git ls-files -- .scratch .scratch-org` plus `git diff --cached -- .scratch .scratch-org` show no tracked or staged tracker files.
 
 If `.scratch/` changed concurrently after the snapshot, report the changed paths and keep `.scratch-org/` as the validated snapshot. Never chase a moving source tree automatically.

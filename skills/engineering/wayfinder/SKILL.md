@@ -69,11 +69,20 @@ Each ticket is a child of the map and sized to one 100K-token session. For the l
 <the decision or investigation this ticket resolves>
 ```
 
+Use `DEFERRED` when a fully specified ticket cannot start before a future time. Its header starts with native Org planning syntax:
+
+```org
+* DEFERRED <Ticket title>
+SCHEDULED: <2026-10-30 Fri> DEADLINE: <2026-11-06 Fri>
+```
+
+`SCHEDULED` is required and records the earliest start constraint. `DEADLINE` is an optional, separate completion target; omit it when none exists. Leave `ASSIGNEE` empty while deferred.
+
 Each ticket carries a `wayfinder:<type>` label — one of `research`, `prototype`, `grilling`, `task` (see [Ticket Types](#ticket-types)).
 
-A session **claims** a ticket by assigning it to the dev driving the map, **first**, before any work, so concurrent sessions skip it. That assignee _is_ the claim: an open, unassigned ticket is unclaimed.
+A session **claims** a ticket before any work so concurrent sessions skip it. For local Org, change the state to `CLAIMED`, set `ASSIGNEE`, and save; every claimed ticket must have an assignee. A `DEFERRED` ticket can be claimed only after its scheduled time arrives and its blockers resolve. Change it directly to `CLAIMED` and keep its planning lines. An open ticket with an empty assignee is unclaimed.
 
-Blocking uses the tracker's **native** dependency relationship — essential because it renders the frontier _visually_ in the tracker's own UI, so the human sees what's takeable without opening the map. Only a tracker that lacks native blocking falls back to a body convention. A ticket is **unblocked** when every ticket blocking it is closed; the **frontier** is the open, unblocked, unclaimed children — the edge of the known.
+Blocking uses the tracker's **native** dependency relationship — essential because it renders the frontier _visually_ in the tracker's UI, so the human sees what's takeable without opening the map. Only a tracker that lacks native blocking falls back to a body convention. A ticket is **unblocked** when every ticket blocking it is closed; the **frontier** is the open, unblocked, unclaimed children whose start time has arrived. Future `DEFERRED` tickets remain outside the frontier until their native `SCHEDULED` time.
 
 The answer is absent while a ticket is open. On resolution, store it using the tracker's Resolve operation; local Org tickets append it under `** Answer`. Link assets from the ticket instead of pasting them.
 
