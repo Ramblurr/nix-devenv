@@ -116,7 +116,7 @@ The block:
 
 Include the `### Triage states` sub-block and write `docs/agents/triage-states.md` only when Skill(triage) is installed. If a prior bootstrap created only `docs/agents/triage-labels.md`, propose replacing it during confirmation; if both files exist, ask rather than overwriting either.
 
-Then ensure `.scratch/` and `.scratch-org/` are ignored in the root `.gitignore`, and write the docs files using the seed templates in this skill folder:
+Then ensure `.scratch-org/` is ignored in the root `.gitignore`, and write the docs files using the seed templates in this skill folder:
 
 - [issue-tracker-local.md](./issue-tracker-local.md) — local Org mode issue tracker
 - [triage-states.md](./triage-states.md) — Org TODO state mapping (only if Skill(triage) is installed)
