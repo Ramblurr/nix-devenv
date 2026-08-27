@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  echo "Usage: $0 <sprite-name>" >&2
+  exit 2
+}
+
+[[ $# -eq 1 ]] || usage
+
+sprite_name=$1
+script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+bootstrap_script=${BOOTSTRAP_SCRIPT:-$script_dir/bootstrap.sh}
+pi_agent_dir=${PI_CODING_AGENT_DIR:-$HOME/.pi/agent}
+auth_file=$pi_agent_dir/auth.json
+org_args=()
+repo_origin=
+repo_dir=
+
+if [[ -n "${SPRITE_ORG:-}" ]]; then
+  org_args=(-o "$SPRITE_ORG")
+fi
+
+command -v sprite >/dev/null 2>&1 || {
+  echo "sprite CLI is not installed or not in PATH." >&2
+  exit 1
+}
+
+[[ -f "$bootstrap_script" ]] || {
+  echo "Bootstrap script not found: $bootstrap_script" >&2
+  exit 1
+}
+
+[[ -s "$auth_file" ]] || {
+  echo "Pi auth file is missing or empty: $auth_file" >&2
+  exit 1
+}
+
+if [[ -f "$PWD/flake.nix" && -d "$PWD/.git" ]]; then
+  if repo_origin=$(git -C "$PWD" remote get-url origin 2>/dev/null); then
+    repo_dir=$(basename "${repo_origin%/}")
+    repo_dir=${repo_dir%.git}
+    echo "Detected flake repository: $repo_origin"
+  else
+    echo "Current directory is a flake Git repository, but it has no origin; skipping clone." >&2
+  fi
+fi
+
+echo "Creating Sprite: $sprite_name"
+sprite create "${org_args[@]}" --skip-console "$sprite_name"
+
+echo "Uploading bootstrap script"
+sprite file push "${org_args[@]}" -s "$sprite_name" \
+  "$bootstrap_script" /home/sprite/bootstrap.sh
+
+echo "Bootstrapping Sprite"
+# Closing the pipe after cat reaches EOF is the non-interactive equivalent of
+# pressing Ctrl-D. The auth contents are sent over stdin, not command arguments.
+if ! cat "$auth_file" | sprite exec "${org_args[@]}" -s "$sprite_name" -- \
+  bash /home/sprite/bootstrap.sh; then
+  echo "Bootstrap failed. The Sprite was left intact for debugging." >&2
+  echo "Connect with: sprite console ${org_args[*]} -s $sprite_name" >&2
+  exit 1
+fi
+
+if [[ -n "$repo_origin" ]]; then
+  echo "Cloning $repo_origin interactively into the Sprite"
+  sprite exec "${org_args[@]}" -s "$sprite_name" --tty -- \
+    bash -lc '
+      set -euo pipefail
+      origin=$1
+      repo_dir=$2
+      destination=$HOME/$repo_dir
+
+      if [[ -d "$destination/.git" ]]; then
+        echo "$destination is already cloned; skipping clone"
+      elif [[ -e "$destination" ]]; then
+        echo "$destination already exists and is not a Git checkout" >&2
+        exit 1
+      else
+        git clone "$origin" "$destination"
+      fi
+
+      cd "$destination"
+      direnv allow || echo "no .envrc skipping direnv"
+    ' bash "$repo_origin" "$repo_dir"
+fi
+
+echo "Bootstrap complete; connecting to console"
+exec env SHELL=/bin/bash sprite console "${org_args[@]}" -s "$sprite_name"
