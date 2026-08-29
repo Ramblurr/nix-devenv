@@ -40,7 +40,7 @@ Lead each question with the recommended answer so the user can accept it in a wo
 
 The engineering workflows use local Org mode. Tell the user that issues and specs live under `.scratch-org/NNN-<slug>/`, with `NNN` drawn from one shared repo-wide three-digit sequence. Tickets use canonical composite IDs such as `006-02`; there is no issue-tracker choice to make.
 
-Ensure the repository's root `.gitignore` contains exact `.scratch/` and `.scratch-org/` entries. Neither tree may contain tracked files, be staged, or be committed; do not rely only on a user's global excludes. Record the tracker configuration in `docs/agents/issue-tracker.md` using the local Org mode seed template.
+Ensure the repository's root `.gitignore` contains `.scratch-org/` entries. Neither tree may contain tracked files, be staged, or be committed; do not rely only on a user's global excludes. Record the tracker configuration in `docs/agents/issue-tracker.md` using the local Org mode seed template.
 
 **Section B — Triage states.** Skip this section entirely if Skill(triage) is not installed.
 
