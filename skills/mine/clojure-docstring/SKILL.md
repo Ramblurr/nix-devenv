@@ -6,8 +6,17 @@ description: Guidelines for writing effective Clojure docstrings with markdown f
 
 # Clojure Docstring Guidelines
 
-Write docstrings, comments and test descriptions succinctly. Use Simplified Technical English.
+Write docstrings, comments and test descriptions succinctly. Use ASD-STE100 Simplified Technical English.
 Docstrings use markdown formatting. All docstrings are interpreted as Markdown on cljdoc and Codox.
+
+Write docstrings from the API user's point of view.
+For a function, describe what callers need to know: its purpose, accepted inputs and options, return value, observable side effects, errors, constraints, and correct use.
+
+Treat docstrings as reference documentation (in the Diátaxis sense).
+Use concise, neutral, factual, and authoritative language.
+Follow consistent patterns so users can find information quickly.
+Examples should illustrate usage without becoming tutorials.
+Exclude implementation details and maintainer-only rationale unless they affect caller-visible behavior. Put such information in code comments beside the implementation it explains.
 
 ## Core Principles
 
@@ -89,17 +98,17 @@ Use markdown tables when a function accepts an options map with multiple keys:
 
   Options:
 
-  | key              | description
-  | -----------------|-------------
-  | `:path`          | Base-path for routes
-  | `:routes`        | Initial resolved routes (default `[]`)
-  | `:data`          | Initial route data (default `{}`)
-  | `:spec`          | Spec to validate route data (default `nil`)
-  | `:syntax`        | Path parameter syntax (default `:bracket`)
-  | `:expand`        | Function to expand route data (default `identity`)
-  | `:coerce`        | Function to coerce parameters (default `nil`)
-  | `:compile`       | Function to compile routes (default `identity`)
-  | `:conflicts`     | Function to handle route conflicts (default `nil`)
+  | key              | description |
+  | -----------------|-------------|
+  | `:path`          | Base-path for routes |
+  | `:routes`        | Initial resolved routes (default `[]`) |
+  | `:data`          | Initial route data (default `{}`) |
+  | `:spec`          | Spec to validate route data (default `nil`) |
+  | `:syntax`        | Path parameter syntax (default `:bracket`) |
+  | `:expand`        | Function to expand route data (default `identity`) |
+  | `:coerce`        | Function to coerce parameters (default `nil`) |
+  | `:compile`       | Function to compile routes (default `identity`) |
+  | `:conflicts`     | Function to handle route conflicts (default `nil`) |
 
   Example:
 
@@ -133,10 +142,10 @@ For public functions, docstrings should contain these fields in order:
 
   Options:
 
-  | key         | description
-  |-------------|-------------
-  | `:filters`  | Vector of filter functions to apply
-  | `:validate` | Enable validation (default `true`)
+  | key         | description |
+  |-------------|-------------|
+  | `:filters`  | Vector of filter functions to apply |
+  | `:validate` | Enable validation (default `true`) |
 
   Example:
 
