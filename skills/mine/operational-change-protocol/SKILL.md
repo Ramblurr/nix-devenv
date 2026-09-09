@@ -1,6 +1,6 @@
 ---
 name: operational-change-protocol
-description: Use this OCP when executing or preparing to execute commands that change a live or important system, service reloads/restarts, package changes, deployments, migrations, firewall/network/access changes, credential rotation, NixOS switch/test/boot/deploy, or incident mitigation. It guides safe operations with a persisted ledger for scope, preflight, baseline, rollback, validation, and evidence.
+description: Plan and execute operational changes to live systems or important infrastructure with preflight, rollback, and validation. Do not invoke for routine software development, local dev server starts/restarts, builds, tests, or development-related CI work.
 ---
 
 # Operational Change Protocol
