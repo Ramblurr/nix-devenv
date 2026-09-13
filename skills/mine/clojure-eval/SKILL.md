@@ -78,9 +78,9 @@ brepl -f src/myapp/core.clj
 
 First run the trivial probe. If it succeeds, reuse that REPL. If `brepl` reports that no server exists:
 
-1. In projects with a `dev` task, start `bb dev` as a background process.
-2. Otherwise use the project's documented REPL command; in these projects the usual fallback is `clojure -M:dev:repl/dev`.
-3. Wait until `brepl '(+ 1 2)'` succeeds. Do not wait by manually reading or passing the generated port.
+1. Load Skill(tmux). Always start REPLs in the named project tmux session (normally the project directory basename); reuse an existing session. Never start an ad hoc background REPL with `nohup`, `&`, or a detached shell.
+2. Capture the target pane first, then start the project's `bb dev` task or documented REPL command in a dedicated window/pane of that session. The usual fallback is `clojure -M:dev:repl/dev`.
+3. Verify startup with `tmuxb capture`, then wait until `brepl '(+ 1 2)'` succeeds. Do not wait by manually reading or passing the generated port.
 
 ## Inspect Errors
 
