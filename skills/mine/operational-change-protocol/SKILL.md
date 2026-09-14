@@ -36,6 +36,24 @@ Update the ledger immediately after each executed command with command, exit cod
 
 Redact secrets, private keys, tokens, passwords, customer data, and sensitive log excerpts.
 
+## Swamp-backed operations
+
+When Swamp is available and an established model or workflow covers the operation,
+use a short ledger with linked evidence. Otherwise, follow the normal workflow below.
+All approval and safety requirements still apply.
+
+- Before execution, record scope, risks, abort/recovery criteria, approval, and the
+  exact invocation and context. Reference the reviewed model/workflow revision
+  instead of repeating its procedure. Generated authorization text is not consent.
+- Swamp may supply baseline and recovery evidence only if it persists them before
+  target mutation and stops on failed preflight. Obtain any approval-dependent
+  findings before go/no-go; capture missing evidence manually.
+- After each run, record its outcome, run ID, definition/workflow identity, and
+  exact artifact versions. Keep manual SSH actions, decisions, retries, remaining
+  validation, and final acceptance in the same ledger.
+- Before closing, save readable, redacted copies of referenced artifacts beside
+  the ledger. Version references and “latest” links do not survive data deletion.
+
 ## Risk and command classes
 
 Risk:
