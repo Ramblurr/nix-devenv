@@ -7,6 +7,8 @@ description:  High-impact writing rules from Strunk's Elements of Style (1918, p
 
 These rules have the highest impact on writing quality. Apply them to all prose output.
 
+When writing about technical topics use ASD-STE100 Simplified Technical English.
+
 ## Rule 1: Use the active voice
 
 The active voice is more direct and vigorous than the passive.
