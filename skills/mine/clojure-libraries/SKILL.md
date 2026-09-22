@@ -23,6 +23,8 @@ Use this skill as an index. Read only the reference file(s) relevant to the libr
 - [core.async.flow](references/core-async-flow.md)
 - [Datomic](datomic/index.md)
 - [donut.party/system](references/donut-system.md)
+- [exoscale/ex](references/exoscale-ex.md) — typed exceptions, keyword hierarchies, and Flow integration (`else-type`)
+- [fmnoise/flow](references/fmnoise-flow.md) — error-as-value pipelines, exception capture, and early-exit bindings
 - [Fulcro Spec](references/fulcro-spec.md)
 - [Guardrails](references/guardrails/overview.md) — [gspec syntax](references/guardrails/gspec-syntax.md)
 - [Hato](references/hato.md)
