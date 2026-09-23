@@ -21,11 +21,11 @@ and read it first.
 
 The Link hub is shared by agents from many unrelated projects. Treat `link_list` as a global directory, not as a pool of workers available to your project.
 
-Before selecting a worker, determine your `<scope>` as defined under **Naming your subagent**. A terminal is eligible only when its Link name begins with the exact `<scope>@` prefix. Filter by scope before considering role, status, cwd, or repository access; a matching role such as `reviewer` never makes a foreign-scope terminal eligible.
+Before selecting a worker, determine your `<scope>` as defined under **Naming your subagent**. A terminal is eligible only when its Link name ends with the exact `@<scope>` suffix. Filter by scope before considering role, status, cwd, or repository access; a matching role such as `reviewer` never makes a foreign-scope terminal eligible.
 
 Never send tasks or prompts to, or compact, an out-of-scope terminal. Ignore those terminals. If too few eligible terminals exist, boot new agents in your project scope as described below.
 
-This `<scope>@<role>` policy overrides generic naming examples in Skill(pi-link-coordination).
+This `<role>@<scope>` policy overrides generic naming examples in Skill(pi-link-coordination).
 
 ## Use one tmux session per project
 
@@ -43,18 +43,18 @@ When `link_list` shows too few eligible agents in your project scope, boot them 
 
 ```bash
 # Interactive, use this by default unless human instructions otherwise
-pi --link-name <scope>@<role>
+pi --link-name <role>@<scope>
 
 # Non-interactive (runs and exits)
 pi -p "Your task"
 
 # Include files in prompt
-pi --link-name <scope>@<role> @file.md @image.png "Analyze these"
+pi --link-name <role>@<scope> @file.md @image.png "Analyze these"
 ```
 
 ### Naming your subagent
 
-Your subagent's link name must follow this format: `<scope>@<role>`
+Your subagent's link name must follow this format: `<role>@<scope>`
 
 `<scope>` is basename("$(pwd)")
 
@@ -72,12 +72,12 @@ Common `<role>`s: leader, dev, dev1, dev2, reviewer, researcher
 ### Examples
 
 ```bash
-pi --link-name <scope>@<role>
+pi --link-name <role>@<scope>
 # then `link_send(triggerTurn: true)` with prompt "Review the code in src/"
 
 # Launch an agent into the project's tmux session
 tmux new-window -t <project-session> -n reviewer2 -c "$PWD" \
-     'pi --link-name <scope>@reviewer1'
+     'pi --link-name reviewer1@<scope>'
 ```
 
 ## Dispatching Tasks to Subagents
