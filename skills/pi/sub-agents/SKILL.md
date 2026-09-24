@@ -29,7 +29,10 @@ This `<role>@<scope>` policy overrides generic naming examples in Skill(pi-link-
 
 ## Use one tmux session per project
 
-Use interactive tmux sessions for agent orchestration. They provide a persistent, observable environment where you can monitor progress, answer questions, interrupt incorrect work, and debug without losing session state.
+USE ONE tmux session per project! Even if it already exists and you didn't create it.
+
+Use interactive tmux sessions for agent orchestration.
+They provide a persistent, observable environment where you can monitor progress, answer questions, interrupt incorrect work, and debug without losing session state.
 
 Before booting an agent, read and follow Skill(tmux), then run `tmuxb list` from the project cwd. Reuse the project's existing tmux session when one exists. A `.tmuxb_session` file identifies that session when present.
 

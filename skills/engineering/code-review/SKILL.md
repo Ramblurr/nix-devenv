@@ -72,6 +72,8 @@ Inspect existing `review*.org` files in that directory. Let `<N>` be one greater
 - Spec: `.scratch-org/NNN-<feature-or-concept>/review<N>-spec.org`
 - Aggregate: `.scratch-org/NNN-<feature-or-concept>/review<N>.org`
 
+If the `.scratch-org` directory does not exist. DO NOT CREATE ONE. Stop (before even starting your review, so right after reading this skill) and ask if you should write the review to disk or just output it in the chat.
+
 ### 5. Spawn both sub-agents in parallel
 
 Pass only [standards-review-template.md](standards-review-template.md) to the Standards reviewer and only [spec-review-template.md](spec-review-template.md) to the Spec reviewer. Pass the template's absolute path and the assigned axis-report path with this explicit instruction: "Use this as the template for your review report." Do not expose either reviewer to the aggregate template or the other axis's template. Each reviewer must write its complete report before replying.

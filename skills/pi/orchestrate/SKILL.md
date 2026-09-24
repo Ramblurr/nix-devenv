@@ -36,13 +36,13 @@ A dev and its reviewers form a pod and may communicate directly with each other.
 
   Unless the user overrides a role's provider, model, or thinking level, use the following defaults.
 
-   | Role               | Provider       | Model           | Thinking |
-   |--------------------|----------------|-----------------|----------|
-   | Dev                | `openai-codex` | `gpt-5.6-terra` | `high`   |
-   | Standards reviewer | `openai-codex`       | `gpt-5.6-luna`  | `xhigh`  |
-   | Spec reviewer      | `openai-codex`       | `gpt-5.6-sol`   | `medium` |
+   | Role               | Provider       | Model       | Thinking |
+   |--------------------|----------------|-------------|----------|
+   | Dev                | `openai-codex` | `gpt-6-sol` | `high`   |
+   | Standards reviewer | `openai-codex` | `gpt-6-sol` | `medium` |
+   | Spec reviewer      | `openai-codex` | `gpt-6-sol` | `medium` |
 
-   Pass all three settings explicitly when starting each agent, for example `pi --provider openai-codex --model gpt-5.6-terra --thinking high`. Reuse an existing agent for a new orchestration only when its role and effective provider, model, and thinking level match the requested or default configuration.
+   Pass all three settings explicitly when starting each agent, for example `pi --provider openai-codex --model gpt-6-terra --thinking high`. Reuse an existing agent for a new orchestration only when its role and effective provider, model, and thinking level match the requested or default configuration.
 
 4. **Check Git sharing.** Determine whether pods share a branch, worktree, index, or HEAD. Shared worktrees use the commit lock in step 7; isolated worktrees do not.
 

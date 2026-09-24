@@ -43,7 +43,8 @@ extra/
 
 **Priority order:**
 1. Search `extra/` with Grep/Glob
-2. If not found → HALT (do NOT web search)
+2. If not found (or `extra/` is absent), use Skill(local-git-reference) to check local repositories. Read them directly; no links into `extra/` are required.
+3. If neither source provides the required material → HALT (do NOT web search)
 
 **Quick lookup:**
 ```bash
@@ -100,7 +101,7 @@ Directly reading entire reference codebases pollutes your context window. Instea
 
 ## HALT Behavior (Hard Stop)
 
-If required material is not in `extra/`:
+If required material is unavailable from both `extra/` and local repositories checked through Skill(local-git-reference):
 
 1. **HALT immediately** - stop current task
 2. **Report what's missing** with specific suggestions

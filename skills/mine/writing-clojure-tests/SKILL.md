@@ -39,13 +39,13 @@ configuration identifies the runner, not the DSL.
 
 Use the first matching row:
 
-| Evidence | Select |
-|---|---|
-| Project instructions specify a DSL | The specified DSL |
-| Behavior tests in the target module use one DSL | The target module's DSL |
-| Behavior tests across the repository use one DSL | The repository's DSL |
-| The repository uses multiple DSLs | The target module's DSL, then the most common repository DSL; ask if the result is unclear |
-| No behavior tests exist, or only generated examples exist | Fulcro Spec |
+| Evidence                                                  | Select                                                                                     |
+|-----------------------------------------------------------|--------------------------------------------------------------------------------------------|
+| Project instructions specify a DSL                        | The specified DSL                                                                          |
+| Behavior tests in the target module use one DSL           | The target module's DSL                                                                    |
+| Behavior tests across the repository use one DSL          | The repository's DSL                                                                       |
+| The repository uses multiple DSLs                         | The target module's DSL, then the most common repository DSL; ask if the result is unclear |
+| No behavior tests exist, or only generated examples exist | Fulcro Spec                                                                                |
 
 A behavior test verifies project behavior. A generated smoke test, sample
 `deftest`, or placeholder assertion is an example, not an established DSL. When
@@ -57,7 +57,7 @@ Before you change test code, select one DSL from project evidence.
 
 ### Fulcro Spec
 
-Read Skill(clojure-libraries/references/fulcro-spec) in full before you write or
+Read Skill(clojure-libraries/references/fulcro-spec.md) in full before you write or
 change a Fulcro Spec test. For a new test suite:
 
 1. Add Fulcro Spec with the project's test or development dependency method.

@@ -77,6 +77,7 @@ When writing comments, docstrings, documentation of any form you are forbidden f
 - own / owns / owning, etc
 - boundary (exception: the fixed phrase 'bounded context')
 - gate
+- retained
 
 These are LLM/Agent jargon words that are meaningless and obscure the true meaning.
 Figure out how to say what you are trying to say there in plain english, it might require more words.
