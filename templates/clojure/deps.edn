@@ -9,7 +9,7 @@
                                   djblue/portal                            {:mvn/version "0.67.2"}
                                   lambdaisland/ansi                        {:mvn/version "0.2.37"}
                                   my/dev-repl                              {:git/url "https://github.com/Ramblurr/clojure-dev-repl.git"
-                                                                            :git/sha "3a298ad1d16875ff841079b1bfab087d3ef817ba"}
+                                                                            :git/sha "f053984effdc6c78b1d1ce8a8878b00639854db8"}
                                   com.clojure-goes-fast/clj-async-profiler {:mvn/version "1.8.0"}}}
            :build  {:deps       {io.github.clojure/tools.build {:mvn/version "0.10.14"}
                                  slipset/deps-deploy           {:mvn/version "0.2.5"}}

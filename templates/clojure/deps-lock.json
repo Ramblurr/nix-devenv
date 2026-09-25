@@ -1,15 +1,15 @@
 {
   "git": {
-    "my/dev-repl/3a298ad1d16875ff841079b1bfab087d3ef817ba": {
+    "my/dev-repl/f053984effdc6c78b1d1ce8a8878b00639854db8": {
       "common_dir": "https/github.com/Ramblurr/clojure-dev-repl",
-      "rev": "3a298ad1d16875ff841079b1bfab087d3ef817ba",
-      "sha256": "00isarmpyyb7ws68jw0y1qbqg4l0mf9z4fwmvhry9095cjm40kmn",
+      "rev": "f053984effdc6c78b1d1ce8a8878b00639854db8",
+      "sha256": "00zjz84zl1c3zqi0nzraicrzrg75j4cd805vvx65iva56931m51m",
       "url": "https://github.com/Ramblurr/clojure-dev-repl.git"
     },
-    "outskirtslabs/bb-tasks/e868e28b18a0496ec4d39878f0307cb1df17da22": {
+    "outskirtslabs/bb-tasks/9dbc6d77384b51ffde69007e98a0420b3cf6a0a7": {
       "common_dir": "https/github.com/outskirtslabs/bb-tasks",
-      "rev": "e868e28b18a0496ec4d39878f0307cb1df17da22",
-      "sha256": "1490l417pp032p6b3ghcnij443qy4pq9kadm72v1g2pn6ylpbsxb",
+      "rev": "9dbc6d77384b51ffde69007e98a0420b3cf6a0a7",
+      "sha256": "0b2iqd8l7x25h75agxb9f37kyv2lywpp4ffh7jccjgpxgz8yyxx3",
       "url": "https://github.com/outskirtslabs/bb-tasks"
     }
   },
@@ -806,12 +806,6 @@
     "org/apache/maven/wagon/wagon/3.5.3/wagon-3.5.3.pom": {
       "sha256": "7c10b8bac59268fe7957f2ab2b50965d90069ebf850c756bb55ea807ce440f0b"
     },
-    "org/clojure/clojure/1.12.4/clojure-1.12.4.jar": {
-      "sha256": "4b81e9ba6da38c45d9cc58023c674062b8c9f0714f33ff00ded22e6a949da177"
-    },
-    "org/clojure/clojure/1.12.4/clojure-1.12.4.pom": {
-      "sha256": "c51879062e41ff9f21afa0e409b199ffe9f2a3c6ae722cdfec5fd9dba05e4172"
-    },
     "org/clojure/clojure/1.12.5/clojure-1.12.5.jar": {
       "sha256": "dfdee131460216a84fef22e537bb0d0579965f8f70338d748323dff26f8e5a8b"
     },
@@ -931,12 +925,6 @@
     },
     "org/clojure/tools.cli/1.4.256/tools.cli-1.4.256.pom": {
       "sha256": "fea131dc677622188e612abe45e892a1ca4598bef0f14465d38ba5d58f7ea9de"
-    },
-    "org/clojure/tools.deps.cli/0.31.158/tools.deps.cli-0.31.158.jar": {
-      "sha256": "7dec0f951b3c5acfc4534545804f337539d4f919ab5f1ca1deb6736af18a076b"
-    },
-    "org/clojure/tools.deps.cli/0.31.158/tools.deps.cli-0.31.158.pom": {
-      "sha256": "40454637cc788957d3d8bcb02ac796b38d8d8f00435521f341373639d328a988"
     },
     "org/clojure/tools.deps.cli/0.31.162/tools.deps.cli-0.31.162.jar": {
       "sha256": "4b05be1084685a7e71678b9c9a5f2accd11121ecac920a4b758165159014f63f"
