@@ -201,7 +201,6 @@
           #  };
           #};
         };
-        flakelight.builtinFormatters = false;
       }
     );
 }

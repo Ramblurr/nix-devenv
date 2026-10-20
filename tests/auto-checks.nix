@@ -13,7 +13,6 @@ let
   common = {
     inherit inputs;
     systems = [ system ];
-    flakelight.builtinFormatters = false;
   };
 
   devShellFlake = mkFlake (
