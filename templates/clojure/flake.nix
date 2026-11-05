@@ -52,6 +52,9 @@
             devenv.capsules.base
             devenv.capsules.clojure
           ];
+          # Optional: use a different JDK for both Java and Clojure in this shell.
+          # clojure.jdk = pkgs.jdk27;
+
           # https://numtide.github.io/devshell
           commands = [
             # { package = pkgs.bazqux; }
