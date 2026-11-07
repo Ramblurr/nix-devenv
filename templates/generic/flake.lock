@@ -12,11 +12,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1792511481,
-        "narHash": "sha256-dwWalckm/8TNJRsUDLfNlPTdygMqefg/64UMWf6LR3E=",
+        "lastModified": 1793892857,
+        "narHash": "sha256-Ym1MK4V1J2qydsF5DDRXJBPVzFQju9KUFT9edwn3lW8=",
         "owner": "ramblurr",
         "repo": "nix-devenv",
-        "rev": "a5bef5e4a35532712f7f181b5d5dfc1e982b75da",
+        "rev": "2a8c2c16b991d05205cabf74a9243f8530eac6ba",
         "type": "github"
       },
       "original": {
@@ -133,16 +133,18 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1792210252,
-        "narHash": "sha256-Mh0PUaIv4nFY+8wAGonaEh8iBzwsmdNlwjVHmFg1Biw=",
-        "rev": "09063bd1f2b36fd9fd793c36dfade7bd40a93dfc",
-        "revCount": 1095516,
-        "type": "tarball",
-        "url": "https://api.flakehub.com/f/pinned/NixOS/nixpkgs/0.1.1095516%2Brev-09063bd1f2b36fd9fd793c36dfade7bd40a93dfc/01a157d6-3d9b-79b3-a066-790f409256a3/source.tar.gz"
+        "lastModified": 1793873621,
+        "narHash": "sha256-XKRUoJn5U4kg7azq4BS5UX2QVGSuYLcWnf+pbDq5ID8=",
+        "owner": "ramblurr",
+        "repo": "nixpkgs",
+        "rev": "e94a3f1a0227579fc7e475d8742b2944984f3e05",
+        "type": "github"
       },
       "original": {
-        "type": "tarball",
-        "url": "https://flakehub.com/f/NixOS/nixpkgs/0.1"
+        "owner": "ramblurr",
+        "ref": "channel/personal-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
       }
     },
     "root": {
