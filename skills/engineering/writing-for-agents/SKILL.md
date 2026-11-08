@@ -41,6 +41,18 @@ Split a sequence only when later steps repeatedly distract from the current step
 
 Use compact, familiar terms that give the agent a stable concept to apply, such as *tight* feedback loop, *tracer bullet*, or *fog of war*. Repeat the term where it guides action. Prefer an established term over a new label that requires a long definition.
 
+## Write history, not an undated present
+
+Research findings, handoffs, ledgers, and decision records describe what was observed or decided, not what must still be true when someone reads them later.
+
+- Date each observation or decision; a clearly dated section can cover several related claims.
+- For code claims, cite the repository and commit examined. Identify uncommitted changes separately rather than attributing them to that commit.
+- Write "On <date>, the check passed at <repo>@<commit>", not "the check passes". Avoid unqualified "is", "now", and "currently" when recording changeable facts.
+- When later evidence changes a conclusion, add a dated correction and mark the earlier claim superseded. Preserve the earlier evidence instead of silently rewriting history.
+- Treat a status summary as an **as-of snapshot**: timestamp it and retain the events behind it. Recheck volatile facts before acting on them.
+
+This rule applies to historical evidence, not every sentence. Definitions, instructions, and specifications may use present tense.
+
 ## Prune
 
 - Keep each meaning in one authoritative location.

@@ -15,5 +15,5 @@ Then use Skill(sub-agents) to delegate the research to another agent, so you kee
 Its job:
 
 1. Investigate the question against **primary sources** — official docs, source code, specs, first-party APIs — not a secondary write-up of them. Follow every claim back to the source that owns it.
-2. Write the findings to a single Org mode file, citing each claim's source with Org links.
+2. Write the findings to a single Org mode file, citing each claim's source with Org links. Follow [Write history, not an undated present](../writing-for-agents/SKILL.md#write-history-not-an-undated-present): date observations and identify the source version examined; for code, include the repository and commit, distinguishing uncommitted changes. For mutable sources without a version, record the access date. Write "As observed on <date>, version X supported Y", not "X supports Y". Mark revised conclusions superseded and append dated corrections rather than silently rewriting earlier findings.
 3. Save it to the resolved output path.

@@ -26,6 +26,8 @@ A dev and its reviewers form a pod and may communicate directly with each other.
    - every outstanding async callback and the next safe action; and
    - recovery instructions that prevent polling or duplicate dispatch after a crash or compaction.
 
+   Follow [Write history, not an undated present](../../engineering/writing-for-agents/SKILL.md#write-history-not-an-undated-present). Timestamp ledger events and cite the repository and commit for code, validation, and review claims; identify uncommitted changes separately. Write "At <time>, reviewer X approved <repo>@<commit>", not "the code is approved". Keep the queue and lock summary as a timestamped as-of snapshot, retain the event history, and append dated corrections when earlier observations are superseded. Verify volatile state before resuming work.
+
    Treat the ledger as local tracker state. Never stage or commit it when the work-item directory is untracked.
 
 3. **Provision pods.** In the project tmux session, create or identify the subagents (dev, reviewers etc).
