@@ -13,8 +13,8 @@ This guide emphasizes defensive practices that account for shared terminal sessi
 
 ## Tool Boundary
 
-Use `tmuxb` for listing, capture, watching, and sending input. Use native
-`tmux` when `tmuxb` does not expose a required window or pane lifecycle
+Use `tmuxb` for listing, capture, watching, sending input, process inspection,
+and window/session shutdown. Use native `tmux` when `tmuxb` does not expose a required window or pane lifecycle
 operation, such as `new-window`, `split-window`, `kill-pane`,
 `rename-window`, or `respawn-pane`.
 
@@ -31,7 +31,7 @@ tmuxb list  # check if a session for your project already exists
 tmuxb new <project-name> # create a new session, creates .tmuxb_session as a side effect. from this point no further commands need the session name explictly passed.
 tmuxb capture   # see the screen inside tmux, including the cursor position
 tmuxb capture --if-changed  # get the output, but only if its changed
-tmux send -- '"echo hello world" :Enter' # Send some key sequences, always remember to add :Enter if needed, :Enter is never pressed automatically
+tmuxb send -- '"echo hello world" :Enter' # Send some key sequences, always remember to add :Enter if needed, :Enter is never pressed automatically
 tmuxb capture --if-changed # view the results
 ```
 
@@ -85,9 +85,45 @@ tmuxb new -S dev.sock myproject
 tmuxb capture
 tmuxb send -- '"make build" :Enter'
 
-# Kill session (auto-deletes .tmuxb_session if it matches)
+# Kill only one window (exact name, index, or ID)
+tmuxb kill myproject --window editor
+
+# Graceful shutdown with a survivor report; run outside the target session
+tmuxb close myproject
+
+# Immediate session removal instead (no graceful shutdown or survivor report)
 tmuxb kill myproject
 ```
+
+Inspect the target before shutdown; do not close a shared session to remove one
+agent's window. Killing the last window removes its session. Killing a linked
+window removes it from every session. A matching local `.tmuxb_session` is deleted
+when the session is removed, not when a sibling window survives.
+
+`close` sends SIGTERM to pane child processes, waits up to five seconds
+(`--timeout SECONDS`), then kills the session. Pane roots receive tmux's hangup.
+Check the survivor report; survivors are not force-killed. This is best-effort
+cleanup, not save-and-exit: unsaved work can be lost. Tracking covers the original
+process snapshot, not processes detached earlier or children spawned afterward.
+
+### Activity and Process Inspection
+
+```bash
+tmuxb windows myproject             # last terminal activity in UTC
+tmuxb processes                    # uses .tmuxb_session; errors if absent
+tmuxb processes myproject --width 120
+tmuxb processes myproject --no-truncate
+tmuxb processes myproject --json
+```
+
+Use `processes` to inspect every pane across all windows, including descendants
+and working directories. Text commands truncate at 300 characters by default;
+use `--no-truncate` or JSON/EDN when full arguments matter. Text paths abbreviate
+home as `~/`; JSON/EDN preserves full commands and absolute paths. Working
+directories require Linux procfs and may be unavailable.
+
+Window activity is not CPU activity or proof that a job has finished. JSON/EDN
+window output exposes `activity` as Unix seconds, or null/nil when unavailable.
 
 ### Flags for `new`
 

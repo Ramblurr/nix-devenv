@@ -83,6 +83,10 @@ tmux new-window -t <project-session> -n reviewer2 -c "$PWD" \
      'pi --link-name reviewer1@<scope>'
 ```
 
+Or, send keys with tmux to type the command `/link-name <role>@<scope>[ENTER]` to change the name of a running agent.
+
+Always keep the role of your subagents up to date.
+
 ## Dispatching Tasks to Subagents
 
 Read Skill(pi-link-coordination) before using the Link tools.
