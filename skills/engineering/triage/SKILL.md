@@ -42,7 +42,7 @@ For a PR, the same states read against the attached code: `ready-for-agent` mean
 
 Every triaged issue or ticket carries one category and one state: Org tag plus TODO keyword locally, or the remote tracker's native representation. Flag conflicting states and ask before acting.
 
-These are canonical role names. The default local tracker maps them to uppercase Org TODO keywords in `docs/agents/triage-states.md`; remote trackers may map them to native labels or states. Run Skill(bootstrap-engineering-workflows) if the mapping is missing.
+These are canonical role names. The default local tracker maps them to uppercase Org TODO keywords in `docs/agents/triage-states.md`; remote trackers may map them to native labels or states. If the mapping is missing, ask the user to run Skill(bootstrap-engineering-workflows).
 
 State transitions: an unclassified item normally goes to `needs-triage`, then to `needs-info`, `ready-for-agent`, `ready-for-human`, or `wontfix`. `needs-info` returns to `needs-triage` after a reply. The maintainer can override at any time; flag unusual transitions before proceeding.
 
@@ -75,7 +75,7 @@ Show counts and a one-line summary per item. Let the maintainer pick.
 
 3. **Verify the claim.** Before any grilling, check that the claim holds up. For a bug, reproduce it from the reporter's steps. For a PR, confirm the diff does what it claims — check it out, run the relevant tests or commands. Report what happened: confirmed (with code path), failed, or insufficient detail (a strong `needs-info` signal). A confirmed verification makes a much stronger agent brief.
 
-4. **Grill (if needed).** If the request needs fleshing out, run Skill(grilling) and Skill(domain-modeling) together — grill it into shape one question at a time, sharpening domain terms and updating `CONTEXT.md`/ADRs inline as decisions land.
+4. **Grill (if needed).** If the request needs fleshing out, load both Skill(grilling) and Skill(domain-modeling), then grill it into shape a frontier round at a time, sharpening domain terms and updating the project's configured glossary and ADRs inline as decisions land.
 
 5. **Apply the outcome.** For local Org tickets, change the first heading to the uppercase TODO keyword for the role, add the `bug` or `enhancement` heading tag, append comments beneath `** Comments`, and use Org links. Setting `WONTFIX` closes a local ticket. For remote trackers, use native labels, comments, and close operations:
    - `ready-for-agent` — post an agent brief comment ([AGENT-BRIEF.md](AGENT-BRIEF.md)).

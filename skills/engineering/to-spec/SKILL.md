@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 This skill takes the current conversation context and codebase understanding and produces a spec. Do NOT interview the user — just synthesize what you already know.
 
-The issue tracker and triage state mapping should have been provided to you — run Skill(bootstrap-engineering-workflows) if not.
+The issue tracker and triage state mapping should have been provided to you — if not, ask the user to run Skill(bootstrap-engineering-workflows).
 
 ## Process
 

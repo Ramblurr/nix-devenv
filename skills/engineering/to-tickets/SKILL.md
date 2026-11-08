@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Break a plan, spec, or conversation into a set of **tickets** — tracer-bullet vertical slices, each declaring the tickets that **block** it.
 
-The issue tracker and triage state mapping should have been provided to you — run Skill(bootstrap-engineering-workflows) if not.
+The issue tracker and triage state mapping should have been provided to you — if not, ask the user to run Skill(bootstrap-engineering-workflows).
 
 ## Process
 
@@ -60,11 +60,11 @@ Iterate until the user approves the breakdown.
 Publish the approved tickets. **How** depends on the tracker configured by Skill(bootstrap-engineering-workflows) — the tickets are the same either way, only the shape of the blocking edges changes:
 
 - **Local Org mode** → write one file per ticket under `.scratch-org/NNN-<feature-slug>/issues/<NN>-<slug>.org`, numbered from `01` in dependency order. Reuse the spec's work-item directory when one exists; otherwise allocate the next `NNN`. Set `TICKET_ID` to the canonical `NNN-NN`; list blockers by canonical ID in `BLOCKED_BY`. Use the Org template below — one ticket per file, never a combined tickets file.
-- **A real issue tracker (GitHub, Linear, …)** → publish one issue per ticket in dependency order (blockers first) so each ticket's blocking edges can reference real identifiers. Use the platform's native blocking / sub-issue relationship where it has one; otherwise set each ticket's "Blocked by" to the blocking issues. Apply the `ready-for-agent` triage label unless instructed otherwise — the tickets are agent-grabbable by construction.
+- **A real issue tracker (GitHub, Linear, …)** → publish one issue per ticket in dependency order (blockers first) so each ticket's blocking edges can reference real identifiers. Use the platform's native blocking relationship where it has one; otherwise set each ticket's "Blocked by" to the blocking issues. Parent-child relationships are separate from blockers: if the source is an existing issue, attach each ticket as its sub-issue using the tracker doc's operation. Apply the `ready-for-agent` triage label unless instructed otherwise — the tickets are agent-grabbable by construction.
 
 Work the **frontier**: any ticket whose blockers are all done. For a purely linear chain that means top to bottom.
 
-Do NOT close or modify any parent issue.
+Do NOT close or rewrite any parent issue. Attaching approved child tickets through the tracker's relationship operation is the only permitted parent update.
 
 <local-ticket-template>
 
@@ -105,7 +105,7 @@ The end-to-end behaviour this ticket makes work, from the user's perspective —
 
 ## Blocked by
 
-- A reference to each blocking ticket, or "None — can start immediately".
+- A reference to each blocking ticket, or "None — can start immediately". Omit this section when blockers are recorded as native edges; local Org tickets still use `BLOCKED_BY`.
 
 </issue-template>
 

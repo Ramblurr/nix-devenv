@@ -10,7 +10,7 @@ Scaffold the per-repo configuration that the engineering skills assume:
 
 - **Issue tracker** — local Org mode files under `.scratch-org/NNN-<slug>/`
 - **Triage states** — canonical workflow roles mapped to Org TODO keywords
-- **Domain docs** — where `CONTEXT.md` and ADRs live, and the consumer rules for reading them
+- **Domain docs** — where `GLOSSARY.md` and ADRs live, with legacy `CONTEXT.md` compatibility
 
 This is a prompt-driven skill, not a deterministic script. Explore, present what you found, confirm with the user, then write.
 
@@ -21,7 +21,7 @@ This is a prompt-driven skill, not a deterministic script. Explore, present what
 Look at the current repo to understand its starting state. Read whatever exists; don't assume:
 
 - `AGENTS.md` and `CLAUDE.md` at the repo root — does either exist? Is there already an `## Agent skills` section in either?
-- `CONTEXT.md` and `CONTEXT-MAP.md` at the repo root
+- `GLOSSARY.md` and `GLOSSARY-MAP.md`, legacy `CONTEXT.md` and `CONTEXT-MAP.md`, and the per-context files their maps reference. Inspect their content: not every `CONTEXT.md` is a domain glossary.
 - `docs/adr/` and any `src/*/docs/adr/` directories
 - `docs/agents/` — does this skill's prior output already exist?
 - `.scratch-org/` — sign that the local Org mode tracker is already configured
@@ -34,7 +34,7 @@ Look at the current repo to understand its starting state. Read whatever exists;
 
 Summarise what's present and what's missing. Then take the sections in order, pausing for an answer only when a section asks a question.
 
-Lead each question with the recommended answer so the user can accept it in a word. Give a one-line explainer only when the choice genuinely branches; skip sections that exploration settled: Section B when Skill(triage) isn't installed, Section C when there is no monorepo, Section D when there are no legacy prompts, and Section E when there is no legacy `.scratch/` tree.
+Lead each question with the recommended answer so the user can accept it in a word. Give a one-line explainer only when the choice genuinely branches; skip sections that exploration settled: Section B when Skill(triage) isn't installed, Section C's new-layout question when there is no monorepo (always inspect existing domain docs and offer any applicable migration), Section D when there are no legacy prompts, and Section E when there is no legacy `.scratch/` tree.
 
 **Section A — Issue tracker.**
 
@@ -46,9 +46,11 @@ Ensure the repository's root `.gitignore` contains `.scratch-org/` entries. Neit
 
 Use the fixed local mapping: `needs-triage` → `NEEDS-TRIAGE`, `needs-info` → `NEEDS-INFO`, `ready-for-agent` → `READY-FOR-AGENT`, `ready-for-human` → `READY-FOR-HUMAN`, and `wontfix` → `WONTFIX`. Also document `IN-PROGRESS`, `CLAIMED`, `DEFERRED`, and `RESOLVED`. `DEFERRED` requires native Org `SCHEDULED` syntax and an empty assignee. When its start time arrives, claim it directly as `CLAIMED` and set the required assignee. There is no label-vocabulary question for the local tracker.
 
-**Section C — Domain docs.** Default to **single-context** — one `CONTEXT.md` + `docs/adr/` at the repo root. This fits almost every repo; write it without asking.
+**Section C — Domain docs.** Preserve an existing configured layout. For new projects, default to **single-context**: one `GLOSSARY.md` + `docs/adr/` at the repo root; create the glossary lazily when a term is resolved.
 
-Offer **multi-context** — a root `CONTEXT-MAP.md` pointing to per-context `CONTEXT.md` files — only when exploration found monorepo signals. Then confirm which layout they want.
+For a new multi-context layout, offer a root `GLOSSARY-MAP.md` pointing to per-context `GLOSSARY.md` files only when exploration found monorepo signals. Confirm the layout with the user.
+
+If legacy domain files exist, offer the opt-in migration in [migrate-domain-glossary.md](./migrate-domain-glossary.md). Include root and nested files and their active consumers in the draft. If the user declines, keep the configured legacy paths and consumer rules; don't create a competing glossary. Existing approval for a specified set of projects is sufficient; ask again only about ambiguous files or collisions.
 
 **Section D — Legacy `prompts/` documents.** Skip this section entirely if exploration found no numbered workflow documents matching the legacy convention.
 
@@ -79,6 +81,7 @@ Show the user a draft of:
 
 - The `## Agent skills` block to add to whichever of `CLAUDE.md` / `AGENTS.md` is being edited (see step 4 for selection rules)
 - The contents of `docs/agents/issue-tracker.md`, `docs/agents/domain.md`, and `docs/agents/triage-states.md` (the last only when Skill(triage) is installed)
+- The source/destination paths and reference updates for an approved glossary migration; retain the old configuration until it validates
 - The exact source and destination paths for the prompts migration (only when Section D ran)
 - The `.scratch/` snapshot counts, `.scratch-org/` destination, exact subagent command, and validation plan (only when Section E ran)
 

@@ -18,11 +18,11 @@ Every map and ticket is an issue, so it has a **name** — its title. In everyth
 
 ## The Map
 
-The map is a single issue on this repo's issue tracker, labelled `wayfinder:map` — the canonical artifact. Its tickets are child issues of the map.
+The map is a single canonical artifact on this repo's issue tracker: `map.org` locally, or an issue labelled `wayfinder:map` remotely. Its tickets are children of the map.
 
 The map is an **index**, not a store. It lists the decisions made and points at the tickets that hold their detail; a decision lives in exactly one place — its ticket — so the map never restates it, only gists it and links.
 
-**Where the map, child tickets, blocking, and frontier queries live is tracker-specific.** Run Skill(bootstrap-engineering-workflows) when the tracker doc is missing, then follow its Wayfinding operations. The default tracker is local Org mode under `.scratch-org/`.
+**Where the map, child tickets, blocking, and frontier queries live is tracker-specific.** If the tracker doc is missing, ask the user to run Skill(bootstrap-engineering-workflows); otherwise follow its Wayfinding operations. The default tracker is local Org mode under `.scratch-org/`.
 
 ### The map body
 
@@ -78,11 +78,11 @@ SCHEDULED: <2026-10-30 Fri> DEADLINE: <2026-11-06 Fri>
 
 `SCHEDULED` is required and records the earliest start constraint. `DEADLINE` is an optional, separate completion target; omit it when none exists. Leave `ASSIGNEE` empty while deferred.
 
-Each ticket carries a `wayfinder:<type>` label — one of `research`, `prototype`, `grilling`, `task` (see [Ticket Types](#ticket-types)).
+Each ticket records its type as the local Org `TYPE` property or a remote `wayfinder:<type>` label: `research`, `prototype`, `grilling`, or `task` (see [Ticket Types](#ticket-types)). Remote maps and tickets carry only `wayfinder:` labels, not implementation-triage labels. Local Org tickets retain their TODO states for readiness and agenda queries.
 
 A session **claims** a ticket before any work so concurrent sessions skip it. For local Org, change the state to `CLAIMED`, set `ASSIGNEE`, and save; every claimed ticket must have an assignee. A `DEFERRED` ticket can be claimed only after its scheduled time arrives and its blockers resolve. Change it directly to `CLAIMED` and keep its planning lines. An open ticket with an empty assignee is unclaimed.
 
-Blocking uses the tracker's **native** dependency relationship — essential because it renders the frontier _visually_ in the tracker's UI, so the human sees what's takeable without opening the map. Only a tracker that lacks native blocking falls back to a body convention. A ticket is **unblocked** when every ticket blocking it is closed; the **frontier** is the open, unblocked, unclaimed children whose start time has arrived. Future `DEFERRED` tickets remain outside the frontier until their native `SCHEDULED` time.
+Blocking uses the tracker's **native** dependency relationship — essential because it renders the frontier _visually_ in the tracker's UI, so the human sees what's takeable without opening the map. Only a tracker that lacks native blocking falls back to a body convention. A ticket is **unblocked** when every blocker satisfies the tracker's resolution rule (`RESOLVED` for local Org, not merely a closed state); the **frontier** is the open, unblocked, unclaimed children whose start time has arrived. Future `DEFERRED` tickets remain outside the frontier until their native `SCHEDULED` time.
 
 The answer is absent while a ticket is open. On resolution, store it using the tracker's Resolve operation; local Org tickets append it under `** Answer`. Link assets from the ticket instead of pasting them.
 
@@ -92,7 +92,7 @@ Every ticket is either **HITL** — human in the loop, worked *with* a human who
 
 - **Research** (AFK): Reading documentation, third-party APIs, or local resources like knowledge bases to surface a fact a decision waits on. Resolved by an agent started with Skill(sub-agents) and running Skill(research). Use when knowledge outside the current working directory is required.
 - **Prototype** (HITL): Raise the fidelity of the discussion by making a cheap, rough, concrete artifact to react to — an outline, a rough take, a stub, or UI/logic code via Skill(prototype). Links the prototype as an asset. Use when "how should it look" or "how should it behave" is the key question.
-- **Grilling** (HITL): Conversation via Skill(grilling) and Skill(domain-modeling), one question at a time. The default case.
+- **Grilling** (HITL): Conversation via Skill(grilling) and Skill(domain-modeling), a frontier round at a time. The default case.
 - **Task** (HITL or AFK): Manual work that must happen before a *decision* can be made — nothing to decide, prototype, or research, but the discussion is blocked until it's done. Signing up for a service so its API can be judged, provisioning access, moving data so its shape can be seen. This is the one type that *does* rather than decides — and it earns its place by unblocking a decision, not by delivering the destination. The agent drives it alone where it can (AFK); otherwise it hands the human a precise checklist (HITL). Resolved when the work is done; the answer records what was done and any resulting facts (credentials location, new URLs, row counts) later tickets depend on.
 
 ## Fog of war
@@ -127,8 +127,8 @@ User invokes with a loose idea.
 1. **Name the destination.** Run Skill(grilling) and Skill(domain-modeling) to pin down what this map is finding its way to — the spec, decision, or change. The destination fixes the scope, so it's settled first.
 2. **Map the frontier.** Grill again, **breadth-first** this time: fan out across the whole space rather than deep on any one thread, surfacing the open decisions and the first steps takeable now. **If this surfaces no fog** — the way to the destination is already clear, the whole journey small enough for one session — you don't need a map. Stop and ask the user how they'd like to proceed.
 3. **Create the map** through the tracker operation: Destination and Notes filled in, Decisions-so-far empty, and fog sketched under **Not yet specified**. A remote tracker uses the `wayfinder:map` label; the local tracker uses `map.org`.
-4. **Create the tickets you can specify now** as child issues of the map — then wire blocking edges in a **second pass** (issues need ids before they can reference each other). Wiring sorts them into the frontier and the blocked; everything you can't yet specify stays in the fog — the **Not yet specified** section.
-5. **Fire the research subagents.** Use Skill(sub-agents) to start one agent per `research` ticket in parallel. Give each Skill(research) agent a distinct tracker-local report path and add a context pointer from its ticket. For local Org, use `.scratch-org/NNN-<effort>/research/<NN>-<slug>.org`; never stage it or create a throwaway Git branch for ignored tracker artifacts.
+4. **Create the tickets you can specify now** as child issues of the map — then wire blocking edges in a **second pass** (issues need ids before they can reference each other). Write cross-references in that pass too, using real canonical IDs and links rather than placeholders that might resolve to unrelated issues. Wiring sorts them into the frontier and the blocked; everything you can't yet specify stays in the fog — the **Not yet specified** section.
+5. **Fire the research subagents.** Use Skill(sub-agents) to start one agent per `research` ticket in parallel, each with a fresh context window and a self-contained brief rather than a fork of the current conversation. Give each Skill(research) agent a distinct tracker-local report path and add a context pointer from its ticket. For local Org, use `.scratch-org/NNN-<effort>/research/<NN>-<slug>.org`; never stage it or create a throwaway Git branch for ignored tracker artifacts.
 6. Stop — charting is one session's work; it hand-resolves nothing.
 
 ### Work through the map
@@ -137,7 +137,7 @@ User invokes with a map (URL or number). A ticket is **optional** — without on
 
 1. Load the **map** — the low-res view, not every ticket body.
 2. Choose the ticket. If the user named one, use it. Otherwise take the first frontier ticket in order. **Claim it**: assign it to yourself before any work.
-3. Resolve it — **zoom as needed**: fetch the full body of any related or closed ticket on demand; invoke the skills the `## Notes` block names. If in doubt, use Skill(grilling) and Skill(domain-modeling).
+3. Read the ticket's local `TYPE` property or remote `wayfinder:<type>` label and resolve it using that type's workflow. If the type is missing or conflicting, clarify it before proceeding. **Zoom as needed**: fetch the full body of any related or closed ticket on demand; invoke the skills the `## Notes` block names. If in doubt, use Skill(grilling) and Skill(domain-modeling).
 4. Record the resolution using the tracker's Resolve operation: save the answer, close the ticket, and append a context pointer to the map's Decisions so far.
 5. Add newly-surfaced tickets (create-then-wire); graduate any fog the answer has made specifiable, clearing each graduated patch from **Not yet specified** so it lives only as its new ticket. If the answer reveals a ticket — this one or another — sits beyond the destination, **rule it out of scope** rather than resolving it on the route. If the decision invalidates other parts of the map, update or delete those tickets.
 

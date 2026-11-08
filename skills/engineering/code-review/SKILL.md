@@ -8,9 +8,9 @@ Two-axis review of the diff between `HEAD` and a fixed point the user supplies:
 - **Standards** — does the code conform to this repo's documented coding standards?
 - **Spec** — does the code faithfully implement the originating issue / spec?
 
-Both axes run as **parallel sub-agents** so they don't pollute each other's context, then this skill aggregates their findings.
+Both axes run as **parallel sub-agents** so they don't pollute each other's context, then this skill aggregates their findings. Give each reviewer a self-contained brief in an independent context, not a fork of the current conversation. Follow Skill(requesting-code-review) for pre-dispatch compaction and transport.
 
-The issue tracker should have been provided to you — run Skill(bootstrap-engineering-workflows) if `docs/agents/issue-tracker.md` is missing.
+The issue tracker should have been provided to you. Use that tracker doc; if none was provided, ask the user to run Skill(bootstrap-engineering-workflows).
 
 ## Process
 
@@ -26,14 +26,14 @@ Before going further, confirm the fixed point resolves (`git rev-parse <fixed-po
 
 Look for the originating spec, in this order:
 
-1. Issue references in the commit messages (`#123`, `Closes #45`, GitLab `!67`, etc.) — fetch via the workflow in `docs/agents/issue-tracker.md`.
+1. Issue references in the commit messages (`#123`, `Closes #45`, GitLab `!67`, etc.) — fetch via the workflow in the provided tracker doc.
 2. A path the user passed as an argument.
 3. A spec file under `docs/`, `specs/`, or `.scratch-org/NNN-<feature>/spec.org` matching the branch name or feature.
 4. If nothing is found, ask the user where the spec is. If they say there isn't one, the **Spec** sub-agent will skip and report "no spec available".
 
 ### 3. Identify the standards sources
 
-Anything in the repo that documents how code should be written, such as `CODING_STANDARDS.md` or `CONTRIBUTING.md`.
+Search the repo for every applicable file documenting how code should be written, including scoped instructions. Include `CODING_STANDARDS.md` and `CONTRIBUTING.md` whenever they exist; pass their paths to the Standards reviewer rather than relying on implicit context.
 
 On top of whatever the repo documents, the Standards axis always carries the **smell baseline** below — a fixed set of Fowler code smells (_Refactoring_, ch.3) that applies even when a repo documents nothing. Two rules bind it:
 

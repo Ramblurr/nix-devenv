@@ -6,7 +6,7 @@ This reference covers the parts of [SKILL.md](SKILL.md) that apply only to skill
 
 Choose model-reachable invocation when the agent must discover the skill independently or another skill must call it. Use a direct human trigger when human judgment should decide whether the skill runs. Follow the target harness's metadata convention for that choice.
 
-A model-reachable skill needs a concise description with the task and its distinct trigger cases. A direct-trigger skill needs a clear human-facing summary.
+A model-reachable skill needs a concise description with the task and its distinct trigger cases. A direct-trigger skill needs a clear human-facing summary. In Pi, `disable-model-invocation: true` reserves the skill for its explicit user command; ask the user to run it rather than making an automatic cross-skill call. Keep reference needed by several workflows in a model-reachable skill or a linked reference file, not behind a human-only workflow.
 
 ## Splitting skills
 

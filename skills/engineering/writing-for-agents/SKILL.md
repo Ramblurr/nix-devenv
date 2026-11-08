@@ -13,7 +13,13 @@ For skill metadata, invocation, and router skills, read [SKILL-MECHANICS.md](SKI
 
 A context pointer names material outside the current context and states when to read it. A skill description and an `AGENTS.md` instruction are both context pointers. The pointer's wording determines whether the agent reaches the material.
 
+When a necessary reference is missed, sharpen its pointer before inlining the reference.
+
 A pointer should name the material, lead with its trigger term, and list distinct cases that require it. Remove synonyms that describe the same case and facts the target already explains.
+
+## Two costs
+
+Always-loaded instructions and skill descriptions spend **context load** on every turn. Material reached only by a human spends **cognitive load**: the human must remember it exists. Keep human control where judgment matters; make shared reference discoverable where it does not.
 
 ## Information hierarchy
 
@@ -29,7 +35,7 @@ Keep steps easy to find. Move conditional reference into a linked file only when
 
 Every step needs a completion criterion. Make it checkable and, when coverage matters, exhaustive. A vague criterion lets an agent finish before the necessary work is complete.
 
-Split a sequence only when later steps repeatedly distract from the current step. First make the current criterion clearer; a separate document or handoff is warranted only when that does not work.
+Split a sequence only when later steps repeatedly distract from the current step. First make the current criterion clearer; a separate document or handoff is warranted only when that does not work. Hiding later steps requires a real context boundary, such as a fresh agent or a handoff; reading another file in the same conversation does not remove the later steps.
 
 ## Leading words
 
