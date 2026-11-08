@@ -1,6 +1,6 @@
 ---
 name: clojure-libraries
-description: Reference index for Clojure and ClojureScript libraries, frameworks, and ecosystem tools. Use whenever you are asked to use a Clojure library or encounter a Clojure library/framework/tool and need to know how to work with it; you MUST check this skill first to see whether guidance exists.
+description: Reference index for Clojure and ClojureScript libraries, frameworks, and ecosystem tools. Check this skill before using a Clojure library or tool, editing deps.edn, or diagnosing dependency resolution, aliases, or classpaths.
 ---
 
 # Clojure Libraries
@@ -22,6 +22,7 @@ Use this skill as an index. Read only the reference file(s) relevant to the libr
 - [core.async](references/core-async.md) — workload/task selection for `1.10.874-alpha3+` on JDK 25+
 - [core.async.flow](references/core-async-flow.md)
 - [Datomic](datomic/index.md)
+- [deps.edn](references/deps-edn.md) — coordinates, aliases, classpaths, repositories, prep, and runtime basis
 - [donut.party/system](references/donut-system.md)
 - [exoscale/ex](references/exoscale-ex.md) — typed exceptions, keyword hierarchies, and Flow integration (`else-type`)
 - [fmnoise/flow](references/fmnoise-flow.md) — error-as-value pipelines, exception capture, and early-exit bindings
