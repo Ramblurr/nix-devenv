@@ -32,7 +32,7 @@
 
          prep
          {:doc  "Prepare Clojure dependencies"
-          :task (apply clojure "-X:deps prep :aliases '[:dev :kaocha]'")}
+          :task (apply clojure "-X:deps prep :aliases '[:dev :test]'")}
 
          deps-tree
          {:doc  "Show dependency tree"

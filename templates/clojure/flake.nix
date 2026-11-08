@@ -27,10 +27,10 @@
           src = ./.;
           prepAliases = [
             "dev"
-            "kaocha"
+            "test"
           ];
-          prefetchAliases = [ "dev:kaocha" ];
-          checkCommand = "clojure -Srepro -M:dev:kaocha";
+          prefetchAliases = [ "dev:test" ];
+          checkCommand = "clojure -Srepro -M:dev:test";
           gitRev = clj-helpers.lib.gitRev self;
         };
     in

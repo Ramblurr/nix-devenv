@@ -77,9 +77,9 @@ packages = {
     name = "my-lib";
     version = "0.1.0";
     src = ./.;
-    prepAliases = [ "dev" "kaocha" ];
-    prefetchAliases = [ "dev:kaocha" ];
-    checkCommand = "clojure -Srepro -M:dev:kaocha";
+    prepAliases = [ "dev" "test" ];
+    prefetchAliases = [ "dev:test" ];
+    checkCommand = "clojure -Srepro -M:dev:test";
     gitRev = clj-helpers.lib.gitRev self;
   };
   locker = pkgs: self.packages.${pkgs.system}.default.locker;
