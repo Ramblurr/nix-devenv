@@ -4,6 +4,10 @@ Upstream repository: https://github.com/mattpocock/skills
 
 The following local skills are copied or adapted from upstream:
 
+- `skills/drafts/retro/` ← [`skills/engineering/retro/`](https://github.com/mattpocock/skills/tree/main/skills/engineering/retro)
+- `skills/drafts/pr/` ← [`skills/engineering/pr/`](https://github.com/mattpocock/skills/tree/main/skills/engineering/pr) (additional visual-summary attribution in `skills/drafts/pr/CREDITS.md`)
+- `skills/drafts/to-questionnaire/` ← [`skills/productivity/to-questionnaire/`](https://github.com/mattpocock/skills/tree/main/skills/productivity/to-questionnaire)
+
 - `skills/engineering/bootstrap-engineering-workflows/` ← [`skills/engineering/setup-matt-pocock-skills/`](https://github.com/mattpocock/skills/tree/main/skills/engineering/setup-matt-pocock-skills)
 - `skills/engineering/codebase-design/` ← [`skills/engineering/codebase-design/`](https://github.com/mattpocock/skills/tree/main/skills/engineering/codebase-design)
 - `skills/engineering/code-review/` ← [`skills/engineering/code-review/`](https://github.com/mattpocock/skills/tree/main/skills/engineering/code-review)
@@ -23,6 +27,8 @@ The following local skills are copied or adapted from upstream:
 - `skills/engineering/triage/` ← [`skills/engineering/triage/`](https://github.com/mattpocock/skills/tree/main/skills/engineering/triage)
 - `skills/engineering/wayfinder/` ← [`skills/engineering/wayfinder/`](https://github.com/mattpocock/skills/tree/main/skills/engineering/wayfinder)
 - `skills/engineering/writing-for-agents/` ← [`skills/productivity/writing-for-agents/`](https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-for-agents)
+
+The three draft imports are based on upstream commit `4ae2317ddb22b046e26455e4f9c9b3aaaf62212d`.
 
 The original MIT license follows.
 
