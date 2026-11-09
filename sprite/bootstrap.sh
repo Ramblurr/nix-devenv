@@ -346,11 +346,6 @@ write_pi_config() {
   "compaction": {
     "enabled": true
   },
-  "skills": [
-    "/home/sprite/.nix-devenv/skills/pi",
-    "/home/sprite/.nix-devenv/skills/mine",
-    "/home/sprite/.nix-devenv/skills/engineering"
-  ],
   "shellCommandPrefix": "eval \"$(DEVSHELL_NO_MOTD=1 direnv export bash 2>/dev/null)\""
 }
 JSON
