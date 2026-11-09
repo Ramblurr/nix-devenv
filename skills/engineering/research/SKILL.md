@@ -10,7 +10,7 @@ Determine the output path before starting the research:
 - If no matching concept directory exists, create `.scratch-org/NNN-<concept-or-feat>/` using the next available `NNN` from the shared repo-wide sequence, then use `report.org` inside it.
 - If multiple directories plausibly match, or the destination `report.org` already exists, ask instead of guessing or overwriting.
 
-Then use Skill(sub-agents) to delegate the research to another agent, so you keep working while it reads.
+If the user told you to use delegate to a subagent, then use Skill(sub-agents) to delegate the research to another agent, so you keep working while it reads.
 
 Its job:
 

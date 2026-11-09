@@ -5,7 +5,7 @@ description: Checklist for finishing work. Use when asked to "land the plane". I
 
 # Landing the Plane
 
-If tools/mechanisms for collaborating with agents are available, then broadcast that you are landing the plane, tell the agents they should not touch the git staging area, branch until you give the all clear. They can continue writing code of course.
+Before staging, committing or merging in a checkout with a shared index or HEAD, obtain explicit exclusive access through the active harness's Skill(agent-coordination). Include unrelated top-level agents and their trees. An announcement is not permission. Release access after the operation or abort; do not hold it while awaiting reviews.
 
 When someone asks you to "land the plane", they want you to wrap up the current body of work cleanly—no loose ends, no hidden surprises. Use this checklist any time that phrase shows up.
 
@@ -29,5 +29,5 @@ Do not do a git push unless the human explicitly said you should.
 
 Do not PR unless the human said to make a PR.
 
-If you are in a worktree, then you are clear to merge (ff merge only!) back into the primary branch (be that main or dev depending on the project) and close out+cleanup the worktree and dev slot.
+If you are in a worktree, merge back into the primary branch only by fast-forward and only after obtaining exclusive access to the destination checkout through Skill(agent-coordination). Verify its expected HEAD and index before merging, and release access after merge or abort. Clean up the worktree and dev slot only after confirming no agent still uses them; follow the runtime's lifecycle rules for runtime-managed checkouts.
 

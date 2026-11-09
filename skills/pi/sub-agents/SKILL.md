@@ -13,19 +13,11 @@ PRE FLIGHT CHECK :If you are not connected to the link hub, and don't have `link
 
 Use `link_list` to see if you need to spawn additional agents according to your collaboration policy.
 
-For `link_*` tool mechanics (link_send / link_prompt / link_compact / link_list, the
-Golden Rule, delivery shapes, anti-patterns) load Skill(pi-link-coordination)
-and read it first.
+For Link tool mechanics, read Skill(pi-link-tools) and the live tool descriptions.
 
 ## Project scope boundary
 
-The Link hub is shared by agents from many unrelated projects. Treat `link_list` as a global directory, not as a pool of workers available to your project.
-
-Before selecting a worker, determine your `<scope>` as defined under **Naming your subagent**. A terminal is eligible only when its Link name ends with the exact `@<scope>` suffix. Filter by scope before considering role, status, cwd, or repository access; a matching role such as `reviewer` never makes a foreign-scope terminal eligible.
-
-Never send tasks or prompts to, or compact, an out-of-scope terminal. Ignore those terminals. If too few eligible terminals exist, boot new agents in your project scope as described below.
-
-This `<role>@<scope>` policy overrides generic naming examples in Skill(pi-link-coordination).
+Follow [Agent coordination — Find peers](../agent-coordination/SKILL.md#find-peers) for project scope and identity checks. Select only workers assigned to you or explicitly made available for delegation. If too few eligible workers exist, boot new agents as described below.
 
 ## Use one tmux session per project
 
@@ -57,15 +49,13 @@ pi --link-name <role>@<scope> @file.md @image.png "Analyze these"
 
 ### Naming your subagent
 
-Your subagent's link name must follow this format: `<role>@<scope>`
-
-`<scope>` is basename("$(pwd)")
+Use the `<role>@<scope>` convention from [Agent coordination](../agent-coordination/SKILL.md#find-peers).
 
 Common `<role>`s: leader, dev, dev1, dev2, reviewer, researcher
 
 ### Key Flags
 
-- `--link-name`: see Skill(pi-link-coordination)
+- `--link-name`: use the naming convention above.
 - `--tools <list>`: Comma-separated tools to enable. Use this rarely.
 - `--thinking <level>`: Thinking level: off, minimal, low, medium, high, xhigh. Use this rarely, prefer the default.
 - `-p, --print`: Non-interactive mode, runs prompt and exits. Generally do not use this mode.
@@ -76,7 +66,7 @@ Common `<role>`s: leader, dev, dev1, dev2, reviewer, researcher
 
 ```bash
 pi --link-name <role>@<scope>
-# then `link_send(triggerTurn: true)` with prompt "Review the code in src/"
+# then use link_send with the review assignment
 
 # Launch an agent into the project's tmux session
 tmux new-window -t <project-session> -n reviewer2 -c "$PWD" \
@@ -89,16 +79,16 @@ Always keep the role of your subagents up to date.
 
 ## Dispatching Tasks to Subagents
 
-Read Skill(pi-link-coordination) before using the Link tools.
+Follow Skill(pi-link-tools) for messaging and waiting.
 
 ### Choose the mode
 
-- **Quick consultation:** One bounded question, answerable mostly from existing context with little tool use and predictably short execution. Use `link_prompt`. No issue is required.
+- **Quick consultation:** Send one bounded question with `link_send` and request a reply. Follow Skill(pi-link-tools) to await it. No issue is required.
 - **Delegated task:** Research, implementation, substantial tool use, multiple stages, or uncertain execution time. Follow the workflow below.
 
 ### Dispatch a delegated task
 
-1. Ensure an independently executable task exists in the issue tracker. Create it first if necessary. The issue is the single source of truth; do not repeat its requirements in the dispatch.
+1. Prepare an independently executable assignment. Reference the existing issue when the workflow has one; otherwise use the caller's self-contained brief. Do not create an issue merely to delegate migration, research, design or review work.
 2. Use `link_list` to select an eligible idle worker under the **Project scope boundary**. Assign at most one active task to each worker.
 3. Manage context at the task boundary:
    - Dispatch directly to a fresh worker.
@@ -106,14 +96,24 @@ Read Skill(pi-link-coordination) before using the Link tools.
    - Preserve its context throughout the current task.
 
    A task remains active until its final callback is accepted and no follow-up is expected. Fixes, blocked-question responses, validation retries, convergence, and commit work remain part of the same task. Never compact during this period.
-4. Send the assignment with `link_send(triggerTurn: true)`. Include only:
-   - Task name and issue ID
+4. Send the assignment with `link_send`. Include:
+   - Task name and ID, plus the issue path or complete brief, inputs, scope and completion criteria
    - This callback contract:
-     - Reply to the orchestrator's exact Link name with `link_send(triggerTurn: true)`.
+     - Reply to the orchestrator's exact Link name with `link_send`.
      - Include the task ID and `DONE` or `BLOCKED`.
      - Include the deliverable file path, or state `no deliverable file`.
      - For `BLOCKED`, include the blocker or question.
 5. Track the task and worker as outstanding. Dispatch independent tasks to distinct workers before yielding.
+
+### Review assignments
+
+For Skill(requesting-code-review), select distinct eligible same-scope reviewers and send the caller's self-contained briefs. Keep reviewer context through fixes and re-reviews of the same ticket or task. Compact a reused reviewer only when switching to a different task, while idle, and wait for completion before dispatch; fresh reviewers need no compaction.
+
+Dispatch with `link_send` to each reviewer's exact Link name. Include the requester's exact Link name and require a final `link_send` reply of `APPROVE <report-path>`, `CHANGES-NEEDED <report-path>`, or `BLOCKED <reason>` instead of the generic `DONE` contract. Keep findings in the assigned report file. Correct delivery problems with a follow-up message; the review remains outstanding until its artifact is verified or its blocked reason is accepted. A blocked result is not approval.
+
+### Peer coordination
+
+When a task needs peer communication or shared-resource access, use [Agent coordination](../agent-coordination/SKILL.md). Routine task results use the completion contract above.
 
 ### Wait for completion
 

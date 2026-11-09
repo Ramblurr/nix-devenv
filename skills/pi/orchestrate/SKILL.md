@@ -13,7 +13,7 @@ A dev and its reviewers form a pod and may communicate directly with each other.
 
 ## Workflow
 
-1. **Prepare.** Read and follow Skill(pi-link-coordination), Skill(sub-agents), and Skill(tmux). Use `link_list` to confirm your exact Link name and find agents in the project scope.
+1. **Prepare.** Read and follow Skill(agent-coordination) for peer communication, Skill(sub-agents) for delegation, and Skill(tmux) for provisioning. Use `link_list` to confirm your exact Link name and find agents in the project scope.
 
    Derive the project name from the repository directory. From the project checkout, use `tmuxb list` to find the project's single tmux session, conventionally named after the project. Reuse it when it exists; otherwise create it with that project name. Inspect its windows and panes before adding anything. Identify sub-agents, REPLs, watchers, servers, and other development tools already running for the target repository and worktree by checking their names, working directories, and processes. Unless the user says otherwise, create every missing agent window and required REPL or development-tool window before orchestration starts. Reuse matching windows and processes; never duplicate them or create a tmux session per agent, pod, or worktree.
 
@@ -46,23 +46,23 @@ A dev and its reviewers form a pod and may communicate directly with each other.
 
    Pass all three settings explicitly when starting each agent, for example `pi --provider openai-codex --model gpt-6-terra --thinking high`. Reuse an existing agent for a new orchestration only when its role and effective provider, model, and thinking level match the requested or default configuration.
 
-4. **Check Git sharing.** Determine whether pods share a branch, worktree, index, or HEAD. Shared worktrees use the commit lock in step 7; isolated worktrees do not.
+4. **Check Git sharing.** Use Skill(agent-coordination) to identify shared index or HEAD access, including unrelated top-level agents and their trees. Agree on one lock authority across all affected agents before using step 7; a pod-local lock does not exclude outside peers. Separate indexes and HEADs need no shared commit lock.
 
-5. **Dispatch one ticket per idle dev.** Use `link_send(triggerTurn: true)` and tell the dev to invoke Skill(implement). Include:
+5. **Dispatch one ticket per idle dev.** Use `link_send` and tell the dev to invoke Skill(implement). Include:
 
    - the ticket ID and path;
    - both reviewer Link names;
    - permission for pod members to communicate directly;
    - the rule that cross-pod coordination goes through the orchestrator;
    - the shared commit-lock protocol when applicable; and
-   - [ ] the golden rule: they must read the link coordination skill , and when communicating with member's of their pod they must use `link_send(triggerTurn: true)` and they must not run bash sleep commands while waiting. they can simply end their turn, that's the beauty of triggerTurn.
-   - this callback contract: reply to the orchestrator's exact Link name with `link_send(triggerTurn: true)` using `DONE <ticket>` or `BLOCKED <ticket>`. Include the deliverable path, commits, validation, both review results, and ticket status.
+   - the requirement to follow Skill(agent-coordination) for peer messaging and waiting;
+   - this callback contract: reply to the orchestrator's exact Link name with `link_send` using `DONE <ticket>` or `BLOCKED <ticket>`. Include the deliverable path, commits, validation, both review results, and ticket status.
 
-6. **Let the pod work.** The dev implements and validates, then dispatches both reviews with `link_send(triggerTurn: true)`. Each reviewer replies to the dev with `link_send(triggerTurn: true)` using `DONE <ticket>` or `BLOCKED <ticket>` and its review result. Pod members may discuss findings directly. The dev owns every fix/re-review loop and finishes only after both reviewers approve.
+6. **Let the pod work.** The dev implements and validates, then uses Skill(code-review) and Skill(requesting-code-review) with its assigned reviewers. Reviewers use the Pi Skill(sub-agents) adapter's `APPROVE <report-path>`, `CHANGES-NEEDED <report-path>` or `BLOCKED <reason>` contract. Reserve `DONE <ticket>` for dev-to-orchestrator completion. Pod members may discuss findings directly. The dev owns every fix/re-review loop and finishes only after both required axes approve; a blocked axis is not approval.
 
-   Preserve every pod member's context while the ticket is active. Do not routinely poll, interrupt, compact, or use `link_prompt` after an async dispatch and before its `DONE` or `BLOCKED` callback.
+   Preserve every pod member's context through fixes and re-reviews while the ticket is active. Do not routinely poll, interrupt or compact outstanding work. Follow Skill(pi-link-tools) for waiting.
 
-   **Status-request liveness check.** Whenever the user asks for a status or update, inspect the project tmux session before answering. Use `tmuxb windows`, `tmuxb panes`, and `tmuxb capture` to check every active pod member and required REPL or development-tool pane. Reconcile pane output with the ledger and Link callbacks; do not merely repeat the last recorded state. Treat missing callbacks, exited windows, idle prompts after errors, policy/tool failures, and agents waiting on already-delivered messages as stalls. Send the affected agent exact recovery instructions with `link_send(triggerTurn: true)`, update the ledger, and report the observed state and intervention. This explicit user-requested liveness check is the exception to the no-polling rule.
+   **Status-request liveness check.** Whenever the user asks for a status or update, inspect the project tmux session before answering. Use `tmuxb windows`, `tmuxb panes`, and `tmuxb capture` to check every active pod member and required REPL or development-tool pane. Reconcile pane output with the ledger and Link callbacks; do not merely repeat the last recorded state. Treat missing callbacks, exited windows, idle prompts after errors, policy/tool failures, and agents waiting on already-delivered messages as stalls. Send the affected agent exact recovery instructions with `link_send`, update the ledger, and report the observed state and intervention. This explicit user-requested liveness check is the exception to the no-polling rule.
 
 7. **Mediate boundaries.** Handle only events that leave the pod:
 
@@ -78,6 +78,6 @@ A dev and its reviewers form a pod and may communicate directly with each other.
 
 8. **Accept completion.** On `DONE <ticket>`, verify the deliverable, validation, commits, approval from both reviewers, ticket closure, and that no fix or review remains.
 
-9. **Advance the queue.** Find the next ready ticket. At the ticket boundary, compact idle pod members before switching tasks; reuse or replace reviewers only here. Dispatch exactly one next ticket to the dev with `link_send(triggerTurn: true)` and the same contract. If no ticket remains, report completion.
+9. **Advance the queue.** Find the next ready ticket. At the ticket boundary, compact idle pod members before switching tasks; reuse or replace reviewers only here. Dispatch exactly one next ticket to the dev with `link_send` and the same contract. If no ticket remains, report completion.
 
 10. **Repeat** until the queue is complete.

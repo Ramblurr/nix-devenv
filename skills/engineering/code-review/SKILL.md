@@ -1,26 +1,32 @@
 ---
 name: code-review
-description: Review changes since a fixed point along Standards and Spec axes using parallel sub-agents. Writes an Org report under the feature's local work-item directory and returns only its path. Use for branch, PR, or work-in-progress reviews.
+description: Review committed or working-tree changes along Standards and Spec axes using parallel sub-agents. Writes an Org report under the feature's local work-item directory and returns its path, or a blocked reason. Use for branch, PR, or work-in-progress reviews.
 ---
 
-Two-axis review of the diff between `HEAD` and a fixed point the user supplies:
+Two-axis review of a pinned committed or working-tree state:
 
 - **Standards** — does the code conform to this repo's documented coding standards?
 - **Spec** — does the code faithfully implement the originating issue / spec?
 
-Both axes run as **parallel sub-agents** so they don't pollute each other's context, then this skill aggregates their findings. Give each reviewer a self-contained brief in an independent context, not a fork of the current conversation. Follow Skill(requesting-code-review) for pre-dispatch compaction and transport.
+Both axes run as **parallel sub-agents** so they don't pollute each other's context, then this skill aggregates their findings. Give each reviewer a self-contained brief in an independent context, not a fork of the current conversation. Follow Skill(requesting-code-review) for dispatch and artifact verification.
 
 The issue tracker should have been provided to you. Use that tracker doc; if none was provided, ask the user to run Skill(bootstrap-engineering-workflows).
 
 ## Process
 
-### 1. Pin the fixed point
+### 1. Pin the review state
 
-Whatever the user said is the fixed point — a commit SHA, branch name, tag, `main`, `HEAD~5`, etc. If they didn't specify one, ask for it.
+Choose the mode from the user's request; ask when ambiguous. Resolve references to commit IDs and record HEAD before capturing inputs.
 
-Capture the diff command once: `git diff <fixed-point>...HEAD` (three-dot, so the comparison is against the merge-base). Also note the list of commits via `git log <fixed-point>..HEAD --oneline`.
+- **Committed branch/PR:** require the user's fixed point (ask if absent). Resolve `<base>` with `git merge-base <fixed-point> <head>`, then capture `git diff --binary <base> <head>` and `git log <fixed-point>..<head> --oneline`.
+- **Working tree/WIP:** default the base to captured HEAD unless the user requests another comparison base. Capture `git diff --binary <base>` for the final tracked working-tree state, including staged and unstaged changes. Also capture `git diff --cached --binary <base>` and `git diff --binary` to preserve the index/working-tree distinction, including staged changes undone in the working tree. Label findings specific to the index separately from findings in the final working-tree state. Enumerate non-ignored untracked files with `git ls-files --others --exclude-standard` and include the task-relevant files; record exclusions explicitly. Ask if their relevance is unclear.
+- **Staged only:** capture `git diff --cached --binary <base>`, using captured HEAD as the default base. Review index contents, not later working-tree edits; exclude unstaged and untracked files unless requested.
 
-Before going further, confirm the fixed point resolves (`git rev-parse <fixed-point>`) and the diff is non-empty. A bad ref or empty diff should fail here — not inside two parallel sub-agents.
+Preserve the captured diffs and a manifest of mode, base, HEAD, scope, exclusions and content hashes in a local review-input directory outside tracked source. Include frozen copies of relevant untracked files and the target file contents needed to inspect the captured state (index contents for staged-only review). Record deleted paths. Verify inputs did not change during capture; recapture if they did. Do not stage or commit to create the snapshot.
+
+Give both reviewers the same absolute input-directory path. They must review the captured state, not substitute their checkout's HEAD or reread mutable files as if unchanged. If further context is needed, retrieve it at the pinned revision or freeze it after verifying its identity. An isolated child checkout does not contain the parent's uncommitted state automatically.
+
+Stop before dispatch if a reference is invalid, required inputs are inaccessible, or the entire selected scope is empty, including relevant untracked files. For WIP, an empty committed diff alone is not an empty review.
 
 ### 2. Identify the spec source
 
@@ -57,7 +63,7 @@ Each smell reads *what it is* → *how to fix*; match it against the diff:
 
 ### 4. Resolve the report paths
 
-Every review is an Org mode artifact on disk. Never send a review body through agent chat or a link callback.
+Every review is an Org mode artifact on disk. Never return a review body through agent chat or a completion message.
 
 Choose the appropriate `.scratch-org/NNN-<feature-or-concept>/` directory:
 
@@ -82,7 +88,7 @@ The review is read-only with respect to implementation files, generated files, G
 
 **Standards sub-agent prompt** — include:
 
-- The full diff command and commit list.
+- The review mode, pinned base/HEAD, captured input directory and manifest, diff commands and commit list (when applicable).
 - The standards-source files from step 3 and the complete smell baseline.
 - The Standards template path and Standards report path.
 - The brief: report documented-standard violations and baseline smells per file or hunk; cite the standard or name the smell, distinguish hard violations from judgement calls, honor repo overrides, skip anything tooling enforces, and keep the report under 400 words.
@@ -90,19 +96,21 @@ The review is read-only with respect to implementation files, generated files, G
 
 **Spec sub-agent prompt** — include:
 
-- The full diff command and commit list.
+- The review mode, pinned base/HEAD, captured input directory and manifest, diff commands and commit list (when applicable).
 - The path or fetched contents of the spec.
 - The Spec template path and Spec report path.
 - The brief: report missing or partial requirements, scope creep, and apparently implemented requirements whose implementation is wrong; quote the relevant spec line and keep the report under 400 words.
 - Use temporary finding IDs `P1`, `P2`, and so on; the aggregate assigns final numbers.
 
-Use Skill(requesting-code-review) to preflight the linked reviewers, dispatch both assignments in parallel, wait for their callbacks, and verify their report artifacts.
+Use Skill(requesting-code-review) to prepare independent reviewers, dispatch both assignments in parallel, await their results, and verify their report artifacts.
 
 If the spec is missing, skip the Spec sub-agent and do not create its axis report. Record "No spec available" in the aggregate.
 
 ### 6. Aggregate on disk
 
-Proceed only after Skill(requesting-code-review) returns verified paths for every dispatched axis report.
+If any dispatched axis returns `BLOCKED`, retain completed reports and return `BLOCKED <axis>: <reason>` with their paths. Do not create a complete aggregate or claim approval. Resolve the blocker and request the missing review through Skill(sub-agents); reuse completed reports only if the pinned inputs and review requirements are unchanged.
+
+Otherwise proceed only after Skill(requesting-code-review) returns verified paths for every dispatched axis report. Record the reviewed mode and input manifest in the aggregate; approval applies only to that captured state, not subsequent edits.
 
 Read [code-review-template.md](code-review-template.md) completely, then read the axis reports from disk and write the canonical Org aggregate to `review<N>.org` using its `<code-review-report-template>`. Keep Standards and Spec separate and do not rerank findings across axes.
 

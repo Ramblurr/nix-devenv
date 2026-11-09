@@ -4,9 +4,9 @@
 
 Report path: `{REPORT_PATH}`
 
-The review is read-only except for writing the complete Org mode report at that path. Never return the body through agent chat or a Link callback.
+The review is read-only except for writing the complete Org mode report at that path. Never return the body through agent chat or a completion message.
 
-After the report exists, use `link_send(triggerTurn:true)` to send exactly `APPROVE {REPORT_PATH}` or `CHANGES-NEEDED {REPORT_PATH}`. If it cannot be written, send `BLOCKED <reason>`.
+After the report exists, return exactly `APPROVE {REPORT_PATH}` or `CHANGES-NEEDED {REPORT_PATH}` through the completion mechanism specified in your assignment. If it cannot be written, return `BLOCKED <reason>`.
 
 <standards-review-template>
 
@@ -15,7 +15,9 @@ After the report exists, use `link_send(triggerTurn:true)` to send exactly `APPR
 
 * Metadata
 - Fixed point :: <commit, branch, tag, or merge-base>
-- Head :: <reviewed head>
+- Head :: <captured HEAD commit>
+- Mode :: <committed / working-tree / staged-only>
+- Inputs :: <absolute captured input manifest path>
 
 * Findings
 <For each finding, use:>

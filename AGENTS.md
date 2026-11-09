@@ -15,4 +15,4 @@ The locker is derived by `clj-helpers.lib.mkCljLib` (from [clojure-nix-locker-he
 
 ## Maintaining the Claude plugin skill list
 
-Whenever you add, rename, or delete a skill under `skills/`, update the `skills` array in `.claude-plugin/plugin.json` so it lists every skill directory.
+When adding, renaming, or deleting a non-harness-specific skill under `skills/` (such as `skills/mine/` or `skills/engineering/`), keep the `skills` array in `.claude-plugin/plugin.json` up to date. This rule does not apply to harness-specific skills. Keep Pi, Codex and T3 skills out of the Claude plugin; its existing `skills/claude/` entry is Claude-specific.

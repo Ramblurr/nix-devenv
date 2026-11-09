@@ -13,7 +13,9 @@ Write a complete Org mode aggregate to that path. Never return the review body t
 
 * Metadata
 - Fixed point :: <commit, branch, tag, or merge-base>
-- Head :: <reviewed head>
+- Head :: <captured HEAD commit>
+- Mode :: <committed / working-tree / staged-only>
+- Inputs :: <absolute captured input manifest path>
 - Spec :: <path, issue reference, or "No spec available">
 - Standards report :: <path>
 - Spec report :: <path or "No spec report">

@@ -12,8 +12,4 @@ Stage only your own changes related to your current task, then commit them.
   `git log -20 --no-merges --format='%s'`. Match the repository's established
   scope syntax and naming; repository history takes precedence over generic examples.
 - Use Skill(scoped-commits) for the commit message.
-- If the `link_send` tool is available, coordinate staging/commit access:
-  - Before staging: `link_send` to your fellow collaborators (only those whose names indicate they work on your project) that you are taking the staging/commit lease.
-  - After commit or abort: `link_send` all-clear/release with `triggerTurn: true`.
-  - Do not `link_broadcast`
-  - If your history indicates that there's an agent that has a lease, then wait for the all clear.
+- If agents share the Git index or HEAD, coordinate exclusive staging/commit access through the active harness's Skill(agent-coordination), including unrelated top-level agents and their sub-agent trees. Honor any existing coordinator's lock protocol; wait for the current holder to release access before staging. Release access after commit or abort. If coordination is unavailable, stop rather than race another agent.

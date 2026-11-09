@@ -1,23 +1,19 @@
 ---
 name: requesting-code-review
-description: Dispatch code-review subagents through Pi Link. Use when Skill(code-review) needs independent reviewers to write on-disk reports.
+description: Dispatch independent code-review subagents using the active harness. Use when Skill(code-review) needs independent reviewers to write on-disk reports.
 ---
 
 # Requesting Code Review
 
-This skill owns reviewer transport and enforces the project scope boundary from Skill(sub-agents). The calling review skill owns review policy, content, templates, report-path allocation, and findings.
+This skill owns reviewer briefs and artifact verification. The calling review skill owns review policy, content, templates, report-path allocation, and findings.
 
-Before step 1, read Skill(sub-agents) completely for project-scope and worker-eligibility rules. Then read Skill(pi-link-coordination) completely for Link tool choice, terminal state, context management, async callbacks, and the Golden Rule.
+Read the active harness's Skill(sub-agents) for agent selection, dispatch, context management, waiting and follow-up mechanics.
 
 ## 1. Acquire reviewers
 
-Run `link_list`. Apply the project scope boundary from Skill(sub-agents) before considering role, status, cwd, or repository access. Assign a different eligible idle terminal to each independent review. Confirm each target can access the repository and its report path. Every brief uses absolute paths.
+Plan a distinct reviewer context for each independent review using Skill(sub-agents). Confirm each assignment provides access to the reviewed repository state and its report path. Every brief uses absolute paths.
 
-When there are too few eligible same-scope terminals, follow Skill(sub-agents) to start them, wait for them to connect, then run `link_list` again.
-
-Run `link_compact` on every selected reviewer after it becomes idle and before each new review, regardless of reported context usage. Wait for each compaction to complete before dispatch. If compaction declines or times out, use `link_list` to confirm the target's state and repeat preflight until compaction succeeds.
-
-**Complete when:** every review has one distinct, eligible same-scope, idle target with repository access and a completed pre-dispatch compaction.
+**Complete when:** every review has an independent assignment with accessible inputs and a report path readable by the coordinator.
 
 ## 2. Assemble each brief
 
@@ -27,30 +23,28 @@ Embed the review content supplied by the calling skill unchanged in a self-conta
 - The absolute repository path
 - The absolute input and template paths named by the calling skill
 - The assigned absolute report path
-- An instruction to send exactly one callback to the requester's exact Link name with `link_send(triggerTurn:true)`: `APPROVE <report-path>`, `CHANGES-NEEDED <report-path>`, or `BLOCKED <reason>`
+- An instruction to return one final result through the harness's completion mechanism: `APPROVE <report-path>`, `CHANGES-NEEDED <report-path>`, or `BLOCKED <reason>`
 
-The report file carries every finding. The reviewer writes it before sending a verdict callback; `BLOCKED` carries only its reason.
+The report file carries every finding. The reviewer writes it before returning a verdict; `BLOCKED` carries only its reason.
 
 **Complete when:** every brief contains all five items, has a distinct report path, and requires no prior conversation.
 
 ## 3. Dispatch asynchronously
 
-Send one brief per target with `link_send(triggerTurn:true)`. Send all independent reviews before yielding. Track each target, report path, and outstanding callback.
+Use Skill(sub-agents) to dispatch the independent briefs in parallel. Track each assignment, report path and outstanding result. Resolve failed dispatches through the harness's lifecycle rules before retrying.
 
-A failed send returns that review to step 1. After a successful send, apply the Golden Rule from Skill(pi-link-coordination).
+**Complete when:** every review has a successful dispatch and is tracked as outstanding.
 
-**Complete when:** every review has a successful send and is tracked as outstanding.
+## 4. Await every result
 
-## 4. Await every callback
+Follow Skill(sub-agents) to await completion. Keep unfinished assignments outstanding. Correct results outside the contract through the harness's follow-up mechanism.
 
-End the turn after dispatch. Resume as callbacks arrive, which may be separate or batched; keep unfinished targets outstanding and end the turn again. A callback outside the contract triggers a corrective `link_send(triggerTurn:true)` and remains outstanding.
-
-**Complete when:** every target has returned one of the three allowed callbacks.
+**Complete when:** every assignment has returned one of the three allowed results.
 
 ## 5. Apply the artifact gate
 
-For `APPROVE` and `CHANGES-NEEDED`, match the callback path to the assigned path and verify the report exists on disk. For `BLOCKED`, capture the reason for the calling skill.
+For `APPROVE` and `CHANGES-NEEDED`, match the returned path to the assigned path and verify the report exists on disk. For `BLOCKED`, capture the reason for the calling skill.
 
-A wrong path, missing report, or inline-only review triggers a corrective `link_send(triggerTurn:true)` to that reviewer and a return to step 4. Return verified artifact paths and blocked reasons to the calling skill.
+A wrong path, missing report, or inline-only review requires a correction through Skill(sub-agents) and a return to step 4. Return verified artifact paths and blocked reasons to the calling skill.
 
 **Complete when:** every non-blocked review has its assigned on-disk report and every blocked review has a reason.

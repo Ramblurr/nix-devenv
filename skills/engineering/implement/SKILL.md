@@ -11,9 +11,9 @@ Work in small vertical slices. Run the focused test file and relevant linter, ty
 
 Run the project's full qa suite (formatter, linter, tests) once after implementation is complete.
 
-Commit your work to the current branch with Skill(scoped-commits)
+Commit your work to the current branch with Skill(scoped-commits). Before each staging or commit operation on a shared index or HEAD, obtain exclusive access through the active harness's Skill(agent-coordination); release it after commit or abort. Stage only your task's changes.
 
-Once done, use Skill(code-review) to review the work. Loop fix findings -> commit (ammend!) -> review until satisfied.
+Once done, use Skill(code-review) to review the work. Loop fix findings -> commit -> review until satisfied. Use regular follow-up commits on shared branches. Amend only when permitted by the task, after verifying exclusive history ownership and that HEAD is the exact commit you intend to replace; a temporary commit lock alone does not establish history ownership.
 
 Take the findings with a grain of salt, reviewers are not infallible. If you suspect a reviewer is wrong:
 

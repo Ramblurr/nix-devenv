@@ -4,7 +4,7 @@ Use this procedure only after the user approves migration from `.scratch/` to `.
 
 ## Preconditions
 
-1. Read and follow Skill(sub-agents) and Skill(tmux).
+1. Read and follow the active harness's Skill(sub-agents).
 2. Confirm the repository root and show the exact source and destination paths.
 3. Require `.scratch/` to exist and `.scratch-org/` to be absent. If the destination exists, stop and ask; never merge, replace, or delete it.
 4. Confirm `git ls-files -- .scratch .scratch-org` returns nothing. Stop if either tree contains tracked files.
@@ -24,19 +24,15 @@ Immediately verify `diff -qr -- .scratch .scratch-org` succeeds. The destination
 
 ## Delegate the conversion
 
-Reuse the project's existing tmux session, or create its single project session according to Skill(tmux). Open one conversion window whose working directory is the absolute `.scratch-org/` path. If the user explicitly requests parallel conversion, give agents disjoint explicit write lists plus the complete source-to-destination mapping so they can rewrite cross-partition references. Start each window with this exact command:
+Use Skill(sub-agents) to dispatch one conversion agent with access to the copied `.scratch-org/` tree. If the user explicitly requests parallel conversion, give agents disjoint explicit write lists plus the complete source-to-destination mapping so they can rewrite cross-partition references.
 
-```sh
-pi --no-session --provider openai-codex --model gpt-5.6-luna --thinking high --fast
-```
-
-Do not add another model or thinking flag. Send the agent a prompt containing the absolute destination path, source counts, complete source-to-destination mapping, and these requirements:
+Send the agent a prompt containing the absolute destination path, source counts, complete source-to-destination mapping, the harness's completion mechanism, and these requirements:
 
 ```text
 Task: Convert this copied local issue-tracker tree from Markdown to Org mode.
 
 Scope and safety:
-- Your current working directory is the repository's .scratch-org directory.
+- Before editing, change your working directory to the assigned absolute .scratch-org path.
 - Modify only files and directories beneath the current working directory; for a partitioned conversion, modify only the explicit write list.
 - Never edit, delete, rename, or write to ../.scratch or elsewhere in the repository.
 - Do not run Git commands or change repository configuration.
@@ -67,10 +63,10 @@ Validation:
 - Confirm no Markdown fence lines remain and every reference to a converted tracker file resolves under `.scratch-org/`.
 - Inspect representative ticket, spec, map, review, handoff, and operation-ledger files.
 - Parse every .org file with Org when Emacs is available.
-- Finish with a concise DONE or BLOCKED report in the tmux terminal.
+- Finish with a concise DONE or BLOCKED report through the completion mechanism specified in your assignment.
 ```
 
-The coordinator monitors the tmux pane and waits for the terminal's final `DONE` or `BLOCKED` result. The conversion task is complete only after the child agent exits or returns to an idle prompt.
+The coordinator follows Skill(sub-agents) to await the final `DONE` or `BLOCKED` result. Begin independent validation only after the agent has finished writing.
 
 ## Independent validation
 

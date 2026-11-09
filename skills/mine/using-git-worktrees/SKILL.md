@@ -3,8 +3,14 @@ name: using-git-worktrees
 description: Use this whenever you need to create an isolated workspace.
 ---
 
+## Choose the workspace owner
+
+For a delegated agent or new thread under T3 Code, follow its injected orchestration instructions and Skill(sub-agents) for runtime-managed isolation. Do not create that agent's checkout in the shell or include checkout creation in its task. The manual procedure below does not apply to runtime-managed checkouts; use their assigned paths and lifecycle rules.
+
+For a manually managed workspace, use the procedure below only when the active harness permits it. Creating a worktree does not grant permission to mutate a shared branch or destination checkout; use Skill(agent-coordination) when integrating changes there.
+
 <required>
-**CRITICAL: Follow these steps in order:**
+**For manually managed worktrees, follow these steps in order:**
 
 1. Find the worktrees directory.
 
