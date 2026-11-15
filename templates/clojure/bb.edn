@@ -1,6 +1,6 @@
 {:deps  {outskirtslabs/bb-tasks
          {:git/url "https://github.com/outskirtslabs/bb-tasks"
-          :git/sha "9dbc6d77384b51ffde69007e98a0420b3cf6a0a7"}}
+          :git/sha "8b2b33290230e8fea64d35e925d7ff509d06473b"}}
  :paths []
  :tasks {:requires
          ([clojure.string :as str]

@@ -6,10 +6,10 @@
       "sha256": "00zjz84zl1c3zqi0nzraicrzrg75j4cd805vvx65iva56931m51m",
       "url": "https://github.com/Ramblurr/clojure-dev-repl.git"
     },
-    "outskirtslabs/bb-tasks/9dbc6d77384b51ffde69007e98a0420b3cf6a0a7": {
+    "outskirtslabs/bb-tasks/8b2b33290230e8fea64d35e925d7ff509d06473b": {
       "common_dir": "https/github.com/outskirtslabs/bb-tasks",
-      "rev": "9dbc6d77384b51ffde69007e98a0420b3cf6a0a7",
-      "sha256": "0b2iqd8l7x25h75agxb9f37kyv2lywpp4ffh7jccjgpxgz8yyxx3",
+      "rev": "8b2b33290230e8fea64d35e925d7ff509d06473b",
+      "sha256": "0z2rbdiahkdk5bd031jbbq8zh8r8dcwmvsw6i9p7ccm9ddmdc3df",
       "url": "https://github.com/outskirtslabs/bb-tasks"
     }
   },
