@@ -7,7 +7,6 @@
     treefmt-nix.inputs.nixpkgs.follows = "flakelight/nixpkgs";
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
-    flake-schemas.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/0.2.0";
   };
   outputs =
     {
